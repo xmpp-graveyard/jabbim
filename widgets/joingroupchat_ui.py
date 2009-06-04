@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/joingroupchat.ui'
 #
-# Created: Wed May  7 15:13:37 2008
-#      by: PyQt4 UI code generator 4.3.1
+# Created: Fri Jun  5 00:35:14 2009
+#      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,148 +12,117 @@ from PyQt4 import QtCore, QtGui
 class Ui_joingroupchat(object):
     def setupUi(self, joingroupchat):
         joingroupchat.setObjectName("joingroupchat")
-        joingroupchat.resize(QtCore.QSize(QtCore.QRect(0,0,375,380).size()).expandedTo(joingroupchat.minimumSizeHint()))
-
+        joingroupchat.resize(375, 380)
         self.gridlayout = QtGui.QGridLayout(joingroupchat)
         self.gridlayout.setMargin(9)
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
-
-        spacerItem = QtGui.QSpacerItem(20,40,QtGui.QSizePolicy.Minimum,QtGui.QSizePolicy.Expanding)
-        self.gridlayout.addItem(spacerItem,3,0,1,1)
-
+        spacerItem = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.gridlayout.addItem(spacerItem, 3, 0, 1, 1)
         self.label = QtGui.QLabel(joingroupchat)
-        self.label.setMaximumSize(QtCore.QSize(48,48))
+        self.label.setMaximumSize(QtCore.QSize(48, 48))
         self.label.setPixmap(QtGui.QPixmap("images/48x48/categories/conferences.png"))
         self.label.setObjectName("label")
-        self.gridlayout.addWidget(self.label,0,0,1,1)
-
+        self.gridlayout.addWidget(self.label, 0, 0, 1, 1)
         self.label_2 = QtGui.QLabel(joingroupchat)
         self.label_2.setWordWrap(True)
         self.label_2.setObjectName("label_2")
-        self.gridlayout.addWidget(self.label_2,0,1,1,1)
-
+        self.gridlayout.addWidget(self.label_2, 0, 1, 1, 1)
         self.groupBox = QtGui.QGroupBox(joingroupchat)
         self.groupBox.setObjectName("groupBox")
-
         self.vboxlayout = QtGui.QVBoxLayout(self.groupBox)
-        self.vboxlayout.setMargin(9)
         self.vboxlayout.setSpacing(6)
+        self.vboxlayout.setMargin(9)
         self.vboxlayout.setObjectName("vboxlayout")
-
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(6)
+        self.hboxlayout.setMargin(0)
         self.hboxlayout.setObjectName("hboxlayout")
-
         self.vboxlayout1 = QtGui.QVBoxLayout()
-        self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setSpacing(6)
+        self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setObjectName("vboxlayout1")
-
         self.label_3 = QtGui.QLabel(self.groupBox)
         self.label_3.setObjectName("label_3")
         self.vboxlayout1.addWidget(self.label_3)
-
         self.label_4 = QtGui.QLabel(self.groupBox)
         self.label_4.setObjectName("label_4")
         self.vboxlayout1.addWidget(self.label_4)
-
         self.label_5 = QtGui.QLabel(self.groupBox)
         self.label_5.setObjectName("label_5")
         self.vboxlayout1.addWidget(self.label_5)
-
         self.label_6 = QtGui.QLabel(self.groupBox)
         self.label_6.setObjectName("label_6")
         self.vboxlayout1.addWidget(self.label_6)
         self.hboxlayout.addLayout(self.vboxlayout1)
-
         self.vboxlayout2 = QtGui.QVBoxLayout()
-        self.vboxlayout2.setMargin(0)
         self.vboxlayout2.setSpacing(6)
+        self.vboxlayout2.setMargin(0)
         self.vboxlayout2.setObjectName("vboxlayout2")
-
         self.nickname = QtGui.QLineEdit(self.groupBox)
         self.nickname.setObjectName("nickname")
         self.vboxlayout2.addWidget(self.nickname)
-
         self.roomName = QtGui.QLineEdit(self.groupBox)
         self.roomName.setObjectName("roomName")
         self.vboxlayout2.addWidget(self.roomName)
-
-        #self.serverName = QtGui.QLineEdit(self.groupBox)
-        #self.serverName.setObjectName("serverName")
-        #self.vboxlayout2.addWidget(self.serverName)
-
         self.serverName = QtGui.QComboBox(self.groupBox)
-
-        #sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(7),QtGui.QSizePolicy.Policy(0))
-        #sizePolicy.setHorizontalStretch(0)
-        #sizePolicy.setVerticalStretch(0)
-        #sizePolicy.setHeightForWidth(self.server.sizePolicy().hasHeightForWidth())
-        #self.server.setSizePolicy(sizePolicy)
         self.serverName.setEditable(True)
         self.serverName.setObjectName("serverName")
         self.vboxlayout2.addWidget(self.serverName)
-
-
         self.password = QtGui.QLineEdit(self.groupBox)
         self.password.setObjectName("password")
         self.vboxlayout2.addWidget(self.password)
         self.hboxlayout.addLayout(self.vboxlayout2)
         self.vboxlayout.addLayout(self.hboxlayout)
-        self.gridlayout.addWidget(self.groupBox,1,0,1,2)
-
+        self.gridlayout.addWidget(self.groupBox, 1, 0, 1, 2)
         self.groupBox_2 = QtGui.QGroupBox(joingroupchat)
         self.groupBox_2.setObjectName("groupBox_2")
-
         self.gridlayout1 = QtGui.QGridLayout(self.groupBox_2)
         self.gridlayout1.setMargin(9)
         self.gridlayout1.setSpacing(6)
         self.gridlayout1.setObjectName("gridlayout1")
-
         self.hboxlayout1 = QtGui.QHBoxLayout()
-        self.hboxlayout1.setMargin(0)
         self.hboxlayout1.setSpacing(6)
+        self.hboxlayout1.setMargin(0)
         self.hboxlayout1.setObjectName("hboxlayout1")
-
         self.bookmarkNameLabel = QtGui.QLabel(self.groupBox_2)
         self.bookmarkNameLabel.setObjectName("bookmarkNameLabel")
         self.hboxlayout1.addWidget(self.bookmarkNameLabel)
-
         self.bookmarkName = QtGui.QLineEdit(self.groupBox_2)
         self.bookmarkName.setObjectName("bookmarkName")
         self.hboxlayout1.addWidget(self.bookmarkName)
-        self.gridlayout1.addLayout(self.hboxlayout1,1,0,1,1)
-
+        self.gridlayout1.addLayout(self.hboxlayout1, 1, 0, 1, 1)
         self.bookmarkChat = QtGui.QCheckBox(self.groupBox_2)
         self.bookmarkChat.setObjectName("bookmarkChat")
-        self.gridlayout1.addWidget(self.bookmarkChat,0,0,1,1)
-
+        self.gridlayout1.addWidget(self.bookmarkChat, 0, 0, 1, 1)
         self.autojoin = QtGui.QCheckBox(self.groupBox_2)
         self.autojoin.setObjectName("autojoin")
-        self.gridlayout1.addWidget(self.autojoin,2,0,1,1)
-        self.gridlayout.addWidget(self.groupBox_2,2,0,1,2)
-
+        self.gridlayout1.addWidget(self.autojoin, 2, 0, 1, 1)
+        self.gridlayout.addWidget(self.groupBox_2, 2, 0, 1, 2)
+        self.buttons = QtGui.QGridLayout()
+        self.buttons.setSpacing(6)
+        self.buttons.setObjectName("buttons")
+        self.browser = QtGui.QPushButton(joingroupchat)
+        self.browser.setObjectName("browser")
+        self.buttons.addWidget(self.browser, 0, 0, 1, 1)
         self.buttonBox = QtGui.QDialogButtonBox(joingroupchat)
         self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.NoButton|QtGui.QDialogButtonBox.Ok)
+        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
         self.buttonBox.setObjectName("buttonBox")
-        self.gridlayout.addWidget(self.buttonBox,4,0,1,2)
+        self.buttons.addWidget(self.buttonBox, 0, 1, 1, 1)
+        self.gridlayout.addLayout(self.buttons, 4, 0, 1, 2)
 
         self.retranslateUi(joingroupchat)
-        QtCore.QObject.connect(self.buttonBox,QtCore.SIGNAL("accepted()"),joingroupchat.accept)
-        QtCore.QObject.connect(self.buttonBox,QtCore.SIGNAL("rejected()"),joingroupchat.reject)
-        QtCore.QObject.connect(self.bookmarkChat,QtCore.SIGNAL("toggled(bool)"),self.bookmarkName.setEnabled)
-        QtCore.QObject.connect(self.bookmarkChat,QtCore.SIGNAL("toggled(bool)"),self.autojoin.setEnabled)
+        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("accepted()"), joingroupchat.accept)
+        QtCore.QObject.connect(self.buttonBox, QtCore.SIGNAL("rejected()"), joingroupchat.reject)
+        QtCore.QObject.connect(self.bookmarkChat, QtCore.SIGNAL("toggled(bool)"), self.bookmarkName.setEnabled)
+        QtCore.QObject.connect(self.bookmarkChat, QtCore.SIGNAL("toggled(bool)"), self.autojoin.setEnabled)
         QtCore.QMetaObject.connectSlotsByName(joingroupchat)
-        joingroupchat.setTabOrder(self.nickname,self.roomName)
-        joingroupchat.setTabOrder(self.roomName,self.serverName)
-        joingroupchat.setTabOrder(self.serverName,self.password)
-        joingroupchat.setTabOrder(self.password,self.bookmarkChat)
-        joingroupchat.setTabOrder(self.bookmarkChat,self.bookmarkName)
-        joingroupchat.setTabOrder(self.bookmarkName,self.autojoin)
-        joingroupchat.setTabOrder(self.autojoin,self.buttonBox)
+        joingroupchat.setTabOrder(self.nickname, self.roomName)
+        joingroupchat.setTabOrder(self.roomName, self.password)
+        joingroupchat.setTabOrder(self.password, self.bookmarkChat)
+        joingroupchat.setTabOrder(self.bookmarkChat, self.bookmarkName)
+        joingroupchat.setTabOrder(self.bookmarkName, self.autojoin)
 
     def retranslateUi(self, joingroupchat):
         joingroupchat.setWindowTitle(QtGui.QApplication.translate("joingroupchat", "Join Chat Room", None, QtGui.QApplication.UnicodeUTF8))
@@ -167,5 +136,5 @@ class Ui_joingroupchat(object):
         self.bookmarkNameLabel.setText(QtGui.QApplication.translate("joingroupchat", "Bookmark name:", None, QtGui.QApplication.UnicodeUTF8))
         self.bookmarkChat.setText(QtGui.QApplication.translate("joingroupchat", "Bookmark this chat room", None, QtGui.QApplication.UnicodeUTF8))
         self.autojoin.setText(QtGui.QApplication.translate("joingroupchat", "Join this chat room automaticaly at login", None, QtGui.QApplication.UnicodeUTF8))
-
+        self.browser.setText(QtGui.QApplication.translate("joingroupchat", "Browse chat rooms", None, QtGui.QApplication.UnicodeUTF8))
 

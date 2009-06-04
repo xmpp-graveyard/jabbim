@@ -37,9 +37,11 @@ class joinGroupChatWindow(QtGui.QDialog):
 		
 		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
 		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setText(self.tr("Join"))
+		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setIcon(QtGui.QIcon('images/16x16/categories/muc.png'))
 		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Ok).setEnabled(False)
-		self.ui.browser=QtGui.QPushButton(self.tr("Browse chat rooms"))
-		self.ui.buttonBox.addButton(self.ui.browser,QtGui.QDialogButtonBox.ActionRole)
+		self.ui.browser.setText("")
+		self.ui.browser.setToolTip(self.tr("Browse chat rooms"))
+		self.ui.browser.setIcon(QtGui.QIcon('images/16x16/actions/service-discovery.png'))
 
 		self.ui.nickname.setText(self.main.selfName)
 		mucjid = []

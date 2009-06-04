@@ -328,6 +328,7 @@ class clientClass(pyxl.client.Client):
 					widget.setLineEditText(resource)
 					widget.setAcceptText(mainWindow.tr("Join"))
 					widget.setRejectText(mainWindow.tr("Cancel"))
+					widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/ok.png'))
 		elif int(code)==401:
 			log.msg("room is password protected")
 			tab,index=self.main.chat.findTab(fromjid)
@@ -897,6 +898,7 @@ class clientClass(pyxl.client.Client):
 				widget.setText(frm+unicode(mainWindow.tr(" is sending you contact. Do you want to receive them?"))+unicode(item["jid"]))
 				widget.setAcceptText(mainWindow.tr("Yes"))
 				widget.setRejectText(mainWindow.tr("No"))
+				widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/ok.png'))
 			else:
 				names = ''
 				for item in items:
@@ -908,6 +910,7 @@ class clientClass(pyxl.client.Client):
 				widget.setText(frm+unicode(mainWindow.tr(" is sending you contacts. Do you want to receive them?"))+unicode(names))
 				widget.setAcceptText(mainWindow.tr("Yes"))
 				widget.setRejectText(mainWindow.tr("No"))
+				widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/ok.png'))
 		elif typ == 'delete':
 			if len(items)==1:
 				item = items[0]
@@ -917,6 +920,8 @@ class clientClass(pyxl.client.Client):
 				widget.setText(frm+unicode(mainWindow.tr(" is requesting removal of a contact. Do you want to proceed?"))+unicode(item.jid))
 				widget.setAcceptText(mainWindow.tr("Yes"))
 				widget.setRejectText(mainWindow.tr("No"))
+				widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/ok.png'))
+				widget.ui.reject.setIcon(QtGui.QIcon('images/16x16/actions/prosess_stop.png'))
 			else:
 				names = ''
 				for item in items:
@@ -928,6 +933,8 @@ class clientClass(pyxl.client.Client):
 				widget.setText(frm+unicode(mainWindow.tr(" is requesting removal of a contacts. Do you want to proceed?"))+unicode(names))
 				widget.setAcceptText(mainWindow.tr("Yes"))
 				widget.setRejectText(mainWindow.tr("No"))
+				widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/ok.png'))
+				widget.ui.reject.setIcon(QtGui.QIcon('images/16x16/actions/prosess_stop.png'))
 		pass
 
 	def rosterx(self, frm, items, id, typ):
@@ -1414,6 +1421,8 @@ class clientClass(pyxl.client.Client):
 		widget.setText(user+unicode(mainWindow.tr(" removed your authorization. You won't see his status. Do you want to remove him/her from your contact list?")))
 		widget.setAcceptText(mainWindow.tr("Yes"))
 		widget.setRejectText(mainWindow.tr("No"))
+		widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/ok.png'))
+		widget.ui.reject.setIcon(QtGui.QIcon('images/16x16/actions/prosess_stop.png'))
 
 
 
@@ -1464,6 +1473,7 @@ class clientClass(pyxl.client.Client):
 				widget.setText(mainWindow.tr('Users ')+" "+unicode(test)+' '+mainWindow.tr("want to see your status. Do you want to authorize these users?"))
 				widget.setAcceptText(mainWindow.tr("Yes"))
 				widget.setRejectText(mainWindow.tr("No"))
+				widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/ok.png'))
 		else:
 			frm=self.main.getJid(frm)
 			if frm.host in self.main.autoAdd.keys():
@@ -1716,6 +1726,7 @@ class clientClass(pyxl.client.Client):
 						widget.setText(unicode(mainWindow.tr("New messages")) +" ("+c+") "+unicode(mainWindow.tr("from:"))+" "+unicode(user))
 					widget.setAcceptText(unicode(mainWindow.tr("Read")))
 					widget.setRejectText(unicode(mainWindow.tr("Ignore")))
+					widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/message.png'))
 
 					self.dispatcher.publishEvent('chatMessageEvent', msg,tab.chat.unreadEvent)
 					tab.chat.unread+=1
@@ -1739,6 +1750,7 @@ class clientClass(pyxl.client.Client):
 						widget.setText(unicode(mainWindow.tr("New messages")) +" ("+c+") "+unicode(mainWindow.tr("from:"))+" "+unicode(user))
 					widget.setAcceptText(unicode(mainWindow.tr("Read")))
 					widget.setRejectText(unicode(mainWindow.tr("Ignore")))
+					widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/message.png'))
 
 					self.dispatcher.publishEvent('chatMessageEvent',msg, tab.chat.unreadEvent)
 					#if int(self.main.chat.ui.chatTab.currentIndex())==tabIndex:
@@ -1800,6 +1812,7 @@ class clientClass(pyxl.client.Client):
 					widget.setText(unicode(mainWindow.tr("New message from:"))+" "+unicode(user))
 					widget.setAcceptText(unicode(mainWindow.tr("Read")))
 					widget.setRejectText(unicode(mainWindow.tr("Ignore")))
+					widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/message.png'))
 
 					tab.chat.lastMessageFrom=unicode(user)
 					if xhtml==None:
@@ -1906,6 +1919,7 @@ class clientClass(pyxl.client.Client):
 		widget.setText(unicode(user)+" "+unicode(mainWindow.tr("is sending you "))+str(len(files))+" "+unicode(mainWindow.tr("files"))+" ("+str(self.toNormalSize(int(size)))+")")
 		widget.setAcceptText(unicode(mainWindow.tr("Accept")))
 		widget.setRejectText(unicode(mainWindow.tr("Reject")))
+		widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/ok.png'))
 		self.dispatcher.publishEvent('FTFileReceivedEvent', weakref.ref(event))
 
 		tab,index=self.main.chat.findTab(unicode(jid.userhost()),typ=['chat'])
@@ -1994,6 +2008,7 @@ class clientClass(pyxl.client.Client):
 				widget.setText(unicode(user)+" "+unicode(mainWindow.tr("is sending you file"))+" "+unicode(self.ft[sid].fileprops['name'])+" ("+str(self.toNormalSize(int(self.ft[sid].fileprops['size'])))+")")
 				widget.setAcceptText(unicode(mainWindow.tr("Accept")))
 				widget.setRejectText(unicode(mainWindow.tr("Reject")))
+				widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/ok.png'))
 				self.dispatcher.publishEvent('FTFileReceivedEvent', weakref.ref(event))
 				tab,index=self.main.chat.findTab(unicode(self.ft[sid].fromjid.userhost()),typ=['chat'])
 				if tab:
@@ -2061,6 +2076,7 @@ class clientClass(pyxl.client.Client):
 		widget.setText(mainWindow.tr('URL:')+" "+unicode(props['url']) + ' <br/> ' +unicode(mainWindow.tr('ID:'))+" " + unicode(props['id']))
 		widget.setAcceptText(mainWindow.tr("Yes"))
 		widget.setRejectText(mainWindow.tr("No"))
+		widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/ok.png'))
 
 	def on_connect(self):
 		mainWindow=self.main
@@ -4350,7 +4366,7 @@ class mainWindow(QtGui.QMainWindow):
 		widget.setLabel(self.tr("Nickname:"))
 		widget.setAcceptText(self.tr("Join"))
 		widget.setRejectText(self.tr("Decline"))
-
+		widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/ok.png'))
 
 	def findPlugins(self):
 		"""

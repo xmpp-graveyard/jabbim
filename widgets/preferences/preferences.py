@@ -50,6 +50,7 @@ class preferencesWindow(QtGui.QDialog):
 		self.ui.setupUi(self)
 		self.ui.stackedWidget.setCurrentIndex(page)
 
+		self.ui.saveButton.setIcon(QtGui.QIcon('images/16x16/categories/gtk-preferences.png'))
 		self.var=[]
 
 		self.justShowed=False

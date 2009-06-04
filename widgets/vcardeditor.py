@@ -100,6 +100,7 @@ class vcardEditorDialog(QtGui.QDialog):
 			#<CTRY>USA</CTRY>
 		#</ADR>
 		self.editable=editable
+		self.ui.pushButton.setIcon(QtGui.QIcon('images/16x16/categories/v-card.png'))
 		
 		if not self.editable:
 			self.ui.name.setReadOnly(True)

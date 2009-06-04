@@ -24,7 +24,7 @@
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0" >
       <size>
        <width>20</width>
        <height>40</height>
@@ -64,27 +64,27 @@
       <string>Join the chat room</string>
      </property>
      <layout class="QVBoxLayout" >
-      <property name="margin" >
-       <number>9</number>
-      </property>
       <property name="spacing" >
        <number>6</number>
       </property>
+      <property name="margin" >
+       <number>9</number>
+      </property>
       <item>
        <layout class="QHBoxLayout" >
-        <property name="margin" >
-         <number>0</number>
-        </property>
         <property name="spacing" >
          <number>6</number>
         </property>
+        <property name="margin" >
+         <number>0</number>
+        </property>
         <item>
          <layout class="QVBoxLayout" >
-          <property name="margin" >
-           <number>0</number>
-          </property>
           <property name="spacing" >
            <number>6</number>
+          </property>
+          <property name="margin" >
+           <number>0</number>
           </property>
           <item>
            <widget class="QLabel" name="label_3" >
@@ -118,11 +118,11 @@
         </item>
         <item>
          <layout class="QVBoxLayout" >
-          <property name="margin" >
-           <number>0</number>
-          </property>
           <property name="spacing" >
            <number>6</number>
+          </property>
+          <property name="margin" >
+           <number>0</number>
           </property>
           <item>
            <widget class="QLineEdit" name="nickname" />
@@ -131,7 +131,11 @@
            <widget class="QLineEdit" name="roomName" />
           </item>
           <item>
-           <widget class="QLineEdit" name="serverName" />
+           <widget class="QComboBox" name="serverName" >
+            <property name="editable" >
+             <bool>true</bool>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QLineEdit" name="password" />
@@ -157,11 +161,11 @@
       </property>
       <item row="1" column="0" >
        <layout class="QHBoxLayout" >
-        <property name="margin" >
-         <number>0</number>
-        </property>
         <property name="spacing" >
          <number>6</number>
+        </property>
+        <property name="margin" >
+         <number>0</number>
         </property>
         <item>
          <widget class="QLabel" name="bookmarkNameLabel" >
@@ -193,26 +197,38 @@
     </widget>
    </item>
    <item row="4" column="0" colspan="2" >
-    <widget class="QDialogButtonBox" name="buttonBox" >
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
+    <layout class="QGridLayout" name="buttons" >
+     <property name="spacing" >
+      <number>6</number>
      </property>
-     <property name="standardButtons" >
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
+     <item row="0" column="0" >
+      <widget class="QPushButton" name="browser" >
+       <property name="text" >
+        <string>Browse chat rooms</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" >
+      <widget class="QDialogButtonBox" name="buttonBox" >
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="standardButtons" >
+        <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
  <tabstops>
   <tabstop>nickname</tabstop>
   <tabstop>roomName</tabstop>
-  <tabstop>serverName</tabstop>
   <tabstop>password</tabstop>
   <tabstop>bookmarkChat</tabstop>
   <tabstop>bookmarkName</tabstop>
   <tabstop>autojoin</tabstop>
-  <tabstop>buttonBox</tabstop>
  </tabstops>
  <resources/>
  <connections>

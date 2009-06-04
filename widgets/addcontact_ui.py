@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/addcontact.ui'
 #
-# Created: Sat Oct 11 07:28:06 2008
-#      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
+# Created: Thu Jun  4 23:36:26 2009
+#      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -17,21 +17,13 @@ class Ui_addContact(object):
         self.gridlayout.setMargin(9)
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
-        self.buttonBox = QtGui.QDialogButtonBox(addContact)
-        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
-        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.NoButton|QtGui.QDialogButtonBox.Ok)
-        self.buttonBox.setCenterButtons(False)
-        self.buttonBox.setObjectName("buttonBox")
-        self.gridlayout.addWidget(self.buttonBox, 4, 0, 1, 1)
-        spacerItem = QtGui.QSpacerItem(313, 16, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
-        self.gridlayout.addItem(spacerItem, 3, 0, 1, 1)
         self.hboxlayout = QtGui.QHBoxLayout()
-        self.hboxlayout.setMargin(0)
         self.hboxlayout.setSpacing(6)
+        self.hboxlayout.setMargin(0)
         self.hboxlayout.setObjectName("hboxlayout")
         self.vboxlayout = QtGui.QVBoxLayout()
-        self.vboxlayout.setMargin(0)
         self.vboxlayout.setSpacing(6)
+        self.vboxlayout.setMargin(0)
         self.vboxlayout.setObjectName("vboxlayout")
         self.add_jidLabel = QtGui.QLabel(addContact)
         self.add_jidLabel.setObjectName("add_jidLabel")
@@ -44,8 +36,8 @@ class Ui_addContact(object):
         self.vboxlayout.addWidget(self.add_groupLabel)
         self.hboxlayout.addLayout(self.vboxlayout)
         self.vboxlayout1 = QtGui.QVBoxLayout()
-        self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setSpacing(6)
+        self.vboxlayout1.setMargin(0)
         self.vboxlayout1.setObjectName("vboxlayout1")
         self.add_jid = QtGui.QLineEdit(addContact)
         self.add_jid.setObjectName("add_jid")
@@ -69,9 +61,24 @@ class Ui_addContact(object):
         self.add_message = QtGui.QTextEdit(addContact)
         self.add_message.setObjectName("add_message")
         self.gridlayout1.addWidget(self.add_message, 1, 0, 1, 2)
-        spacerItem1 = QtGui.QSpacerItem(191, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
-        self.gridlayout1.addItem(spacerItem1, 0, 1, 1, 1)
+        spacerItem = QtGui.QSpacerItem(191, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridlayout1.addItem(spacerItem, 0, 1, 1, 1)
         self.gridlayout.addLayout(self.gridlayout1, 2, 0, 1, 1)
+        spacerItem1 = QtGui.QSpacerItem(314, 13, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
+        self.gridlayout.addItem(spacerItem1, 3, 0, 1, 1)
+        self.gridLayout_3 = QtGui.QGridLayout()
+        self.gridLayout_3.setSpacing(6)
+        self.gridLayout_3.setObjectName("gridLayout_3")
+        self.buttonBox = QtGui.QDialogButtonBox(addContact)
+        self.buttonBox.setOrientation(QtCore.Qt.Horizontal)
+        self.buttonBox.setStandardButtons(QtGui.QDialogButtonBox.Cancel|QtGui.QDialogButtonBox.Ok)
+        self.buttonBox.setCenterButtons(False)
+        self.buttonBox.setObjectName("buttonBox")
+        self.gridLayout_3.addWidget(self.buttonBox, 0, 1, 1, 1)
+        self.search_user = QtGui.QPushButton(addContact)
+        self.search_user.setObjectName("search_user")
+        self.gridLayout_3.addWidget(self.search_user, 0, 0, 1, 1)
+        self.gridlayout.addLayout(self.gridLayout_3, 4, 0, 1, 1)
         self.addContact_headerLabel = QtGui.QLabel(addContact)
         self.addContact_headerLabel.setObjectName("addContact_headerLabel")
         self.gridlayout.addWidget(self.addContact_headerLabel, 0, 0, 1, 1)
@@ -94,10 +101,12 @@ class Ui_addContact(object):
         self.add_group.setToolTip(QtGui.QApplication.translate("addContact", "Choose existing group or enter name for the new group", None, QtGui.QApplication.UnicodeUTF8))
         self.add_messageLabel.setText(QtGui.QApplication.translate("addContact", "Message:", None, QtGui.QApplication.UnicodeUTF8))
         self.add_message.setToolTip(QtGui.QApplication.translate("addContact", "Enter a short message that you want to send to the added contact.", None, QtGui.QApplication.UnicodeUTF8))
-        self.add_message.setHtml(QtGui.QApplication.translate("addContact", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        self.add_message.setHtml(QtGui.QApplication.translate("addContact", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:10pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\'; font-size:9pt;\">Hi! I am adding you to my roster using the jabber client Jabbim! Please authorize me to see you when you are available. Thanks!</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+"</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Hi! I am adding you to my roster using the jabber client Jabbim! Please authorize me to see you when you are available. Thanks!</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.search_user.setText(QtGui.QApplication.translate("addContact", "Search", None, QtGui.QApplication.UnicodeUTF8))
         self.addContact_headerLabel.setText(QtGui.QApplication.translate("addContact", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
