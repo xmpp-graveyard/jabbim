@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/rostertooltip.ui'
+# Form implementation generated from reading ui file 'rostertooltip.ui'
 #
-# Created: Fri Jan  9 18:09:17 2009
-#      by: PyQt4 UI code generator 4.4.3
+# Created: Thu Jun  4 14:31:53 2009
+#      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,7 +12,7 @@ from PyQt4 import QtCore, QtGui
 class Ui_RosterToolTip(object):
     def setupUi(self, RosterToolTip):
         RosterToolTip.setObjectName("RosterToolTip")
-        RosterToolTip.resize(332, 132)
+        RosterToolTip.resize(332, 156)
         self.gridlayout = QtGui.QGridLayout(RosterToolTip)
         self.gridlayout.setMargin(9)
         self.gridlayout.setSpacing(6)
@@ -59,6 +59,16 @@ class Ui_RosterToolTip(object):
         self.jid.setOpenExternalLinks(True)
         self.jid.setObjectName("jid")
         self.vboxlayout.addWidget(self.jid)
+        self.subscription = QtGui.QLabel(RosterToolTip)
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.subscription.sizePolicy().hasHeightForWidth())
+        self.subscription.setSizePolicy(sizePolicy)
+        self.subscription.setMouseTracking(True)
+        self.subscription.setWordWrap(True)
+        self.subscription.setObjectName("subscription")
+        self.vboxlayout.addWidget(self.subscription)
         self.status = QtGui.QTextBrowser(RosterToolTip)
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Minimum)
         sizePolicy.setHorizontalStretch(0)
@@ -95,5 +105,6 @@ class Ui_RosterToolTip(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:12pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-weight:600;\">JID:</span></p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+        self.subscription.setText(QtGui.QApplication.translate("RosterToolTip", "Subscription:", None, QtGui.QApplication.UnicodeUTF8))
         self.label.setText(QtGui.QApplication.translate("RosterToolTip", "Avatar", None, QtGui.QApplication.UnicodeUTF8))
 

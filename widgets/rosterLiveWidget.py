@@ -1100,7 +1100,21 @@ class rosterWidget(QtGui.QWidget):
 							self.tool.ui.status.show()
 					else:
 						self.tool.ui.status.hide()
+					
+					subscription= contact.subscription
+					if unicode(contact.subscription) == 'from':
+						self.tool.ui.subscription.setText('<b>'+self.main.tr("Subscription:")+'</b> '+self.main.tr(" from"))
+						self.tool.ui.subscription.show()
+					elif unicode(contact.subscription) == 'to':
+						self.tool.ui.subscription.setText('<b>'+self.main.tr("Subscription:")+'</b> '+self.main.tr(" to"))
+						self.tool.ui.subscription.show()
+					elif unicode(contact.subscription) == 'none':
+						self.tool.ui.subscription.setText('<b>'+self.main.tr("Subscription:")+'</b> '+self.main.tr(" none"))
+						self.tool.ui.subscription.show()
+					else:
+						self.tool.ui.subscription.hide()
 				else:
+					self.tool.ui.subscription.hide()
 					self.tool.ui.status.hide()
 
 				tune = contact.getPEP('http://jabber.org/protocol/tune')

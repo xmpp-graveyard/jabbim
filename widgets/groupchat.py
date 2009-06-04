@@ -279,6 +279,7 @@ class groupChatWidget(abstractChatWidget):
 					self.tool.ui.status.show()
 				else:
 					self.tool.ui.status.hide()
+				self.tool.ui.subscription.hide()
 
 				#tune = contact.getPEP('http://jabber.org/protocol/tune')
 				#if type(tune) == list:

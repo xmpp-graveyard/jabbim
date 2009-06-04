@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>332</width>
-    <height>132</height>
+    <height>156</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -120,6 +120,25 @@ p, li { white-space: pre-wrap; }
         <bool>true</bool>
        </property>
        <property name="openExternalLinks" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="subscription" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="mouseTracking" >
+        <bool>true</bool>
+       </property>
+       <property name="text" >
+        <string>Subscription:</string>
+       </property>
+       <property name="wordWrap" >
         <bool>true</bool>
        </property>
       </widget>
