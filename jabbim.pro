@@ -40,8 +40,9 @@ widgets/mucbrowser.py \
 widgets/mucbrowser_ui.py \
 widgets/paint.py \
 widgets/paint_ui.py \
+widgets/preferences/preferences.py \
+widgets/preferences/view.py \
 widgets/preferences_bookmarks_ui.py \
-widgets/preferences.py \
 widgets/preferences_ui.py \
 widgets/privacy.py \
 widgets/privacy_ui.py \

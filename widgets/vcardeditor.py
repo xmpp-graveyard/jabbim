@@ -287,6 +287,7 @@ class vcardEditorDialog(QtGui.QDialog):
 		print err
 		lineLast,lineLastStatus=self.makeLastWidget(res)
 		lineLast.setText(self.tr("Unable to retrieve."))
+		lineLastStatus.setText(self.tr("Unable to retrieve."))
 		
 	def clearAvatar(self):
 		self.ui.avatar.setPixmap(QtGui.QPixmap())
