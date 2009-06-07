@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'widgets/addcontact.ui'
 #
-# Created: Thu Jun  4 23:36:26 2009
+# Created: Sun Jun  7 23:47:33 2009
 #      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -75,9 +75,9 @@ class Ui_addContact(object):
         self.buttonBox.setCenterButtons(False)
         self.buttonBox.setObjectName("buttonBox")
         self.gridLayout_3.addWidget(self.buttonBox, 0, 1, 1, 1)
-        self.search_user = QtGui.QPushButton(addContact)
-        self.search_user.setObjectName("search_user")
-        self.gridLayout_3.addWidget(self.search_user, 0, 0, 1, 1)
+        self.search = QtGui.QPushButton(addContact)
+        self.search.setObjectName("search")
+        self.gridLayout_3.addWidget(self.search, 0, 0, 1, 1)
         self.gridlayout.addLayout(self.gridLayout_3, 4, 0, 1, 1)
         self.addContact_headerLabel = QtGui.QLabel(addContact)
         self.addContact_headerLabel.setObjectName("addContact_headerLabel")
@@ -105,7 +105,7 @@ class Ui_addContact(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:10pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\'; font-size:9pt;\">Hi! I am adding you to my roster using the jabber client Jabbim! Please authorize me to see you when you are available. Thanks!</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
-        self.search_user.setText(QtGui.QApplication.translate("addContact", "Search", None, QtGui.QApplication.UnicodeUTF8))
+        self.search.setText(QtGui.QApplication.translate("addContact", "Search", None, QtGui.QApplication.UnicodeUTF8))
         self.addContact_headerLabel.setText(QtGui.QApplication.translate("addContact", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"

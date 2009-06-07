@@ -170,7 +170,7 @@ p, li { white-space: pre-wrap; }
       </widget>
      </item>
      <item row="0" column="0" >
-      <widget class="QPushButton" name="search_user" >
+      <widget class="QPushButton" name="search" >
        <property name="text" >
         <string>Search</string>
        </property>

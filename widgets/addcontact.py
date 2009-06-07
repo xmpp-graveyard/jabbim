@@ -16,9 +16,9 @@ class addContactDialog(QtGui.QDialog):
 		self.ui.buttonBox.button(QtGui.QDialogButtonBox.Cancel).setText(self.tr("Cancel"))
 		self.ui.save.setText(self.tr("Add"))
 		self.ui.save.setIcon(QtGui.QIcon('images/16x16/actions/gtk-add.png'))
-		self.ui.search_user.setIcon(QtGui.QIcon('images/16x16/actions/service-discovery.png'))
-		self.ui.search_user.setToolTip(self.tr("Search User"))
-		self.ui.search_user.setText("")
+		self.ui.search.setIcon(QtGui.QIcon('images/16x16/actions/service-discovery.png'))
+		self.ui.search.setToolTip(self.tr("Search User"))
+		self.ui.search.setText("")
 		for k,v in self.main.client.roster['groups'].iteritems():
 			if k==group:
 				self.ui.add_group.insertItem(0,unicode(k))
@@ -38,7 +38,7 @@ class addContactDialog(QtGui.QDialog):
 		else:
 			self.jidChanged()
 			QtCore.QObject.connect(self.ui.add_jid,QtCore.SIGNAL("textEdited ( const QString & )"),self.jidChanged)
-		QtCore.QObject.connect(self.ui.search_user,QtCore.SIGNAL("clicked()"),self.search)
+		QtCore.QObject.connect(self.ui.search,QtCore.SIGNAL("clicked()"),self.search)
 		#if check:
 			#self.ui.add_jid.setEnabled(False)
 
