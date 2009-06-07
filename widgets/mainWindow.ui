@@ -348,7 +348,7 @@
             </size>
            </property>
            <property name="pixmap" >
-            <pixmap>images/jabbim-text.png</pixmap>
+            <pixmap>images/logo.png</pixmap>
            </property>
            <property name="alignment" >
             <set>Qt::AlignCenter</set>
@@ -852,6 +852,7 @@ p, li { white-space: pre-wrap; }
          <item>
           <widget class="QLabel" name="splashImage" >
            <property name="pixmap" >
+			  <pixmap>images/logo.png</pixmap>
             <pixmap/>
            </property>
            <property name="alignment" >

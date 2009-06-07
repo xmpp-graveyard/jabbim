@@ -2,8 +2,8 @@
 
 # Form implementation generated from reading ui file 'widgets/mainWindow.ui'
 #
-# Created: Fri Jan  9 22:28:55 2009
-#      by: PyQt4 UI code generator 4.4.3
+# Created: Sat Jun  6 14:37:55 2009
+#      by: PyQt4 UI code generator 4.4.4
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -127,7 +127,7 @@ class Ui_MainWindow(object):
         self.gridlayout1.addLayout(self.hboxlayout2, 8, 0, 1, 1)
         self.login_headerLabel = QtGui.QLabel(self.login)
         self.login_headerLabel.setMinimumSize(QtCore.QSize(0, 95))
-        self.login_headerLabel.setPixmap(QtGui.QPixmap("images/jabbim-text.png"))
+        self.login_headerLabel.setPixmap(QtGui.QPixmap("images/logo.png"))
         self.login_headerLabel.setAlignment(QtCore.Qt.AlignCenter)
         self.login_headerLabel.setObjectName("login_headerLabel")
         self.gridlayout1.addWidget(self.login_headerLabel, 0, 0, 1, 1)
@@ -339,6 +339,7 @@ class Ui_MainWindow(object):
         spacerItem10 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.vboxlayout2.addItem(spacerItem10)
         self.splashImage = QtGui.QLabel(self.splash)
+        self.splashImage.setPixmap(QtGui.QPixmap("images/logo.png"))
         self.splashImage.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
         self.splashImage.setObjectName("splashImage")
         self.vboxlayout2.addWidget(self.splashImage)

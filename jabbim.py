@@ -3651,17 +3651,18 @@ class mainWindow(QtGui.QMainWindow):
 		menu=QtGui.QMenu(self)
 		if self.client:
 			menu.addMenu(self.statusWidgetMenu)
+			self.statusWidgetMenu.setIcon(QtGui.QIcon('images/16x16/status/jabber-online.png'))
 		else:
-			menu.addAction(self.tr("Connect"),self.connect)
+			menu.addAction(QtGui.QIcon('images/16x16/status/jabber-online.png'), self.tr("Connect"),self.connect)
 		if len(self.config['commandsInTray'])!=0 and self.client:
 			menu.addSeparator()
 			for jid in self.config['commandsInTray']:
-				action=menu.addAction(self.ui.roster.getNameByJID(jid))
+				action=menu.addAction(QtGui.QIcon('images/16x16/actions/exec.png'), self.ui.roster.getNameByJID(jid))
 				action.setObjectName("cmd"+unicode(jid))
 				action.setData(QtCore.QVariant(jid))
 		menu.addSeparator()
 		action=menu.addAction(self.tr("Hide / Show"),self.trayActivated)
-		menu.addAction(self.tr("Quit"),self.trayQuit)
+		menu.addAction(QtGui.QIcon('images/16x16/actions/gtk-quit.png'), self.tr("Quit"),self.trayQuit)
 		menu.connect(menu, QtCore.SIGNAL("hovered ( QAction * )"),self.trayMenuHovered)
 		self.tray.setContextMenu(menu)
 
@@ -5405,6 +5406,7 @@ class mainWindow(QtGui.QMainWindow):
 			return
 		self.config.write()
 		MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
+		MainWindow.ui.splashProgress.setValue(0)
 		#MainWindow.ui.showOffline.hide()
 		MainWindow.ui.actionAdd_Contact.setEnabled(False)
 		MainWindow.ui.actionJoin_groupchat.setEnabled(False)

@@ -23,6 +23,8 @@ class booleanWidget(QtGui.QWidget):
 		return ret[:-1]
 
 	def setText(self,text):
+		top_parent=self.parentWidget().parentWidget().parentWidget().parentWidget().parentWidget().parentWidget().width()
+		self.setMinimumWidth(top_parent-10)
 		self.ui.text.setText(self.getSafeText(text,self.width()-10))
 
 	def setAcceptText(self,text):

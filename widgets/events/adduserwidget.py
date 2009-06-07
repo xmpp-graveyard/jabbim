@@ -41,6 +41,8 @@ class addUserWidget(QtGui.QWidget):
 		self.event.parent.main.chat.activate()
 
 	def setData(self,jid,message=None):
+		top_parent=self.parentWidget().parentWidget().parentWidget().parentWidget().parentWidget().parentWidget().width()
+		self.setMinimumWidth(top_parent-10)
 		if isinstance(jid,unicode):
 			self.jid=unicode(jid)
 			text=unicode(self.tr("Do you want to add user"))
