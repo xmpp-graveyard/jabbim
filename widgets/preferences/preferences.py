@@ -139,7 +139,7 @@ class preferencesWindow(QtGui.QDialog):
 					if themePackage.has_key("header"):
 						if len(themePackage["header"]["name"])!=0:
 							self.ui.themePackages.insertItem(0,themePackage["header"]["name"],QtCore.QVariant(unicode(theme)))
-		html, self.chatThemeHtml, self.groupchatThemeHtml, self.emoticonsHtml = view.generateThemePackagePreview(self.main,self.main.config)
+		html, self.chatThemeHtml, self.groupchatThemeHtml, self.emoticonsHtml = view.generateThemePackagePreview(self.main)
 		self.webkitObject.setConfig(self.main.config)
 		self.ui.themePackage.setHtml(html)
 

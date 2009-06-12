@@ -1916,7 +1916,7 @@ class clientClass(pyxl.client.Client):
 		event.setRejectHandler(self._declineFTTree,[id,frm])
 		widget=event.getWidgets()[0]
 		user=self.main.ui.roster.getNameByJID(jid.userhost())
-		widget.setText(unicode(user)+" "+unicode(mainWindow.tr("is sending you "))+str(len(files))+" "+unicode(mainWindow.tr("files"))+" ("+str(self.toNormalSize(int(size)))+")")
+		widget.setText(unicode(user)+" "+unicode(mainWindow.tr("is sending you "))+unicode(mainWindow.tr("%n files","",len(files)))+" ("+str(self.toNormalSize(int(size)))+")")
 		widget.setAcceptText(unicode(mainWindow.tr("Accept")))
 		widget.setRejectText(unicode(mainWindow.tr("Reject")))
 		widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/ok.png'))
@@ -2025,15 +2025,18 @@ class clientClass(pyxl.client.Client):
 					tab.chat.lastMessageFrom=""
 
 	def toNormalSize(self,size):
-		original=int(size)
-		new=int(size/1000) # kB
-		if new==0:
-			return str(round(original,2.0))+" B" # B
-		size=new
-		new=int(size/1000) # MB
-		if new==0:
-			return str(round(original/1000.0,2))+" kB" # kB
-		return str(round(original/1000000.0,2))+" MB" # MB
+		try:
+			original=int(size)
+			new=int(size/1000) # kB
+			if new==0:
+				return str(round(original,2.0))+" B" # B
+			size=new
+			new=int(size/1000) # MB
+			if new==0:
+				return str(round(original/1000.0,2))+" kB" # kB
+			return str(round(original/1000000.0,2))+" MB" # MB
+		except:
+			return 'N/A'
 
 	def _declineFT(self,sid,  id):
 		log.msg("_declineFT")

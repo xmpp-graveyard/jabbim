@@ -657,7 +657,7 @@ def getFilenameFromLnk(name):
 	else:
 		return name
 
-def elapsed_time(seconds, suffixes=['y','w','d','h','m','s'], add_s=False, separator=' '):
+def elapsed_time(mainWindow, seconds, separator=' '):
 	"""
 	Takes an amount of seconds and turns it into a human-readable amount of time.
 	"""
@@ -676,15 +676,16 @@ def elapsed_time(seconds, suffixes=['y','w','d','h','m','s'], add_s=False, separ
  
 	# for each time piece, grab the value and remaining seconds, and add it to
 	# the time string
+	i=0
 	for suffix, length in parts:
 		value = seconds / length
 		if value > 0:
 			seconds = seconds % length
-			tim.append('%s %s' % (str(value),
-					       (suffix, (suffix, suffix + 's')[value > 1])[add_s]))
+			tim.append(unicode([mainWindow.tr('%n year',"",value),mainWindow.tr('%n week',"",value),mainWindow.tr('%n day',"",value),mainWindow.tr('%n hour',"",value),mainWindow.tr('%n minute',"",value),mainWindow.tr('%n second',"",value)][i] ))
+					       #(suffix, (suffix, suffix + 's')[value > 1])[add_s]))
+			i=i+1
 		if seconds < 1:
 			break
- 
 	return separator.join(tim)
 
 def getRevisionFromSvn():
@@ -749,12 +750,15 @@ def getSvnVersion():
 
 def getNormalSize(byte, kmg = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB'], index = 0): 
 	"""Convert Bytes to human readable form"""
-	cislo = float(byte)
-	while cislo >= 1024:
-		cislo = cislo/1024
-		index += 1
-	return "%.1f %s" % (cislo, kmg[index])
-	
+	try:
+		cislo = float(byte)
+		while cislo >= 1024:
+			cislo = cislo/1024
+			index += 1
+		return "%.1f %s" % (cislo, kmg[index])
+	except:
+		return 'N/A'
+		
 def getStampFromFormat(datetime, format): # format e.g. "%d.%m.%Y %H:%M"
 	"""Conver datetime by format to time by xep-0082"""
 	if format==None or datetime==None:

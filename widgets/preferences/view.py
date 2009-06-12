@@ -56,8 +56,8 @@ class webkitObject(QtCore.QObject):
 			d=extraDialog(unicode(typ),self.preferences().main,self.preferences().main)
 			d.exec_()
 		else:
-			MainWindow = self.preferences().main
-			QtGui.QMessageBox.information(self.preferences(), MainWindow.tr("Informations"), MainWindow.tr("You have to be connected to download new addons."))
+			mainWindow = self.preferences().main
+			QtGui.QMessageBox.information(self.preferences(), mainWindow.tr("Informations"), mainWindow.tr("You have to be connected to download new addons."))
 
 	@QtCore.pyqtSignature("QString, QString")
 	def selectChanged(self, typ, value):
@@ -121,12 +121,12 @@ class webkitObject(QtCore.QObject):
 			self.html = generateJabbimStylePreview(self.preferences().main, self.theme)
 			self.preferences().ui.themePackage.page().mainFrame().evaluateJavaScript('document.getElementById("jabbimStyleDiv").innerHTML = webkitObject.getHtml();')
 
-def populateJabbimStylesList(MainWindow, config):
-	ret = '<form name="jabbimStyleForm"><label>' + unicode(MainWindow.tr("Name: ")) + '<select name="jabbimstyles" size="1" onchange="webkitObject.selectChanged(\'jabbimstyles\',this.options[this.selectedIndex].value);">'
+def populateJabbimStylesList(mainWindow, config):
+	ret = '<form name="jabbimStyleForm"><label>' + unicode(mainWindow.tr("Name: ")) + '<select name="jabbimstyles" size="1" onchange="webkitObject.selectChanged(\'jabbimstyles\',this.options[this.selectedIndex].value);">'
 	if config == "None":
-		ret += '<option selected value="None">' + unicode(MainWindow.tr("Don't use themes")) + "</option>"
+		ret += '<option selected value="None">' + unicode(mainWindow.tr("Don't use themes")) + "</option>"
 	else:
-		ret += '<option value="None">' + unicode(MainWindow.tr("Don't use themes")) + "</option>"
+		ret += '<option value="None">' + unicode(mainWindow.tr("Don't use themes")) + "</option>"
 	skins=os.listdir("themes/")
 	for skin in skins:
 		if os.path.isdir("themes/"+skin) and os.path.exists("themes/"+skin+"/style.css"):
@@ -154,8 +154,8 @@ def populateJabbimStylesList(MainWindow, config):
 	return ret
 
 
-def populateRosterStylesList(MainWindow, config):
-	ret = '<form name="rosterStyleForm"><label>' + unicode(MainWindow.tr("Name: ")) + '<select name="rosterstyles" size="1" onchange="webkitObject.selectChanged(\'rosterstyles\',this.options[this.selectedIndex].value);">'
+def populateRosterStylesList(mainWindow, config):
+	ret = '<form name="rosterStyleForm"><label>' + unicode(mainWindow.tr("Name: ")) + '<select name="rosterstyles" size="1" onchange="webkitObject.selectChanged(\'rosterstyles\',this.options[this.selectedIndex].value);">'
 	packs=os.listdir("rosterstyles/")
 	loaded=[]
 	for pack in packs:
@@ -170,9 +170,9 @@ def populateRosterStylesList(MainWindow, config):
 				else:
 					ret += '<option value="' + path + '">' + path + "</option>"
 
-	packs=os.listdir(MainWindow.realHomeDir+'/rosterstyles/')
+	packs=os.listdir(mainWindow.realHomeDir+'/rosterstyles/')
 	for pack in packs:
-		if os.path.isdir(MainWindow.realHomeDir+'/rosterstyles/'+pack):
+		if os.path.isdir(mainWindow.realHomeDir+'/rosterstyles/'+pack):
 			#skins=os.listdir('chatskins/'+pack+"/")
 			#for skin in skins:
 			path=pack
@@ -186,15 +186,15 @@ def populateRosterStylesList(MainWindow, config):
 	ret += "</select></label></form>"
 	return ret
 
-def populateRosterStylesVariantList(MainWindow,config):
-	ret = '<form name="chatThemeVariantForm"><label>' + unicode(MainWindow.tr("Variant: ")) + '<select name="rosterstylesVariant" size="1" onchange="webkitObject.selectChanged(\'rosterstylesVariant\',this.options[this.selectedIndex].value);">'
+def populateRosterStylesVariantList(mainWindow,config):
+	ret = '<form name="chatThemeVariantForm"><label>' + unicode(mainWindow.tr("Variant: ")) + '<select name="rosterstylesVariant" size="1" onchange="webkitObject.selectChanged(\'rosterstylesVariant\',this.options[this.selectedIndex].value);">'
 	path = config.split("/")[0]
 	
 	variants=[]
 	if os.path.isdir("rosterstyles/"+path):
 		variants+=os.listdir("rosterstyles/"+path)
-	if os.path.isdir(MainWindow.realHomeDir+"/rosterstyles/"+path):
-		variants+=os.listdir(MainWindow.realHomeDir+"/rosterstyles/"+path)
+	if os.path.isdir(mainWindow.realHomeDir+"/rosterstyles/"+path):
+		variants+=os.listdir(mainWindow.realHomeDir+"/rosterstyles/"+path)
 	v=""
 	default=""
 	for variant in variants:
@@ -211,8 +211,8 @@ def populateRosterStylesVariantList(MainWindow,config):
 	ret += "</select></label></form>"
 	return ret,v
 
-def populateEmoticonsList(MainWindow,em):
-	ret = '<form name="emoticonsForm"><label>' + unicode(MainWindow.tr("Name: ")) + '<select name="emoticons" size="1" onchange="webkitObject.selectChanged(\'emoticons\',this.options[this.selectedIndex].value);">'
+def populateEmoticonsList(mainWindow,em):
+	ret = '<form name="emoticonsForm"><label>' + unicode(mainWindow.tr("Name: ")) + '<select name="emoticons" size="1" onchange="webkitObject.selectChanged(\'emoticons\',this.options[this.selectedIndex].value);">'
 	# emoticons from Jabbim root directory
 	packs=os.listdir("emoticons/")
 	for pack in packs:
@@ -222,7 +222,7 @@ def populateEmoticonsList(MainWindow,em):
 				if emoticon.endswith('.cfg'):
 					emo=pack+"/"+emoticon
 					#config=ConfigObj("emoticons/"+emo,encoding='UTF8')
-					loaded,config=MainWindow.loadJabbimExtraConfig("emoticons/"+emo,'emoticons/default/smileys.cfg')
+					loaded,config=mainWindow.loadJabbimExtraConfig("emoticons/"+emo,'emoticons/default/smileys.cfg')
 					if loaded:
 						if emo == em:
 							ret += '<option selected value="' + emo + '" >' + unicode(config['header']['name']) + "</option>"
@@ -234,15 +234,15 @@ def populateEmoticonsList(MainWindow,em):
 							#item=self.ui.emoticonsList.addItem(QtGui.QIcon('emoticons/'+os.path.dirname(emo)+"/"+unicode(config['header']['frontImage'])),unicode(config['header']['name']),QtCore.QVariant(emo))
 	
 	# emoticons from users home directory
-	packs=os.listdir(MainWindow.realHomeDir+"/emoticons")
+	packs=os.listdir(mainWindow.realHomeDir+"/emoticons")
 	for pack in packs:
-		if os.path.isdir(MainWindow.realHomeDir+"/emoticons/"+pack):
-			emoticons=os.listdir(MainWindow.realHomeDir+"/emoticons/"+pack+"/")
+		if os.path.isdir(mainWindow.realHomeDir+"/emoticons/"+pack):
+			emoticons=os.listdir(mainWindow.realHomeDir+"/emoticons/"+pack+"/")
 			for emoticon in emoticons:
 				if emoticon.endswith('.cfg'):
 					emo=pack+"/"+emoticon
-					#config=ConfigObj(MainWindow.realHomeDir+"/emoticons/"+emo,encoding='UTF8')
-					loaded,config=MainWindow.loadJabbimExtraConfig(MainWindow.realHomeDir+"/emoticons/"+emo,'emoticons/default/smileys.cfg')
+					#config=ConfigObj(mainWindow.realHomeDir+"/emoticons/"+emo,encoding='UTF8')
+					loaded,config=mainWindow.loadJabbimExtraConfig(mainWindow.realHomeDir+"/emoticons/"+emo,'emoticons/default/smileys.cfg')
 					if loaded:
 						if emo == em:
 							ret += '<option selected value="' + emo + '" >' + unicode(config['header']['name']) + "</option>"
@@ -252,8 +252,8 @@ def populateEmoticonsList(MainWindow,em):
 	ret += "</select></label></form>"
 	return ret
 
-def populateChatThemeList(MainWindow,default):
-	ret = '<form name="chatThemeForm"><label>' + unicode(MainWindow.tr("Name: ")) + '<select name="chatTheme" size="1" onchange="webkitObject.selectChanged(\'chatTheme\',this.options[this.selectedIndex].value);">'
+def populateChatThemeList(mainWindow,default):
+	ret = '<form name="chatThemeForm"><label>' + unicode(mainWindow.tr("Name: ")) + '<select name="chatTheme" size="1" onchange="webkitObject.selectChanged(\'chatTheme\',this.options[this.selectedIndex].value);">'
 	# chat skins from Jabbim root directory
 	packs=os.listdir("chatskins/")
 	for pack in packs:
@@ -264,9 +264,9 @@ def populateChatThemeList(MainWindow,default):
 				ret += '<option value="' + pack + '">' + pack + "</option>"
 
 	# chat skins from Jabbim home directory
-	packs=os.listdir(MainWindow.realHomeDir+"/chatskins/")
+	packs=os.listdir(mainWindow.realHomeDir+"/chatskins/")
 	for pack in packs:
-		if os.path.isdir(MainWindow.realHomeDir+'/chatskins/'+pack) and os.path.isdir(MainWindow.realHomeDir+'/chatskins/'+pack+'/Incoming'):
+		if os.path.isdir(mainWindow.realHomeDir+'/chatskins/'+pack) and os.path.isdir(mainWindow.realHomeDir+'/chatskins/'+pack+'/Incoming'):
 			if pack == default.split("/")[0]:
 				ret += '<option selected value="' + pack + '" >' + pack + "</option>"
 			else:
@@ -275,13 +275,13 @@ def populateChatThemeList(MainWindow,default):
 	ret += "</select></label></form>"
 	return ret
 
-def populateChatThemeStyleList(MainWindow,chatTheme):
-	ret = '<form name="chatThemeVariantForm"><label>' + unicode(MainWindow.tr("Variant: ")) + '<select name="chatThemeVariant" size="1" onchange="webkitObject.selectChanged(\'chatThemeVariant\',this.options[this.selectedIndex].value);">'
+def populateChatThemeStyleList(mainWindow,chatTheme):
+	ret = '<form name="chatThemeVariantForm"><label>' + unicode(mainWindow.tr("Variant: ")) + '<select name="chatThemeVariant" size="1" onchange="webkitObject.selectChanged(\'chatThemeVariant\',this.options[this.selectedIndex].value);">'
 	path = chatTheme.split("/")[0]
 	if os.path.exists("chatskins/"+path+"/Variants"):
 		variants=os.listdir("chatskins/"+path+"/Variants")
 	else:
-		variants=os.listdir(MainWindow.realHomeDir+"/chatskins/"+path+"/Variants")
+		variants=os.listdir(mainWindow.realHomeDir+"/chatskins/"+path+"/Variants")
 	v=None
 	default=""
 	for variant in variants:
@@ -298,7 +298,7 @@ def populateChatThemeStyleList(MainWindow,chatTheme):
 	ret += "</select></label></form>"
 	return ret,v
 
-def generateJabbimStylePreview(MainWindow,skin):
+def generateJabbimStylePreview(mainWindow,skin):
 	if os.path.isdir("themes/"+skin) and os.path.exists("themes/"+skin+"/style.css"):
 		preview = unicode(os.getcwd(), sys.getfilesystemencoding())+'/themes/'+skin+"/preview.png"
 		if os.path.isfile(preview):
@@ -306,28 +306,28 @@ def generateJabbimStylePreview(MainWindow,skin):
 	return ''
 
 
-def generateEmoticonsPreview(MainWindow,pack):
+def generateEmoticonsPreview(mainWindow,pack):
 	src=unicode(os.getcwd(), sys.getfilesystemencoding())+'/emoticons/'
 	#config=ConfigObj("emoticons/"+path,encoding='UTF8')
-	loaded,config=MainWindow.loadJabbimExtraConfig("emoticons/"+pack,'emoticons/default/smileys.cfg')
+	loaded,config=mainWindow.loadJabbimExtraConfig("emoticons/"+pack,'emoticons/default/smileys.cfg')
 	if len(config)==0 or not loaded:
-		#config=ConfigObj(MainWindow.mainWindow.realHomeDir+"/emoticons/"+path,encoding='UTF8')
-		src=MainWindow.realHomeDir+'/emoticons/'
-		loaded,config=MainWindow.loadJabbimExtraConfig(MainWindow.realHomeDir+"/emoticons/"+pack,'emoticons/default/smileys.cfg')
+		#config=ConfigObj(mainWindow.mainWindow.realHomeDir+"/emoticons/"+path,encoding='UTF8')
+		src=mainWindow.realHomeDir+'/emoticons/'
+		loaded,config=mainWindow.loadJabbimExtraConfig(mainWindow.realHomeDir+"/emoticons/"+pack,'emoticons/default/smileys.cfg')
 		if not loaded:
 			return None
 	html="<html><head></head><body>"
 	values=[]
 	for k,v in config['emoticons'].iteritems():
-		#MainWindow.smileys[k.replace("<","&lt;").replace(">","&gt;")]=v
+		#mainWindow.smileys[k.replace("<","&lt;").replace(">","&gt;")]=v
 		if not v in values:
 			html+='<img src="file://'+src+os.path.dirname(pack)+'/'+v+'" />'
 			values.append(v)
 	html += "</body></html>"
 	return html
 
-def generateChatThemePreview(MainWindow,pack):
-	factory=webkitthemes.webkitThemeFactory(pack,pack,MainWindow.realHomeDir)
+def generateChatThemePreview(mainWindow,pack):
+	factory=webkitthemes.webkitThemeFactory(pack,pack,mainWindow.realHomeDir)
 	html="""
 <html xmlns="http://www.w3.org/1999/xhtml">
 <meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -347,43 +347,44 @@ def generateChatThemePreview(MainWindow,pack):
 	"""
 
 	jabbim_icon = unicode(os.getcwd(), sys.getfilesystemencoding()) + "/images/32x32/apps/jabbim.png"
-	html+=factory.genIncomingContent(unicode(MainWindow.tr("User")),unicode(MainWindow.tr("Message for me")),MainWindow.now(),jabbim_icon)
-	html+=factory.genIncomingNextContent(unicode(MainWindow.tr("User")),unicode(MainWindow.tr("Second message for me")),MainWindow.now(),jabbim_icon)
-	html+=factory.genChatStatus(unicode(MainWindow.tr("User is now away")),MainWindow.now())
-	html+=factory.genOutgoingContent(unicode(MainWindow.tr("Me")),unicode(MainWindow.tr("Message for user")),MainWindow.now(),jabbim_icon)
-	html+=factory.genOutgoingNextContent(unicode(MainWindow.tr("Me")),unicode(MainWindow.tr("Second message for user")),MainWindow.now(),jabbim_icon)
+	html+=factory.genIncomingContent(unicode(mainWindow.tr("User")),unicode(mainWindow.tr("Message for me")),mainWindow.now(),jabbim_icon)
+	html+=factory.genIncomingNextContent(unicode(mainWindow.tr("User")),unicode(mainWindow.tr("Second message for me")),mainWindow.now(),jabbim_icon)
+	html+=factory.genChatStatus(unicode(mainWindow.tr("User is now away")),mainWindow.now())
+	html+=factory.genOutgoingContent(unicode(mainWindow.tr("Me")),unicode(mainWindow.tr("Message for user")),mainWindow.now(),jabbim_icon)
+	html+=factory.genOutgoingNextContent(unicode(mainWindow.tr("Me")),unicode(mainWindow.tr("Second message for user")),mainWindow.now(),jabbim_icon)
 	
 	return html, factory.cPath
 
-def generateThemePackagePreview(MainWindow,config):
+def generateThemePackagePreview(mainWindow):
+	config=mainWindow.config
 	ret = "<html><head></head><body>"
 
-	emoticons = generateEmoticonsPreview(MainWindow,config["emoticons"])
-	ret += "<h3>" + unicode(MainWindow.tr("Emoticons")) + "<span style=\"float: right;text-align:right;\"><a href=\"#\" onclick=\"webkitObject.getMore('emoticons')\">" + unicode(MainWindow.tr("Get more!")) + "</a></span></h3>"
-	ret += populateEmoticonsList(MainWindow,config["emoticons"])
+	emoticons = generateEmoticonsPreview(mainWindow,config["emoticons"])
+	ret += "<h3>" + unicode(mainWindow.tr("Emoticons")) + "<span style=\"float: right;text-align:right;\"><a href=\"#\" onclick=\"webkitObject.getMore('emoticons')\">" + unicode(mainWindow.tr("Get more!")) + "</a></span></h3>"
+	ret += populateEmoticonsList(mainWindow,config["emoticons"])
 	ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="emoticonsFrame"></iframe>'
 
-	chatTheme, cPath = generateChatThemePreview(MainWindow,config["chatTheme"])
-	ret += "<h3>" + unicode(MainWindow.tr("Chat theme")) + "<span style=\"float: right;text-align:right;\"><a href=\"#\" onclick=\"webkitObject.getMore('chatskins')\">" + unicode(MainWindow.tr("Get more!")) + "</a></span></h3>"
-	ret += populateChatThemeList(MainWindow,config["chatTheme"])
-	ret += "<div id=\"chatThemeStyleDiv\">" + populateChatThemeStyleList(MainWindow,config["chatTheme"])[0] + "</div>"
+	chatTheme, cPath = generateChatThemePreview(mainWindow,config["chatTheme"])
+	ret += "<h3>" + unicode(mainWindow.tr("Chat theme")) + "<span style=\"float: right;text-align:right;\"><a href=\"#\" onclick=\"webkitObject.getMore('chatskins')\">" + unicode(mainWindow.tr("Get more!")) + "</a></span></h3>"
+	ret += populateChatThemeList(mainWindow,config["chatTheme"])
+	ret += "<div id=\"chatThemeStyleDiv\">" + populateChatThemeStyleList(mainWindow,config["chatTheme"])[0] + "</div>"
 	ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="chatThemeFrame"></iframe>'
 
-	groupchatTheme, gPath = generateChatThemePreview(MainWindow,config["groupchatTheme"])
-	ret += "<h3>" + unicode(MainWindow.tr("Groupchat theme")) + "<span style=\"float: right;text-align:right;\"><a href=\"#\" onclick=\"webkitObject.getMore('chatskins')\">" + unicode(MainWindow.tr("Get more!")) + "</a></span></h3>"
-	ret += populateChatThemeList(MainWindow,config["groupchatTheme"]).replace("\"chatTheme","\"groupchatTheme").replace("'chatTheme","'groupchatTheme")
-	ret += "<div id=\"groupchatThemeStyleDiv\">" + populateChatThemeStyleList(MainWindow,config["groupchatTheme"])[0].replace("\"chatTheme","\"groupchatTheme").replace("'chatTheme","'groupchatTheme") + "</div>"
+	groupchatTheme, gPath = generateChatThemePreview(mainWindow,config["groupchatTheme"])
+	ret += "<h3>" + unicode(mainWindow.tr("Groupchat theme")) + "<span style=\"float: right;text-align:right;\"><a href=\"#\" onclick=\"webkitObject.getMore('chatskins')\">" + unicode(mainWindow.tr("Get more!")) + "</a></span></h3>"
+	ret += populateChatThemeList(mainWindow,config["groupchatTheme"]).replace("\"chatTheme","\"groupchatTheme").replace("'chatTheme","'groupchatTheme")
+	ret += "<div id=\"groupchatThemeStyleDiv\">" + populateChatThemeStyleList(mainWindow,config["groupchatTheme"])[0].replace("\"chatTheme","\"groupchatTheme").replace("'chatTheme","'groupchatTheme") + "</div>"
 	ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="groupchatThemeFrame"></iframe>'
 	
-	#rosterstyles = generateRosterStylesPreview(MainWindow,config["rosterStyle"])
-	ret += "<h3>" + unicode(MainWindow.tr("Roster style")) +"</h3>"
-	ret += populateRosterStylesList(MainWindow,config["rosterStyle"])
-	ret += "<div id=\"rosterStyleDiv\">" + populateRosterStylesVariantList(MainWindow,config["rosterStyle"])[0] + "</div>"
+	#rosterstyles = generateRosterStylesPreview(mainWindow,config["rosterStyle"])
+	ret += "<h3>" + unicode(mainWindow.tr("Roster style")) +"</h3>"
+	ret += populateRosterStylesList(mainWindow,config["rosterStyle"])
+	ret += "<div id=\"rosterStyleDiv\">" + populateRosterStylesVariantList(mainWindow,config["rosterStyle"])[0] + "</div>"
 	#ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="rosterStyleFrame"></iframe>'
 	
-	ret += "<h3>" + unicode(MainWindow.tr("Jabbim theme")) +"</h3>"
-	ret += populateJabbimStylesList(MainWindow,config["theme"])
-	ret += "<div id=\"jabbimStyleDiv\">" + generateJabbimStylePreview(MainWindow,config["theme"]) + "</div>"
+	ret += "<h3>" + unicode(mainWindow.tr("Jabbim theme")) +"</h3>"
+	ret += populateJabbimStylesList(mainWindow,config["theme"])
+	ret += "<div id=\"jabbimStyleDiv\">" + generateJabbimStylePreview(mainWindow,config["theme"]) + "</div>"
 
 
 	ret += "</body></html>"

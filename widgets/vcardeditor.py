@@ -4,7 +4,6 @@ from vcardeditor_ui import *
 import base64
 from twisted.words.xish.domish import Element
 from twisted.internet.defer import DeferredList 
-from include import utils
 
 try:
 	from hashlib import sha1
@@ -271,7 +270,7 @@ class vcardEditorDialog(QtGui.QDialog):
 	def lastReceived(self, el,res):
 		lineLast,lineLastStatus=self.makeLastWidget(res)
 		query = el.firstChildElement()
-		lineLast.setText(unicode(utils.elapsed_time(int(query['seconds']),[self.tr('year'),self.tr('week'),self.tr('day'),self.tr('hour'),self.tr('minute'),self.tr(' second')],separator=', ')))
+		lineLast.setText(unicode(self.main.utils.elapsed_time(self.main, int(query['seconds']), separator=', ')))
 		lineLastStatus.setText(unicode(query))
 		self.ui.download.hide()
 		self.ui.tabWidget.setEnabled(True)

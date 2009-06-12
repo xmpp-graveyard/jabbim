@@ -1041,94 +1041,29 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/preferences/view.py" line="60"/>
-        <source>Informations</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/preferences/view.py" line="60"/>
-        <source>You have to be connected to download new addons.</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="widgets/preferences/view.py" line="256"/>
         <source>Name: </source>
-        <translation type="unfinished">Nazwa: </translation>
-    </message>
-    <message>
-        <location filename="widgets/preferences/view.py" line="129"/>
-        <source>Don&apos;t use themes</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/preferences/view.py" line="279"/>
-        <source>Variant: </source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Nazwa: </translation>
     </message>
     <message>
         <location filename="widgets/preferences/view.py" line="351"/>
         <source>User</source>
-        <translation type="unfinished">Użytkownik</translation>
-    </message>
-    <message>
-        <location filename="widgets/preferences/view.py" line="350"/>
-        <source>Message for me</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/preferences/view.py" line="351"/>
-        <source>Second message for me</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/preferences/view.py" line="352"/>
-        <source>User is now away</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Użytkownik</translation>
     </message>
     <message>
         <location filename="widgets/preferences/view.py" line="354"/>
         <source>Me</source>
-        <translation type="unfinished">Ja</translation>
+        <translation type="obsolete">Ja</translation>
     </message>
     <message>
-        <location filename="widgets/preferences/view.py" line="353"/>
-        <source>Message for user</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/preferences/view.py" line="354"/>
-        <source>Second message for user</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/preferences/view.py" line="362"/>
+        <location filename="widgets/preferences/view.py" line="364"/>
         <source>Emoticons</source>
-        <translation type="unfinished">Emotikony</translation>
+        <translation type="obsolete">Emotikony</translation>
     </message>
     <message>
-        <location filename="widgets/preferences/view.py" line="373"/>
-        <source>Get more!</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/preferences/view.py" line="367"/>
-        <source>Chat theme</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/preferences/view.py" line="373"/>
-        <source>Groupchat theme</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/preferences/view.py" line="379"/>
+        <location filename="widgets/preferences/view.py" line="381"/>
         <source>Roster style</source>
-        <translation type="unfinished">Styl rostera</translation>
-    </message>
-    <message>
-        <location filename="widgets/preferences/view.py" line="384"/>
-        <source>Jabbim theme</source>
-        <translation type="unfinished"></translation>
+        <translation type="obsolete">Styl rostera</translation>
     </message>
 </context>
 <context>
@@ -1858,12 +1793,12 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>customStatusWindow</name>
     <message>
-        <location filename="jabbim.py" line="5513"/>
+        <location filename="jabbim.py" line="5516"/>
         <source>Window will be closed in </source>
         <translation type="unfinished">Okno zostanie zamknięte za </translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5513"/>
+        <location filename="jabbim.py" line="5516"/>
         <source> seconds.</source>
         <translation type="unfinished"> sekund.</translation>
     </message>
@@ -3124,7 +3059,7 @@ Do you realy want to leave this room?</source>
         <translation type="obsolete">Autoryzować kontakt?</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3844"/>
+        <location filename="jabbim.py" line="3847"/>
         <source>JID:</source>
         <translation type="unfinished">JID:</translation>
     </message>
@@ -3184,12 +3119,12 @@ Do you realy want to leave this room?</source>
         <translation type="unfinished">nie zwraca uwagi na czat.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2051"/>
+        <location filename="jabbim.py" line="2054"/>
         <source>Save File</source>
         <translation type="unfinished">Zapisz plik</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2051"/>
+        <location filename="jabbim.py" line="2054"/>
         <source>*.*</source>
         <translation type="unfinished">*.*</translation>
     </message>
@@ -3199,52 +3134,52 @@ Do you realy want to leave this room?</source>
         <translation type="obsolete">Prośba o autoryzację</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2076"/>
+        <location filename="jabbim.py" line="2079"/>
         <source>URL:</source>
         <translation type="unfinished">URL:</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2076"/>
+        <location filename="jabbim.py" line="2079"/>
         <source>ID:</source>
         <translation type="unfinished">ID:</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2089"/>
+        <location filename="jabbim.py" line="2092"/>
         <source>Jabbim is logged in.</source>
         <translation type="unfinished">Jabbim jest zalogowany.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2363"/>
+        <location filename="jabbim.py" line="2366"/>
         <source>Online</source>
         <translation type="unfinished">Dostępny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2359"/>
+        <location filename="jabbim.py" line="2362"/>
         <source>Chatty</source>
         <translation type="unfinished">Chętny do rozmowy</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2360"/>
+        <location filename="jabbim.py" line="2363"/>
         <source>Away</source>
         <translation type="unfinished">Zaraz wracam</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2361"/>
+        <location filename="jabbim.py" line="2364"/>
         <source>Extended away</source>
         <translation type="unfinished">Nieobecny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2362"/>
+        <location filename="jabbim.py" line="2365"/>
         <source>DND</source>
         <translation type="unfinished">Nie przeszkadzać</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2364"/>
+        <location filename="jabbim.py" line="2367"/>
         <source>Offline</source>
         <translation type="unfinished">Niedostępny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2368"/>
+        <location filename="jabbim.py" line="2371"/>
         <source>Invisible</source>
         <translation type="unfinished">Niewidoczny</translation>
     </message>
@@ -3259,77 +3194,77 @@ Do you realy want to leave this room?</source>
         <translation type="obsolete">Pokaż transporty</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3527"/>
+        <location filename="jabbim.py" line="3530"/>
         <source>Commands</source>
         <translation type="unfinished">Komendy</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3531"/>
+        <location filename="jabbim.py" line="3534"/>
         <source>Send file</source>
         <translation type="unfinished">Wyślij plik</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3600"/>
+        <location filename="jabbim.py" line="3603"/>
         <source>I&apos;m here</source>
         <translation type="unfinished">Jestem tutaj</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3601"/>
+        <location filename="jabbim.py" line="3604"/>
         <source>Doing something important. Message me later.</source>
         <translation type="unfinished">Robę coś ważnego. Napisz później.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3602"/>
+        <location filename="jabbim.py" line="3605"/>
         <source>Chat with me!</source>
         <translation type="unfinished">Pogadajmy!</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3603"/>
+        <location filename="jabbim.py" line="3606"/>
         <source>Leave a message. Beep</source>
         <translation type="unfinished">Zostaw wiadomość. Piiiip</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3604"/>
+        <location filename="jabbim.py" line="3607"/>
         <source>Doing something else for a moment.</source>
         <translation type="unfinished">Przez chwilę robię coś innego.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3664"/>
+        <location filename="jabbim.py" line="3667"/>
         <source>Hide / Show</source>
         <translation type="unfinished">Ukryj / Pokaż</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3665"/>
+        <location filename="jabbim.py" line="3668"/>
         <source>Quit</source>
         <translation type="unfinished">Wyjdź</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3713"/>
+        <location filename="jabbim.py" line="3716"/>
         <source>Status</source>
         <translation type="unfinished">Status</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3912"/>
+        <location filename="jabbim.py" line="3915"/>
         <source>Add message</source>
         <translation type="unfinished">Dodaj wiadomość</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3914"/>
+        <location filename="jabbim.py" line="3917"/>
         <source>Manage messages</source>
         <translation type="unfinished">Zarządzaj wiadomościami</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3916"/>
+        <location filename="jabbim.py" line="3919"/>
         <source>Log out</source>
         <translation type="unfinished">Wyloguj</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4358"/>
+        <location filename="jabbim.py" line="4361"/>
         <source> invites you to conference </source>
         <translation type="unfinished"> zaprasza Cię do konferencji </translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4360"/>
+        <location filename="jabbim.py" line="4363"/>
         <source>Reason: </source>
         <translation type="unfinished">Powód: </translation>
     </message>
@@ -3354,42 +3289,42 @@ Do you realy want to leave this room?</source>
         <translation type="unfinished">Usuń zakładkę</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5143"/>
+        <location filename="jabbim.py" line="5146"/>
         <source>Connecting to the server...</source>
         <translation type="unfinished">Łączenie z serwerem...</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5180"/>
+        <location filename="jabbim.py" line="5183"/>
         <source>Login information</source>
         <translation type="unfinished">Informacje o logowaniu</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5180"/>
+        <location filename="jabbim.py" line="5183"/>
         <source>Save current login information?</source>
         <translation type="unfinished">Zachować aktualne informacje logowania?</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5383"/>
+        <location filename="jabbim.py" line="5386"/>
         <source>Bad Jabber ID or password.</source>
         <translation type="unfinished">Nieprawidłowy Jabber ID lub hasło.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5386"/>
+        <location filename="jabbim.py" line="5389"/>
         <source>Server is not found.</source>
         <translation type="unfinished">Serwer nie został znaleziony.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5453"/>
+        <location filename="jabbim.py" line="5456"/>
         <source>You are now offline.</source>
         <translation type="unfinished">Jesteś wylogowany.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5466"/>
+        <location filename="jabbim.py" line="5469"/>
         <source>Connection lost! </source>
         <translation type="unfinished">Utracono połączenie! </translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5466"/>
+        <location filename="jabbim.py" line="5469"/>
         <source>Trying to reconnect ..  </source>
         <translation type="unfinished">Próba ponownego połączenia..  </translation>
     </message>
@@ -3404,7 +3339,7 @@ Do you realy want to leave this room?</source>
         <translation type="unfinished">Transfer plików</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2719"/>
+        <location filename="jabbim.py" line="2722"/>
         <source>Choose files</source>
         <translation type="unfinished">Wybierz pliki</translation>
     </message>
@@ -3464,12 +3399,12 @@ Do you realy want to leave this room?</source>
         <translation type="obsolete">chce zobaczyć Twój status.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3587"/>
+        <location filename="jabbim.py" line="3590"/>
         <source>Become invisible</source>
         <translation type="unfinished">Stał się niewidoczny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3584"/>
+        <location filename="jabbim.py" line="3587"/>
         <source>Become visible</source>
         <translation type="unfinished">Stał się widoczny</translation>
     </message>
@@ -3499,7 +3434,7 @@ Do you realy want to leave this room?</source>
         <translation type="obsolete">Nowa nazwa:</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4369"/>
+        <location filename="jabbim.py" line="4372"/>
         <source>Decline</source>
         <translation type="unfinished">Odrzuć</translation>
     </message>
@@ -3584,627 +3519,627 @@ Do you realy want to leave this room?</source>
         <translation type="unfinished">Cześć! Dodaję Cię do mojego rostera przez klienta Jabbim! Proszę autoryzuj mnie abym mógł widziec kiedy jesteś dostępny(a). Dzięki!</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2083"/>
+        <location filename="jabbim.py" line="2086"/>
         <source>Jabbim is connecting to the server.</source>
         <translation type="unfinished">Jabbim łączy się z serwerem.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2370"/>
+        <location filename="jabbim.py" line="2373"/>
         <source>afraid</source>
         <translation type="unfinished">wystraszony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2371"/>
+        <location filename="jabbim.py" line="2374"/>
         <source>amazed</source>
         <translation type="unfinished">zdziwiony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2372"/>
+        <location filename="jabbim.py" line="2375"/>
         <source>angry</source>
         <translation type="unfinished">zły</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2373"/>
+        <location filename="jabbim.py" line="2376"/>
         <source>annoyed</source>
         <translation type="unfinished">zirytowany</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2374"/>
+        <location filename="jabbim.py" line="2377"/>
         <source>anxious</source>
         <translation type="unfinished">zaniepokojony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2375"/>
+        <location filename="jabbim.py" line="2378"/>
         <source>aroused</source>
         <translation type="unfinished">podniecony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2376"/>
+        <location filename="jabbim.py" line="2379"/>
         <source>ashamed</source>
         <translation type="unfinished">zawstydzony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2377"/>
+        <location filename="jabbim.py" line="2380"/>
         <source>bored</source>
         <translation type="unfinished">znudzony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2378"/>
+        <location filename="jabbim.py" line="2381"/>
         <source>brave</source>
         <translation type="unfinished">dzielny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2379"/>
+        <location filename="jabbim.py" line="2382"/>
         <source>calm</source>
         <translation type="unfinished">spokojny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2380"/>
+        <location filename="jabbim.py" line="2383"/>
         <source>cold</source>
         <translation type="unfinished">oziębły</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2381"/>
+        <location filename="jabbim.py" line="2384"/>
         <source>confused</source>
         <translation type="unfinished">zdezorientowany</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2382"/>
+        <location filename="jabbim.py" line="2385"/>
         <source>contented</source>
         <translation type="unfinished">zadowolony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2383"/>
+        <location filename="jabbim.py" line="2386"/>
         <source>cranky</source>
         <translation type="unfinished">zakręcony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2384"/>
+        <location filename="jabbim.py" line="2387"/>
         <source>curious</source>
         <translation type="unfinished">ciekawski</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2385"/>
+        <location filename="jabbim.py" line="2388"/>
         <source>depressed</source>
         <translation type="unfinished">przygnębiony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2386"/>
+        <location filename="jabbim.py" line="2389"/>
         <source>disappointed</source>
         <translation type="unfinished">rozczarowany</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2387"/>
+        <location filename="jabbim.py" line="2390"/>
         <source>disgusted</source>
         <translation type="unfinished">zdegustowany</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2388"/>
+        <location filename="jabbim.py" line="2391"/>
         <source>distracted</source>
         <translation type="unfinished">roztargniony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2389"/>
+        <location filename="jabbim.py" line="2392"/>
         <source>embarrassed</source>
         <translation type="unfinished">zakłopotany</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2390"/>
+        <location filename="jabbim.py" line="2393"/>
         <source>excited</source>
         <translation type="unfinished">podekscytowany</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2391"/>
+        <location filename="jabbim.py" line="2394"/>
         <source>flirtatious</source>
         <translation type="unfinished">zalotny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2392"/>
+        <location filename="jabbim.py" line="2395"/>
         <source>frustrated</source>
         <translation type="unfinished">sfrustrowany</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2393"/>
+        <location filename="jabbim.py" line="2396"/>
         <source>grumpy</source>
         <translation type="unfinished">naburmuszony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2394"/>
+        <location filename="jabbim.py" line="2397"/>
         <source>guilty</source>
         <translation type="unfinished">winny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2395"/>
+        <location filename="jabbim.py" line="2398"/>
         <source>happy</source>
         <translation type="unfinished">szczęśliwy</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2396"/>
+        <location filename="jabbim.py" line="2399"/>
         <source>hot</source>
         <translation type="unfinished">gorący</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2397"/>
+        <location filename="jabbim.py" line="2400"/>
         <source>humbled</source>
         <translation type="unfinished">skromny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2398"/>
+        <location filename="jabbim.py" line="2401"/>
         <source>humiliated</source>
         <translation type="unfinished">upokorzony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2399"/>
+        <location filename="jabbim.py" line="2402"/>
         <source>hungry</source>
         <translation type="unfinished">głodny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2400"/>
+        <location filename="jabbim.py" line="2403"/>
         <source>hurt</source>
         <translation type="unfinished">zraniony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2401"/>
+        <location filename="jabbim.py" line="2404"/>
         <source>impressed</source>
         <translation type="unfinished">pod wrażeniem</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2402"/>
+        <location filename="jabbim.py" line="2405"/>
         <source>in_awe</source>
         <translation type="unfinished">podziw</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2403"/>
+        <location filename="jabbim.py" line="2406"/>
         <source>in_love</source>
         <translation type="unfinished">zakochany</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2404"/>
+        <location filename="jabbim.py" line="2407"/>
         <source>indignant</source>
         <translation type="unfinished">oburzony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2405"/>
+        <location filename="jabbim.py" line="2408"/>
         <source>interested</source>
         <translation type="unfinished">zainteresowany</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2406"/>
+        <location filename="jabbim.py" line="2409"/>
         <source>intoxicated</source>
         <translation type="unfinished">nietrzeźwy</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2407"/>
+        <location filename="jabbim.py" line="2410"/>
         <source>invincible</source>
         <translation type="unfinished">niezwyciężony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2408"/>
+        <location filename="jabbim.py" line="2411"/>
         <source>jealous</source>
         <translation type="unfinished">zazdrosny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2409"/>
+        <location filename="jabbim.py" line="2412"/>
         <source>lonely</source>
         <translation type="unfinished">samotny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2410"/>
+        <location filename="jabbim.py" line="2413"/>
         <source>mean</source>
         <translation type="unfinished">skąpy</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2411"/>
+        <location filename="jabbim.py" line="2414"/>
         <source>moody</source>
         <translation type="unfinished">humorzasty</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2412"/>
+        <location filename="jabbim.py" line="2415"/>
         <source>nervous</source>
         <translation type="unfinished">nerwowy</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2413"/>
+        <location filename="jabbim.py" line="2416"/>
         <source>neutral</source>
         <translation type="unfinished">neutralny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2414"/>
+        <location filename="jabbim.py" line="2417"/>
         <source>offended</source>
         <translation type="unfinished">obrażony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2415"/>
+        <location filename="jabbim.py" line="2418"/>
         <source>playful</source>
         <translation type="unfinished">figlarny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2416"/>
+        <location filename="jabbim.py" line="2419"/>
         <source>proud</source>
         <translation type="unfinished">dumny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2417"/>
+        <location filename="jabbim.py" line="2420"/>
         <source>relieved</source>
         <translation type="unfinished">odczuwa ulgę</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2418"/>
+        <location filename="jabbim.py" line="2421"/>
         <source>remorseful</source>
         <translation type="unfinished">skruszony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2419"/>
+        <location filename="jabbim.py" line="2422"/>
         <source>restless</source>
         <translation type="unfinished">niespokojny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2420"/>
+        <location filename="jabbim.py" line="2423"/>
         <source>sad</source>
         <translation type="unfinished">smutny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2421"/>
+        <location filename="jabbim.py" line="2424"/>
         <source>sarcastic</source>
         <translation type="unfinished">sarkastyczny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2422"/>
+        <location filename="jabbim.py" line="2425"/>
         <source>serious</source>
         <translation type="unfinished">poważny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2423"/>
+        <location filename="jabbim.py" line="2426"/>
         <source>shocked</source>
         <translation type="unfinished">zszokowany</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2424"/>
+        <location filename="jabbim.py" line="2427"/>
         <source>shy</source>
         <translation type="unfinished">nieśmiały</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2425"/>
+        <location filename="jabbim.py" line="2428"/>
         <source>sick</source>
         <translation type="unfinished">chory</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2426"/>
+        <location filename="jabbim.py" line="2429"/>
         <source>sleepy</source>
         <translation type="unfinished">śpiący</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2427"/>
+        <location filename="jabbim.py" line="2430"/>
         <source>stressed</source>
         <translation type="unfinished">zestresowany</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2428"/>
+        <location filename="jabbim.py" line="2431"/>
         <source>surprised</source>
         <translation type="unfinished">zaskoczony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2429"/>
+        <location filename="jabbim.py" line="2432"/>
         <source>thirsty</source>
         <translation type="unfinished">spragniony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2432"/>
+        <location filename="jabbim.py" line="2435"/>
         <source>worried</source>
         <translation type="unfinished">zmartwiony</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2435"/>
+        <location filename="jabbim.py" line="2438"/>
         <source>buying_groceries</source>
         <translation type="unfinished">kupujący warzywa</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2436"/>
+        <location filename="jabbim.py" line="2439"/>
         <source>cleaning</source>
         <translation type="unfinished">sprzątanie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2437"/>
+        <location filename="jabbim.py" line="2440"/>
         <source>cooking</source>
         <translation type="unfinished">gotowanie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2438"/>
+        <location filename="jabbim.py" line="2441"/>
         <source>doing_maintenance</source>
         <translation type="unfinished">konserwacja</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2439"/>
+        <location filename="jabbim.py" line="2442"/>
         <source>doing_the_dishes</source>
         <translation type="unfinished">mycie_naczyń</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2440"/>
+        <location filename="jabbim.py" line="2443"/>
         <source>doing_the_laundry</source>
         <translation type="unfinished">pranie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2441"/>
+        <location filename="jabbim.py" line="2444"/>
         <source>gardening</source>
         <translation type="unfinished">w_ogrodzie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2442"/>
+        <location filename="jabbim.py" line="2445"/>
         <source>running_an_errand</source>
         <translation type="unfinished">coś_załatwia</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2443"/>
+        <location filename="jabbim.py" line="2446"/>
         <source>walking_the_dog</source>
         <translation type="unfinished">wyprowadza_psa</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2444"/>
+        <location filename="jabbim.py" line="2447"/>
         <source>having_a_beer</source>
         <translation type="unfinished">przy_piwie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2445"/>
+        <location filename="jabbim.py" line="2448"/>
         <source>having_coffee</source>
         <translation type="unfinished">przy_kawie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2446"/>
+        <location filename="jabbim.py" line="2449"/>
         <source>having_tea</source>
         <translation type="unfinished">przy_herbacie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2447"/>
+        <location filename="jabbim.py" line="2450"/>
         <source>having_a_snack</source>
         <translation type="unfinished">przekąska</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2448"/>
+        <location filename="jabbim.py" line="2451"/>
         <source>having_breakfast</source>
         <translation type="unfinished">na_śniadaniu</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2449"/>
+        <location filename="jabbim.py" line="2452"/>
         <source>having_dinner</source>
         <translation type="unfinished">na_obiedzie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2450"/>
+        <location filename="jabbim.py" line="2453"/>
         <source>having_lunch</source>
         <translation type="unfinished">na_lunchu</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2484"/>
+        <location filename="jabbim.py" line="2487"/>
         <source>cycling</source>
         <translation type="unfinished">na_rowerze</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2452"/>
+        <location filename="jabbim.py" line="2455"/>
         <source>hiking</source>
         <translation type="unfinished">na_wędrówce</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2453"/>
+        <location filename="jabbim.py" line="2456"/>
         <source>jogging</source>
         <translation type="unfinished">jogging</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2454"/>
+        <location filename="jabbim.py" line="2457"/>
         <source>playing_sports</source>
         <translation type="unfinished">uprawia_sport</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2455"/>
+        <location filename="jabbim.py" line="2458"/>
         <source>running</source>
         <translation type="unfinished">biega</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2456"/>
+        <location filename="jabbim.py" line="2459"/>
         <source>skiing</source>
         <translation type="unfinished">na_nartach</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2457"/>
+        <location filename="jabbim.py" line="2460"/>
         <source>swimming</source>
         <translation type="unfinished">pływa</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2458"/>
+        <location filename="jabbim.py" line="2461"/>
         <source>working_out</source>
         <translation type="unfinished">trenuje</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2459"/>
+        <location filename="jabbim.py" line="2462"/>
         <source>at_the_spa</source>
         <translation type="unfinished">w_uzdrowisku</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2460"/>
+        <location filename="jabbim.py" line="2463"/>
         <source>brushing_teeth</source>
         <translation type="unfinished">myje_zęby</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2461"/>
+        <location filename="jabbim.py" line="2464"/>
         <source>getting_a_haircut</source>
         <translation type="unfinished">u_fryzjera</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2462"/>
+        <location filename="jabbim.py" line="2465"/>
         <source>shaving</source>
         <translation type="unfinished">golenie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2463"/>
+        <location filename="jabbim.py" line="2466"/>
         <source>taking_a_bath</source>
         <translation type="unfinished">w_kąpieli</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2464"/>
+        <location filename="jabbim.py" line="2467"/>
         <source>taking_a_shower</source>
         <translation type="unfinished">pod_prysznicem</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2467"/>
+        <location filename="jabbim.py" line="2470"/>
         <source>on_vacation</source>
         <translation type="unfinished">na_wakacjach</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2468"/>
+        <location filename="jabbim.py" line="2471"/>
         <source>scheduled_holiday</source>
         <translation type="unfinished">zaplanowane_wakacje</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2469"/>
+        <location filename="jabbim.py" line="2472"/>
         <source>sleeping</source>
         <translation type="unfinished">śpi</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2470"/>
+        <location filename="jabbim.py" line="2473"/>
         <source>gaming</source>
         <translation type="unfinished">gra</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2471"/>
+        <location filename="jabbim.py" line="2474"/>
         <source>going_out</source>
         <translation type="unfinished">wychodzi</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2472"/>
+        <location filename="jabbim.py" line="2475"/>
         <source>partying</source>
         <translation type="unfinished">imprezuje</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2473"/>
+        <location filename="jabbim.py" line="2476"/>
         <source>reading</source>
         <translation type="unfinished">czyta</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2474"/>
+        <location filename="jabbim.py" line="2477"/>
         <source>rehearsing</source>
         <translation type="unfinished">na_próbie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2475"/>
+        <location filename="jabbim.py" line="2478"/>
         <source>shopping</source>
         <translation type="unfinished">na_zakupach</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2476"/>
+        <location filename="jabbim.py" line="2479"/>
         <source>socializing</source>
         <translation type="unfinished">udziela_się_towarzysko</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2477"/>
+        <location filename="jabbim.py" line="2480"/>
         <source>sunbathing</source>
         <translation type="unfinished">opalanie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2478"/>
+        <location filename="jabbim.py" line="2481"/>
         <source>watching_tv</source>
         <translation type="unfinished">TV</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2479"/>
+        <location filename="jabbim.py" line="2482"/>
         <source>watching_a_movie</source>
         <translation type="unfinished">ogląda film</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2480"/>
+        <location filename="jabbim.py" line="2483"/>
         <source>in_real_life</source>
         <translation type="unfinished">w_prawdziwym_życiu</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2481"/>
+        <location filename="jabbim.py" line="2484"/>
         <source>on_the_phone</source>
         <translation type="unfinished">na_telefonie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2482"/>
+        <location filename="jabbim.py" line="2485"/>
         <source>on_video_phone</source>
         <translation type="unfinished">na_video-telefonie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2483"/>
+        <location filename="jabbim.py" line="2486"/>
         <source>commuting</source>
         <translation type="unfinished">w_drodze</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2485"/>
+        <location filename="jabbim.py" line="2488"/>
         <source>driving</source>
         <translation type="unfinished">za_kierownicą</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2486"/>
+        <location filename="jabbim.py" line="2489"/>
         <source>in_a_car</source>
         <translation type="unfinished">w_samochodzie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2487"/>
+        <location filename="jabbim.py" line="2490"/>
         <source>on_a_bus</source>
         <translation type="unfinished">w_autobusie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2488"/>
+        <location filename="jabbim.py" line="2491"/>
         <source>on_a_plane</source>
         <translation type="unfinished">w_samolocie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2489"/>
+        <location filename="jabbim.py" line="2492"/>
         <source>on_a_train</source>
         <translation type="unfinished">w_pociągu</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2490"/>
+        <location filename="jabbim.py" line="2493"/>
         <source>on_a_trip</source>
         <translation type="unfinished">na_wycieczce</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2491"/>
+        <location filename="jabbim.py" line="2494"/>
         <source>walking</source>
         <translation type="unfinished">na_spacerze</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2492"/>
+        <location filename="jabbim.py" line="2495"/>
         <source>coding</source>
         <translation type="unfinished">programuje</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2493"/>
+        <location filename="jabbim.py" line="2496"/>
         <source>in_a_meeting</source>
         <translation type="unfinished">na_spotkaniu</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2494"/>
+        <location filename="jabbim.py" line="2497"/>
         <source>studying</source>
         <translation type="unfinished">uczy_się</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2497"/>
+        <location filename="jabbim.py" line="2500"/>
         <source>writing</source>
         <translation type="unfinished">pisze</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2497"/>
+        <location filename="jabbim.py" line="2500"/>
         <source>doing_chores</source>
         <translation type="unfinished">obowiązki_domowe</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2498"/>
+        <location filename="jabbim.py" line="2501"/>
         <source>drinking</source>
         <translation type="unfinished">pije</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2499"/>
+        <location filename="jabbim.py" line="2502"/>
         <source>eating</source>
         <translation type="unfinished">je</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2500"/>
+        <location filename="jabbim.py" line="2503"/>
         <source>exercising</source>
         <translation type="unfinished">ćwiczy</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2501"/>
+        <location filename="jabbim.py" line="2504"/>
         <source>grooming</source>
         <translation type="unfinished">oporządza</translation>
     </message>
@@ -4214,87 +4149,87 @@ Do you realy want to leave this room?</source>
         <translation type="obsolete">ma_spotkanie</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2503"/>
+        <location filename="jabbim.py" line="2506"/>
         <source>inactive</source>
         <translation type="unfinished">nieaktywny</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2504"/>
+        <location filename="jabbim.py" line="2507"/>
         <source>relaxing</source>
         <translation type="unfinished">relaksuje_się</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2505"/>
+        <location filename="jabbim.py" line="2508"/>
         <source>talking</source>
         <translation type="unfinished">rozmawia</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2506"/>
+        <location filename="jabbim.py" line="2509"/>
         <source>traveling</source>
         <translation type="unfinished">podróżuje</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2507"/>
+        <location filename="jabbim.py" line="2510"/>
         <source>working</source>
         <translation type="unfinished">pracuje</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2916"/>
+        <location filename="jabbim.py" line="2919"/>
         <source>Name:</source>
         <translation type="unfinished">Nazwa:</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2939"/>
+        <location filename="jabbim.py" line="2942"/>
         <source>Subscription:</source>
         <translation type="unfinished">Subskrypcja:</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2935"/>
+        <location filename="jabbim.py" line="2938"/>
         <source> from</source>
         <translation type="unfinished"> od</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2937"/>
+        <location filename="jabbim.py" line="2940"/>
         <source> to</source>
         <translation type="unfinished"> do</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2939"/>
+        <location filename="jabbim.py" line="2942"/>
         <source> none</source>
         <translation type="unfinished"> żadna</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2950"/>
+        <location filename="jabbim.py" line="2953"/>
         <source>Priority</source>
         <translation type="unfinished">Priorytet</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3497"/>
+        <location filename="jabbim.py" line="3500"/>
         <source>Change profile photo</source>
         <translation type="unfinished">Zmień obrazek profilu</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3748"/>
+        <location filename="jabbim.py" line="3751"/>
         <source>Mood</source>
         <translation type="unfinished">Nastrój</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3780"/>
+        <location filename="jabbim.py" line="3783"/>
         <source>Activity</source>
         <translation type="unfinished">Aktywność</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4274"/>
+        <location filename="jabbim.py" line="4277"/>
         <source>Chat with new user</source>
         <translation type="unfinished">Rozmawiaj z nowym użytkownikiem</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4274"/>
+        <location filename="jabbim.py" line="4277"/>
         <source>Enter Jabber ID:</source>
         <translation type="unfinished">Wprowadź Jabber ID:</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4282"/>
+        <location filename="jabbim.py" line="4285"/>
         <source>is not valid Jabber ID</source>
         <translation type="unfinished">nie jest poprawnym Jabber ID</translation>
     </message>
@@ -4314,22 +4249,22 @@ Do you realy want to leave this room?</source>
         <translation type="unfinished">Nie masz uprawnień do wykonania tego polecenia.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5147"/>
+        <location filename="jabbim.py" line="5150"/>
         <source>Bad JID</source>
         <translation type="unfinished">Nieprawidłowy JID</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5147"/>
+        <location filename="jabbim.py" line="5150"/>
         <source>You have an error in your Jabber ID.</source>
         <translation type="unfinished">Błąd w Twoim Jabber ID.</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3656"/>
+        <location filename="jabbim.py" line="3659"/>
         <source>Connect</source>
         <translation type="unfinished">Połącz</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4367"/>
+        <location filename="jabbim.py" line="4370"/>
         <source>Nickname:</source>
         <translation type="unfinished">Nick:</translation>
     </message>
@@ -4344,12 +4279,12 @@ Do you realy want to leave this room?</source>
         <translation type="unfinished">Zamknij</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2077"/>
+        <location filename="jabbim.py" line="2080"/>
         <source>Yes</source>
         <translation type="unfinished">Tak</translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2078"/>
+        <location filename="jabbim.py" line="2081"/>
         <source>No</source>
         <translation type="unfinished">Nie</translation>
     </message>
@@ -4474,11 +4409,6 @@ Do you realy want to leave this room?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="1919"/>
-        <source>files</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="jabbim.py" line="2022"/>
         <source>Accept</source>
         <translation type="unfinished"></translation>
@@ -4504,57 +4434,57 @@ Do you realy want to leave this room?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="4026"/>
+        <location filename="jabbim.py" line="4029"/>
         <source>Enter status message</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2434"/>
+        <location filename="jabbim.py" line="2437"/>
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2465"/>
+        <location filename="jabbim.py" line="2468"/>
         <source>day_off</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2466"/>
+        <location filename="jabbim.py" line="2469"/>
         <source>hanging_out</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="2683"/>
+        <location filename="jabbim.py" line="2686"/>
         <source>System is suspended</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3044"/>
+        <location filename="jabbim.py" line="3047"/>
         <source>User is chatting in:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3942"/>
+        <location filename="jabbim.py" line="3945"/>
         <source>Enter mood message</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="3976"/>
+        <location filename="jabbim.py" line="3979"/>
         <source>Enter activity message</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5150"/>
+        <location filename="jabbim.py" line="5153"/>
         <source>Empty password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5150"/>
+        <location filename="jabbim.py" line="5153"/>
         <source>Your password is empty.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="jabbim.py" line="5388"/>
+        <location filename="jabbim.py" line="5391"/>
         <source>Connection to server failed. Check your Jabberd ID and try it again.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -4781,6 +4711,159 @@ Do you realy want to leave this room?</source>
     <message>
         <location filename="include/utils.py" line="600"/>
         <source>Show Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="jabbim.py" line="1919"/>
+        <source>%n files</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="include/utils.py" line="684"/>
+        <source>%n year</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="include/utils.py" line="684"/>
+        <source>%n week</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="include/utils.py" line="684"/>
+        <source>%n day</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="include/utils.py" line="684"/>
+        <source>%n hour</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="include/utils.py" line="684"/>
+        <source>%n minute</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="include/utils.py" line="684"/>
+        <source>%n second</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="363"/>
+        <source>Emoticons</source>
+        <translation type="unfinished">Emotikony</translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="368"/>
+        <source>Chat theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="374"/>
+        <source>Get more!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="374"/>
+        <source>Groupchat theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="380"/>
+        <source>Roster style</source>
+        <translation type="unfinished">Styl rostera</translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="385"/>
+        <source>Jabbim theme</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="60"/>
+        <source>Informations</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="60"/>
+        <source>You have to be connected to download new addons.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="256"/>
+        <source>Name: </source>
+        <translation type="unfinished">Nazwa: </translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="129"/>
+        <source>Don&apos;t use themes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="279"/>
+        <source>Variant: </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="351"/>
+        <source>User</source>
+        <translation type="unfinished">Użytkownik</translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="350"/>
+        <source>Message for me</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="351"/>
+        <source>Second message for me</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="352"/>
+        <source>User is now away</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="354"/>
+        <source>Me</source>
+        <translation type="unfinished">Ja</translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="353"/>
+        <source>Message for user</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="widgets/preferences/view.py" line="354"/>
+        <source>Second message for user</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -6352,102 +6435,72 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>vcardEditorDialog</name>
     <message>
-        <location filename="widgets/vcardeditor.py" line="25"/>
+        <location filename="widgets/vcardeditor.py" line="24"/>
         <source>vCard</source>
         <translation type="unfinished">Wizytówka (vCard)</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="27"/>
+        <location filename="widgets/vcardeditor.py" line="26"/>
         <source>VCard Editor</source>
         <translation type="unfinished">Edycja wizytówki</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="201"/>
+        <location filename="widgets/vcardeditor.py" line="200"/>
         <source>Can&apos;t download vCard of this contact.</source>
         <translation type="unfinished">Nie można pobrać wizytówki tego kontaktu.</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="290"/>
+        <location filename="widgets/vcardeditor.py" line="289"/>
         <source>Unable to retrieve.</source>
         <translation type="unfinished">Nie można odnaleźć.</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="308"/>
+        <location filename="widgets/vcardeditor.py" line="307"/>
         <source>Avatar</source>
         <translation type="unfinished">Avatar</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="308"/>
+        <location filename="widgets/vcardeditor.py" line="307"/>
         <source>Your avatar was too big. He had to be resized to smaller size.</source>
         <translation type="unfinished">Twój avatar jest za duży. Musisz go pomniejszyć.</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="471"/>
+        <location filename="widgets/vcardeditor.py" line="470"/>
         <source>Saving VCard</source>
         <translation type="unfinished">Zpisywanie wizytówki</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="498"/>
+        <location filename="widgets/vcardeditor.py" line="497"/>
         <source>Can&apos;t send VCard to the server</source>
         <translation type="unfinished">Nie można wysłać wizytówki na serwer</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="209"/>
+        <location filename="widgets/vcardeditor.py" line="208"/>
         <source>Name:</source>
         <translation type="unfinished">Imię:</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="210"/>
+        <location filename="widgets/vcardeditor.py" line="209"/>
         <source>Operating System:</source>
         <translation type="unfinished">System operacyjny:</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="211"/>
+        <location filename="widgets/vcardeditor.py" line="210"/>
         <source>Version:</source>
         <translation type="unfinished">Wersja:</translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="230"/>
+        <location filename="widgets/vcardeditor.py" line="229"/>
         <source>Offline Information</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="232"/>
+        <location filename="widgets/vcardeditor.py" line="231"/>
         <source>Last Active:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="widgets/vcardeditor.py" line="274"/>
-        <source>year</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/vcardeditor.py" line="274"/>
-        <source>week</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/vcardeditor.py" line="274"/>
-        <source>day</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/vcardeditor.py" line="274"/>
-        <source>hour</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/vcardeditor.py" line="274"/>
-        <source>minute</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/vcardeditor.py" line="274"/>
-        <source> second</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="widgets/vcardeditor.py" line="235"/>
+        <location filename="widgets/vcardeditor.py" line="234"/>
         <source>Last Status:</source>
         <translation type="unfinished"></translation>
     </message>
