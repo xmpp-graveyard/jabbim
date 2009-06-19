@@ -1470,7 +1470,7 @@ class clientClass(pyxl.client.Client):
 					user=self.main.ui.roster.getNameByJID(j)
 					test+=" <br/> "+user
 
-				widget.setText(mainWindow.tr('Users ')+" "+unicode(test)+' '+mainWindow.tr("want to see your status. Do you want to authorize these users?"))
+				widget.setText(unicode(mainWindow.tr('Users '))+" "+unicode(test)+' '+unicode(mainWindow.tr("want to see your status. Do you want to authorize these users?")))
 				widget.setAcceptText(mainWindow.tr("Yes"))
 				widget.setRejectText(mainWindow.tr("No"))
 				widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/ok.png'))
