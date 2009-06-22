@@ -172,7 +172,7 @@ class jabbimServiceManager(QtGui.QDialog):
 		self.addService(self.tr("Jabber Disk"),"disk.jabbim.cz",self.tr("<b>Jabber Disk</b><br/>Jabber Disk allows you to upload files to Jabbim server where they can be downloaded by your friends."),services["disk.jabbim.cz"])
 		self.addService(self.tr('Jabbim News'), 'news.jabbim.cz', self.tr('<b>Jabbim News</b><br/>RSS service with custom RSS feeds for Jabbim VIP users'), services['news.jabbim.cz'])
 		self.addService(self.tr("SMS Vodafone/O2"),"sms.netlab.cz",self.tr("<b>SMS Vodafone/O2</b><br/>SMS Vodafone/O2 allows you to send SMS messages straight from your Jabbim Client."),transports["sms.netlab.cz"])
-		self.addService(self.tr("Facebook Transport"),"fb.jabbim.cz",self.tr("<b>Facebook Transport</b><br/>Facebook Transport allows you to chat with your friends who use Facebook Chat."),transports["fb.jabbim.cz"])
+		self.addService(self.tr("Facebook"),"fb.jabbim.cz",self.tr("<b>Facebook</b><br/>Facebook transport allows you to chat with your friends who use Facebook Chat."),transports["fb.jabbim.cz"])
 		if transports["icq.netlab.cz"]:
 			self.addService(self.tr("ICQ"),"icq.netlab.cz",self.tr("<b>ICQ</b><br/>ICQ transport allows you to chat with your friends who use ICQ."),transports["icq.netlab.cz"])
 		elif transports["icq.jabbim.cz"]:
