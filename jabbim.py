@@ -990,6 +990,7 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.splashProgress.setValue(100)
 		self.main.ui.loginInfo.setText(mainWindow.tr("Jabbim is ready."))
 		self.main.ui.rosterStackedWidget.setCurrentIndex(1)
+		self.main.ui.splashImage.hide()
 		self.main.ui.menuPlugins.clear() # clear plugins menu
 		for plug in self.main.plugins.itervalues():
 			if plug['module']:
@@ -5141,6 +5142,8 @@ class mainWindow(QtGui.QMainWindow):
 			return
 		self.ui.selfAvatar.setPixmap(QtGui.QPixmap('images/32x32/apps/jabbim.png'))
 		self.ui.rosterStackedWidget.setCurrentIndex(2)
+		self.ui.login_headerLabel.hide()
+		self.ui.splashImage.show()
 		self.ui.login_connect.setEnabled(False)
 		self.ui.profilesList.setEnabled(False)
 		self.ui.loginInfo.setText(self.tr("Connecting to the server..."))
@@ -5409,6 +5412,7 @@ class mainWindow(QtGui.QMainWindow):
 			return
 		self.config.write()
 		MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
+		MainWindow.ui.login_headerLabel.show()
 		MainWindow.ui.splashProgress.setValue(0)
 		#MainWindow.ui.showOffline.hide()
 		MainWindow.ui.actionAdd_Contact.setEnabled(False)

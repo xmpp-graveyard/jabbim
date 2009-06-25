@@ -667,23 +667,22 @@ def elapsed_time(mainWindow, seconds, separator=' '):
 	# the pieces of time to iterate over (days, hours, minutes, etc)
 	# - the first piece in each tuple is the suffix (d, h, w)
 	# - the second piece is the length in seconds (a day is 60s * 60m * 24h)
-	parts = [(suffixes[0], 60 * 60 * 24 * 7 * 52),
-		  (suffixes[1], 60 * 60 * 24 * 7),
-		  (suffixes[2], 60 * 60 * 24),
-		  (suffixes[3], 60 * 60),
-		  (suffixes[4], 60),
-		  (suffixes[5], 1)]
+	parts = [60 * 60 * 24 * 7 * 52,
+		     60 * 60 * 24 * 7,
+		     60 * 60 * 24,
+		     60 * 60,
+		     60,
+		     1]
  
 	# for each time piece, grab the value and remaining seconds, and add it to
 	# the time string
 	i=0
-	for suffix, length in parts:
+	for length in parts:
 		value = seconds / length
 		if value > 0:
 			seconds = seconds % length
 			tim.append(unicode([mainWindow.tr('%n year',"",value),mainWindow.tr('%n week',"",value),mainWindow.tr('%n day',"",value),mainWindow.tr('%n hour',"",value),mainWindow.tr('%n minute',"",value),mainWindow.tr('%n second',"",value)][i] ))
-					       #(suffix, (suffix, suffix + 's')[value > 1])[add_s]))
-			i=i+1
+		i=i+1
 		if seconds < 1:
 			break
 	return separator.join(tim)
