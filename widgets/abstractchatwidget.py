@@ -378,18 +378,14 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		key=event.key()
 		if key!=QtCore.Qt.Key_Tab:
 			self.main().tabWord=None
-		if (key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter) and (event.modifiers() & QtCore.Qt.ControlModifier):
-			if self.main().main().config['sendByCtrl']=="True":
+		if (key == QtCore.Qt.Key_Return or key == QtCore.Qt.Key_Enter):
+			if bool(event.modifiers() & QtCore.Qt.ControlModifier) == (self.main().main().config['sendByCtrl'] == "True"):
 				self.main().sendButtonClicked()
 				event.accept()
 			else:
-				return QtGui.QTextEdit.keyPressEvent(self,event)
-		elif key==QtCore.Qt.Key_Return or key==QtCore.Qt.Key_Enter:
-			if self.main().main().config['sendByCtrl']=="False":
-				self.main().sendButtonClicked()
-				event.accept()
-			else:
-				return QtGui.QTextEdit.keyPressEvent(self,event)
+				# let QTextEdit insert a newline
+				new_event = QtGui.QKeyEvent(event.type(), key, QtCore.Qt.NoModifier, event.text(), event.isAutoRepeat(), event.count())
+				return QtGui.QTextEdit.keyPressEvent(self, new_event)
 		elif key == QtCore.Qt.Key_Up and  self.main().hindex > 0 and (event.modifiers() & QtCore.Qt.ControlModifier): 
 			self.main().hindex = self.main().hindex-1
 			self.main().ui.line.setText(self.main().sent[self.main().hindex])
