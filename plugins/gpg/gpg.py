@@ -5,103 +5,99 @@ from PyQt4 import QtCore, QtGui
 from urllib import quote, unquote
 from twisted.python import log
 from twisted.words.protocols.jabber import jid
+from pyme import core, constants, errors
 
 class config:
 	def __init__(self,main):
 		self.main=main
 		self.config={}
-		self.config['self_gpg_id']={'type':'text-single','label':self.main.tr("Your long GPG id"),'value':self.main.tr('AABBCCDDEEFF0011')}
-		self.config['passphrase']={'type':'text-private','label':self.main.tr("Passphrase"),'value':''}
 		self.config['gpg_enabled_list']={'type':'jid-list','label':self.main.tr("GPG is enabled for:"),'value':''}
-		self.config['remember_passphrase']={'type':'boolean','label':self.main.tr("Remember passphrase"),'value':''}
 
 class Plugin(plugins.PluginBase):
 	def __init__(self, main, homedir, plugindir):
 		plugins.PluginBase.__init__(self, main, homedir, plugindir)
 		self.fname = 'gpg'
 		self.installTranslator()
-		self.description = self.tr('CAREFUL!\n' +
-			'Plugin that allows you to use gnupg on linux.\n\n' +
-			'This plugin requires gpg and all used keys imported.\n' +
+		self.description = self.tr(
+			'Plugin that allows you to use PGP/GPG (or similar engine supported by GPGME).\n\n' +
+			'This plugin requires your gpg system to be setup already.\n' +
 			'If you enable this plugin, you can receive gpg encrypted messages ' +
-			'set gpg key ids for jids and select to which people you send encrypted messages.\n\n' +
-			'This version could be UNSECURE, it (optionally) stores your passphrase in plaintext and everytime you ' +
-			'decrypt a message, passphrase could be probably seen in /proc.')
+			'set gpg key ids for jids and select to which people you send encrypted messages.'
+		)
 		self.author = "Marek Hulan"
 		self.name = self.tr('GPG plugin')
-		self.version = '0.006'
+		self.version = '0.100'
 		self.category = ['misc']
 		self.url = 'http://dev.jabbim.cz/jabbim'
-		self.passphrase = None
 		self.configDialog=config(self)
 		if main:
 			self.registerHandler('on_message', self.on_message, priority = 4)
 
 			self.loadConfig()
 			self.key_dialog=self.loadDialog("%s/gpg_dialog.py" % self.pluginDir,self.main)
-
-			if self.config['remember_passphrase'] == 'False':
-				self.passphrase_required()
 		else:
 			self.loadConfig(homedir)
 
-	def passphrase_required(self):
-		event=self.main.events.addLineEditEvent()
-		event.setAcceptHandler(self.set_passphrase)
-		event.setRejectHandler(self.dont_set_passphrase)
-		widget=event.getWidgets()[0]
-		widget.setText('Type a passphrase for your GPG key')
-		widget.setEchoMode(2)
-		widget.setLabel('Passphrase:')
-		widget.setAcceptText(self.main.tr("OK"))
-		widget.setRejectText(self.main.tr("Cancel"))
-
-	def set_passphrase(self, phrase):
-		self.passphrase = phrase
-
-	def unset_passphrase(self):
-		self.passphrase = None
-
-	def dont_set_passphrase(self):
-		pass
+	# potreba kvuli op_decrypt_cb, o frazi se stara agent (s pinentry programem)
+	def passCallback(hint='', desc='', prev_bad='', hook=''):
+		return True
 
 	def on_message(self,msg):
 		if not msg.getGpgEncryptedBody() is None:
-			if self.config['remember_passphrase'] == 'False' and self.passphrase is None:
-				# neni zadna passphrase
-				# mela by vyskocit bublina, idealne spis pockat nez se pass zada
-				msg.setBody(self.tr('Can not decrypt, passphrase is missing') + "\n" +
-					"\n-----BEGIN PGP MESSAGE-----\n\n" +
-					msg.getGpgEncryptedBody() + "\n" + '-----END PGP MESSAGE-----')
-				if self.config['remember_passphrase'] == 'False':
-					self.passphrase_required()
-				return True
-			else:
-				passphrase = self.passphrase or self.config['passphrase']
+			cipher = core.Data("-----BEGIN PGP MESSAGE-----\n\n" +
+												 msg.getGpgEncryptedBody().encode('utf-8') +
+											   "\n-----END PGP MESSAGE-----")
+			cipher.seek(0,0)
+			c = core.Context()
+			c.set_armor(1)
+			c.set_passphrase_cb(self.passCallback)
 
-			lines = os.popen('echo "' + passphrase.encode('unicode-escape')  + "\n-----BEGIN PGP MESSAGE-----\n\n" +
-				msg.getGpgEncryptedBody().encode('unicode-escape').replace('\\n',"\n") + "\n" + '-----END PGP MESSAGE-----"' +
-				' | gpg --charset utf8 --yes --passphrase-fd 0 --decrypt --quiet').readlines()
-			message = string.join(lines, '')
+			try:
+				plain = core.Data()
+				c.op_decrypt(cipher, plain)
+				plain.seek(0,0)
+			except errors.GPGMEError, ex:
+				print ex.getstring()
+			
+			message = unicode(plain.read(),'utf-8')
+			print message
+
 			if not message:
-				msg.setBody(self.tr('Can not decrypt, bad passphrase or another problem') + "\n" +
+				msg.setBody(self.tr('Can not decrypt, agent problem? Here is original:') + "\n" +
 					"\n-----BEGIN PGP MESSAGE-----\n\n" +
 					msg.getGpgEncryptedBody() + "\n" + '-----END PGP MESSAGE-----')
-				if self.config['remember_passphrase'] == 'False':
-					self.passphrase_required()
 			else:
-				msg.setBody(message.rstrip("\n\x00"))
+				msg.setBody(message)
 		return True
 
 	def on_messageSend(self,msg):
 		for jid_with_resource in self.config['gpg_enabled_list']:
 			if (jid_with_resource == msg.to.userhost() or jid_with_resource == msg.to.full()) and self.config.has_key(msg.to.userhost()) and len(self.config[msg.to.userhost()]['long_key_id']) == 16:
-				lines = os.popen('echo "' + msg.getBody().encode('unicode-escape')  +
-					'"| gpg --charset utf8 --batch --yes --armor --no-version  --quiet --recipient ' +
-					self.config[msg.to.userhost()]['long_key_id'] + ' --trusted-key="' +
-					self.config[msg.to.userhost()]['long_key_id'] + '" --encrypt').readlines()
-				message = string.join(lines[2:-1], '')
-				msg.setGpgEncryptedBody(message)
+				
+				plain = core.Data(msg.getBody().encode('utf-8'))
+				cipher = core.Data()
+				c = core.Context()
+				c.set_armor(1)
+				c.op_keylist_start(self.config[msg.to.userhost()]['long_key_id'].encode(),0)
+				r = c.op_keylist_next()
+				if r == None:
+					# TODO: upozornit uzivatele, ze klic nebyl dle id nalezen
+					return False
+				else:
+					try:
+						c.op_encrypt([r], 1, plain, cipher)
+						cipher.seek(0,0)
+						message = cipher.read()
+					except errors.GPGMEError, ex:
+						print ex.getstring()
+						# TODO: upozornit uzivatele, ze sifrovani se nezdarilo
+						return False
+
+					# podle XEP 0027 je potreba odrezat hlavicky, lepsi zpusob?
+					lines = string.split(message, '\n')
+					message = string.join(lines[2:-2], '\n')
+
+					msg.setGpgEncryptedBody(message)
 		return msg
 
 	def keyAccepted(self):
