@@ -890,6 +890,10 @@ class clientClass(pyxl.client.Client):
 	def on_rosterx(self, frm, items, id, typ):
 		mainWindow = self.main
 		if typ == 'add':
+			if self.main.getJid(frm).host == "fb.jabbim.cz":
+				frm = self.main.getJid(frm)
+				self.rosterx(frm, items, id, typ)
+				return
 			if len(items)==1:
 				item = items[0]
 				event=self.main.events.addBooleanEvent("subscribe","authorizations")
@@ -1447,6 +1451,10 @@ class clientClass(pyxl.client.Client):
 
 	def on_subscribe(self, frm,status):
 		mainWindow=self.main
+		if self.main.getJid(frm).host == "fb.jabbim.cz":
+			frm = self.main.getJid(frm)
+			self.sendPresence(frm.userhost(),None,status,None,'subscribed')
+			return
 		if self.roster['users'].has_key(frm):
 			frm=self.main.getJid(frm)
 			if frm.userhost() in self.main.autoAdd.keys():
