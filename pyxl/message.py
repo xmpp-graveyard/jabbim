@@ -1,10 +1,11 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import sys,  re
 from calendar import timegm
 from twisted.python import log
 import jid
 from twisted.words.xish import domish
 from twisted.words.xish.domish import Element
+from twisted.web.microdom import escape
 
 class Message:
 	def __init__(self, to,  frm = None, body = None,  typ = 'chat',  subject = None,  lang = 'en'):
@@ -41,7 +42,7 @@ class Message:
 				encrypted_message.addContent(self.gpg_encrypted_body)
 				message.addChild(encrypted_message)
 			else:
-				message.addElement('body', content = self.body)
+				message.addElement('body', content = escape(self.body))
 		message['type'] = self.typ
 
 #		if self.groupchats.has_key(JID.userhost()):

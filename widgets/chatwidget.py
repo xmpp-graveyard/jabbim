@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -849,7 +850,6 @@ class chatWidget(abstractChatWidget):
 			self.main().userRating.reward(self.main().getJid(self.jid).userhost())
 			# get plain text message
 			text=unicode(self.ui.line.toPlainText())
-			text=unescape(text)
 			ret=False
 			if self.xhtml:
 				xhtml=self.ui.line.toHtml()

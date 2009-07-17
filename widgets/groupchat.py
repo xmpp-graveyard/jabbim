@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -1119,7 +1120,7 @@ class groupChatWidget(abstractChatWidget):
 			if self.main().config['chatMode']=="normal":
 				text=unicode(self.ui.line.toPlainText())
 				#text=unicode(text, 'utf-8')
-				text=unescape(text)
+				#text=unescape(text)
 			else:
 				text=unicode(self.ui.line.toHtml())
 				a=parseString(text)
@@ -1138,7 +1139,7 @@ class groupChatWidget(abstractChatWidget):
 				text=gatherTextNodes(c)
 				text=unicode(text, 'utf-8')
 				text=text.replace(unichr(2028),"\n")
-				text=unescape(text)
+				#text=unescape(text)
 
 			# get message in Qt html format
 			xhtml=self.ui.line.toHtml()
