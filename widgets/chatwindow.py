@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -252,6 +253,11 @@ class chatWindow(QtGui.QMainWindow):
 
 
 	#{ Public Functions
+
+	def keyPressEvent(self, event): 
+		key = event.key() 
+		if key == QtCore.Qt.Key_Escape: 
+			self.removeTab() 
 
 	def getUnreadMessages(self):
 		count=0
