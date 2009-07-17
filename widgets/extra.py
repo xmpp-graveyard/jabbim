@@ -97,7 +97,7 @@ class extraDialog(QtGui.QDialog):
 		self.main.client.dispatcher.unregisterHandler("FTDownloadEvent", self.showDownload)
 
 	def _getFile(self,data):
-		self.main.client.dispatcher.registerHandler("FTDownloadEvent", self.showDownload, "FTDonwloadEvent")
+		self.main.client.dispatcher.registerHandler("FTDownloadEvent", self.showDownload, "FTDownloadEvent")
 		print "DATA:",unicode(data)
 		sid=unicode(data[0][0])
 		self.main.allowedSids[sid]=self.main.realHomeDir+'/'+unicode(self.downloading)

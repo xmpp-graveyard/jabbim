@@ -88,6 +88,9 @@ class FTDownloadWidget(QtGui.QWidget):
 	def setFileSize(self,size):
 		self.size=int(size)
 
+	def setJid(self,jid):
+		self.ui.jid.setText(unicode(self.metrics.elidedText(jid,QtCore.Qt.ElideRight, self.width()-10)))
+
 	def setCurrentFile(self,file):
 		self.file=file
 		self.ui.filename.setText(unicode(self.metrics.elidedText(basename(self.file),QtCore.Qt.ElideMiddle, self.width()-10-self.ui.closeButton.width())))
@@ -169,6 +172,9 @@ class FTUploadWidget(QtGui.QWidget):
 				text+=unicode(self.metrics.elidedText(basename(file),QtCore.Qt.ElideMiddle, self.width()-10))+'<br/>'
 			self.ui.more.setText(text)
 		self.queue=queue
+
+	def setJid(self,jid):
+		self.ui.jid.setText(unicode(self.metrics.elidedText(jid,QtCore.Qt.ElideRight, self.width()-10)))
 
 	def setCurrentFile(self,file):
 		self.uploaded+=1

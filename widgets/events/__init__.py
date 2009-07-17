@@ -107,6 +107,7 @@ class FTDownloadEvent(abstractEvent):
 		abstractEvent.__init__(self,parent)
 		self.SID=None
 		self.currentFile=""
+		self.jid=""
 		self.fileSize=1
 		self.fileTransfered=0
 
@@ -128,6 +129,11 @@ class FTDownloadEvent(abstractEvent):
 		self.currentFile=file
 		for widget in self.widgets:
 			widget().setCurrentFile(file)
+
+	def setJid(self,jid):
+		self.jid=jid
+		for widget in self.widgets:
+			widget().setJid(jid)
 
 	def accept(self):
 		if abstractEvent.accept(self):
@@ -153,6 +159,10 @@ class FTUploadEvent(abstractEvent):
 	def setCurrentFile(self,file):
 		for widget in self.widgets:
 			widget().setCurrentFile(file)
+
+	def setJid(self,jid):
+		for widget in self.widgets:
+			widget().setJid(jid)
 
 	def setFileSize(self,size):
 		for widget in self.widgets:
@@ -517,6 +527,7 @@ class events:
 		k=filesQueue.keys()[0]
 		file=filesQueue[k]
 		event.setCurrentFile(file.name)
+		event.setJid(jid)
 		event.setQueue(filesQueue)
 		del event.queue[file.name]
 		
@@ -552,13 +563,20 @@ class events:
 		file=unicode(file)
 		#text="<b>"+basename(unicode(file))+'</b>'
 
+		if jid.find("/") == -1:
+			showJid = jid
+			showRes = self.main.client.roster['users'][jid].getHighestResource()
+		else:
+			showJid, showRes = jid.split("/", 1)
+
 		event=FTDownloadEvent(self)
-		event.setType("ftDonwload")
+		event.setType("ftDownload")
 		event.setCategory("filetransfers")
 		widget=FTDownloadWidget(event)
 		widget=self.addWidget(widget,"filetransfers")
 		event.addWidget(widget)
 		event.setCurrentFile(file)
+		event.setJid(showJid)
 		event.setFileSize(int(size))
 		event.SID=sid
 		# get event height (based on font size)
