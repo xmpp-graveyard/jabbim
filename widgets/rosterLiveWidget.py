@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -2692,10 +2693,10 @@ class rosterWidget(QtGui.QWidget):
 					action.setObjectName("privacy_unhide")
 		if len(contact.resources)!=0 and not myJid:
 			if oneres:
-				#if self.main.client.roster['users'][jid].resources[resource[0]].hasFeature('http://jabber.org/protocol/commands'):
-				action=contactMenu.addAction(QtGui.QIcon("images/16x16/actions/exec.png"),self.tr("Extra actions"))
-				action.setData(QtCore.QVariant("%s/%s" % (jid, contact.resources.keys()[0])))
-				action.setObjectName("ad_hoc")
+				if self.main.client.roster['users'][jid].resources[resource[0]].hasFeature('http://jabber.org/protocol/commands'):
+					action=contactMenu.addAction(QtGui.QIcon("images/16x16/actions/exec.png"),self.tr("Extra actions"))
+					action.setData(QtCore.QVariant("%s/%s" % (jid, contact.resources.keys()[0])))
+					action.setObjectName("ad_hoc")
 			else:
 				submenu=contactMenu.addMenu(QtGui.QIcon("images/16x16/actions/exec.png"),self.tr("Extra actions"))
 				for res in contact.resources.keys():
