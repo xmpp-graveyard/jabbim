@@ -3822,6 +3822,7 @@ class mainWindow(QtGui.QMainWindow):
 			#self.ui.transportsWidget.show()
 			self.ui.tabWidgetButton.setChecked(True)
 			self.ui.tabWidgetButton.show()
+			print self.transports
 			for transport in list(self.transports.keys()):
 				# make transports QMenu and use icon according to transports type and show
 				show=self.client.roster['users'][transport].status
@@ -3873,6 +3874,7 @@ class mainWindow(QtGui.QMainWindow):
 					if separator and len(config[key])!=0:
 						menu.addSeparator()
 					action=menu.addAction(self.getIcon("1@"+transport,status=key,size="16x16"),self.status[key])
+					print 'transport status: ', key,unicode(transport)
 					action.setData(QtCore.QVariant(QtCore.QStringList([key,unicode(transport)])))
 					if len(config[key])!=0:
 						for val in config[key]:
@@ -3999,6 +4001,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		data=action.data()
 		cmd = action.objectName()
+
 		if cmd=="mood":
 			return
 		if cmd == 'activity':

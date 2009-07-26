@@ -601,7 +601,10 @@ def replace_url(text,mainWindow,widget=None):
 			elif word.find("youtube.com/watch?")!=-1: #nahradi adresu z youtube za nazev videa
 				print 'processing youtube link: '+word
 				url=word
-				stranka=urlopen(url).read(350)
+				try:
+					stranka=urlopen(url).read(350)
+				except:
+					continue
 				title=re.findall('<title>(.*)</title>',stranka)
 				if title==[] or title[0].strip()=="": # pokud jsme nenasli zadny <title> tag, nebo byl prazdny
 					text+='<a href="'+url+'">'+url+'</a>'
