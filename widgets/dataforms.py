@@ -42,23 +42,20 @@ def makeDataForm(parent,layout,form,row=1):
 					if d.name == "desc":
 						widget.setToolTip(unicode(d))
 			elif x['type']=="fixed":
-				label=QtGui.QLabel(parent)
-				label.setWordWrap(True)
+				try:
+					label=QtGui.QLabel(x['label'],parent)
+					layout.addWidget(label,row,0)
+				except KeyError:
+					label=None
+				text=QtGui.QLabel(parent)
+				text.setWordWrap(True)
 				for child in x.elements():
 					if child.name == 'value':
-						label.setText(unicode(child))
-				layout.addWidget(label,row,0,1,2)
-				for d in x.elements():
-					if d.name == "desc":
-						widget.setToolTip(unicode(d))
-				row+=1
-			elif x['type']=="fixed":
-				label=QtGui.QTextEdit(self)
-				label.setReadOnly(True)
-				for child in x.elements():
-					if child.name == 'value':
-						label.setText(unicode(child))
-				layout.addWidget(label,row,0,1,2)
+						text.setText(unicode(child))
+				if label==None:
+					layout.addWidget(text,row,0,1,2)
+				else:
+					layout.addWidget(text,row,1)
 				for d in x.elements():
 					if d.name == "desc":
 						widget.setToolTip(unicode(d))
