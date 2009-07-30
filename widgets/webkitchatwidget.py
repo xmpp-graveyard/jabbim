@@ -230,6 +230,9 @@ class webkitChatWidget(QtWebKit.QWebView):
 	def dragMoveEvent(self, event):
 		event.acceptProposedAction()
 
+	def dragLeaveEvent(self, event):
+		event.acceptProposedAction()
+		
 	def dropEvent(self, event):
 		"""
 		Called when something is dropped to this widget.
