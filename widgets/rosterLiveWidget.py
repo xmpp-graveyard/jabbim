@@ -2697,6 +2697,10 @@ class rosterWidget(QtGui.QWidget):
 					action=contactMenu.addAction(QtGui.QIcon("images/16x16/actions/exec.png"),self.tr("Extra actions"))
 					action.setData(QtCore.QVariant("%s/%s" % (jid, contact.resources.keys()[0])))
 					action.setObjectName("ad_hoc")
+				elif resource[0]==None: #adhoc for services
+					action=contactMenu.addAction(QtGui.QIcon("images/16x16/actions/exec.png"),self.tr("Extra actions"))
+					action.setData(QtCore.QVariant("%s" % (jid)))
+					action.setObjectName("ad_hoc")
 			else:
 				submenu=contactMenu.addMenu(QtGui.QIcon("images/16x16/actions/exec.png"),self.tr("Extra actions"))
 				for res in contact.resources.keys():
