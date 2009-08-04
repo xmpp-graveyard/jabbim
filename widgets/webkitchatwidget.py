@@ -268,7 +268,8 @@ class webkitChatWidget(QtWebKit.QWebView):
 				tab.chat.invitation=[unicode(jid2.full()),unicode(self.chatwidget().parent.jid)]
 				self.chatwidget().main().client.joinGC(room, self.chatwidget().main().client.jid.user,sendRooms=self.chatwidget().main().config['sendRooms']=="True")
 			# remove old user2user conversation tab
-			self.chatwidget().main().chat.removeTab(rmIndex)
+			# XXX: for some reason, removing the tab causes a crash
+			#self.chatwidget().main().chat.removeTab(rmIndex) 
 			event.acceptProposedAction()
 		elif (event.mimeData().hasUrls()):
 			urlList=event.mimeData().urls()
