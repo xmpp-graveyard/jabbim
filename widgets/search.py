@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
 Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
@@ -84,7 +85,7 @@ class searchDialog(QtGui.QDialog):
 				self.addDialog.ui.add_jid.setText(item.text(self.table.jidIndex))
 				self.addDialog.jidChanged()
 			else:
-				self.main.addContactMainWindow(item.text(self.table.jidIndex))
+				self.main().addContactMainWindow(item.text(self.table.jidIndex))
 			self.done(1)
 
 	def _gotResults(self,data):
@@ -129,7 +130,7 @@ class searchDialog(QtGui.QDialog):
 
 	def search(self):
 		self.table.jidIndex=None
-		form=dataforms.sendDataForm(self.main,self.jid,self.form,self.var,"only get form")
+		form=dataforms.sendDataForm(self.main(),self.jid,self.form,self.var,"only get form")
 		d=self.main().client.setSearchForm(self.jid,forms=form)
 		d.addCallback(self._gotResults)
 
