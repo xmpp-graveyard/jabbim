@@ -18,7 +18,7 @@ class config:
 		if sys.platform == 'win32':
 			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'Winamp':'winamp', 'Foobar 2000':'fb2k' }, 'value':'winamp'}
 		else:
-			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Amarok':'amarok', 'Amarok 2':'amarok2', 'Exaile':'exaile', 'Banshee':'banshee', 'Rhythmbox':'rhythmbox', 'Audacious':'audacious'}, 'value':'amarok'}
+			self.config['player']={'type':'list-single','label':self.main.tr("Player"), 'items':{'MPD':'mpd', 'Amarok':'amarok', 'Amarok 2':'amarok2', 'Exaile':'exaile', 'Banshee':'banshee', 'Rhythmbox':'rhythmbox', 'Audacious':'audacious', 'Qmmp':'qmmp'}, 'value':'amarok'}
 
 class Player:
 	def __init__(self, plugin):
@@ -165,6 +165,10 @@ class MPRISPlayer(Player):
 class Amarok2(MPRISPlayer):
 	def __init__(self, plugin):
 		MPRISPlayer.__init__(self, plugin, "amarok")
+
+class Qmmp(MPRISPlayer):
+	def __init__(self, plugin):
+		MPRISPlayer.__init__(self, plugin, "qmmp")
 
 class Exaile(Player):
 	def __init__(self, plugin):
@@ -367,7 +371,8 @@ class Plugin(plugins.PluginBase):
 			'exaile':    Exaile,
 			'banshee':   Banshee,
 			'rhythmbox': Rhythmbox,
-			'audacious': Audacious
+			'audacious': Audacious,
+			'qmmp': Qmmp
 		}
 		# create the chosen Player instance
 		self.player = player_map[self.config['player']](self)
