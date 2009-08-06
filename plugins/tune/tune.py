@@ -136,6 +136,8 @@ class MPRISPlayer(Player):
 		try:
 			out['artist'] = unicode(song_info['artist'])
 			out['title'] = unicode(song_info['title'])
+			if out['artist'] == "" and out['title'] == "":
+				out = {}
 		except:
 			out = {}
 		self.plugin.sendPEP(out)
