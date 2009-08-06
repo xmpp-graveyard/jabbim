@@ -126,10 +126,11 @@ class Amarok(Player):
 				'dcop', ['dcop', 'amarok', 'player', field],
 				env=os.environ)
 
-class Amarok2(Player):
-	def __init__(self, plugin):
+class MPRISPlayer(Player):
+	def __init__(self, plugin, mpris_name):
 		Player.__init__(self, plugin)
 		self.sig_receivers = []
+		self.dbus_name = "org.mpris." + mpris_name
 	def got_metadata(self, song_info):
 		out = {}
 		try:
@@ -144,20 +145,24 @@ class Amarok2(Player):
 		# Amarok again what the current song is. It's slower, but works.
 		try:
 			bus = self.main.session_dbus
-			amarok_player = bus.get_object("org.mpris.amarok", "/Player")
+			amarok_player = bus.get_object(self.dbus_name, "/Player")
 			amarok_player.GetMetadata(reply_handler=self.got_metadata, error_handler=self.clear_PEP)
 		except:
 			self.clear_PEP()
 	def start_listening(self):
 		bus = self.main.session_dbus
 		self.sig_receivers.append(bus.add_signal_receiver(self.check,
-			'TrackChange',  "org.freedesktop.MediaPlayer", "org.mpris.amarok", "/Player"))
+			'TrackChange',  "org.freedesktop.MediaPlayer", self.dbus_name, "/Player"))
 		self.sig_receivers.append(bus.add_signal_receiver(self.check,
-			'StatusChange', "org.freedesktop.MediaPlayer", "org.mpris.amarok", "/Player"))
+			'StatusChange', "org.freedesktop.MediaPlayer", self.dbus_name, "/Player"))
 	def stop_listening(self):
 		for receiver in self.sig_receivers:
 			receiver.remove()
 		self.sig_receivers = []
+
+class Amarok2(MPRISPlayer):
+	def __init__(self, plugin):
+		MPRISPlayer.__init__(self, plugin, "amarok")
 
 class Exaile(Player):
 	def __init__(self, plugin):
