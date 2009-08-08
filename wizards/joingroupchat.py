@@ -98,9 +98,9 @@ class joinGroupchatWizard(QtGui.QWizard):
 		self.setWindowTitle(self.tr("Join Groupchat"))
 		self.setButtonText(QtGui.QWizard.FinishButton,self.tr("Join"))
 		mucjid = None
-		for jid in self.main.client.disco[self.main.client.jid.host][None]['items'].iterkeys():
+		for jid,node in self.main.client.disco[self.main.client.jid.host][(self.main.client.jid.host,None)]['items'].iterkeys():
 			print jid
-			print self.main.client.disco[self.main.client.jid.host][None]['items'][jid]
+			print self.main.client.disco[self.main.client.jid.host][(self.main.client.jid.host,None)]['items'][jid]
 			if self.main.client.hasIdentity(jid, 'conference', 'text') and jid.startswith('c'):
 				mucjid = jid
 				break

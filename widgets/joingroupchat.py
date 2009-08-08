@@ -42,18 +42,19 @@ class joinGroupChatWindow(QtGui.QDialog):
 		self.ui.browser.setText("")
 		self.ui.browser.setToolTip(self.tr("Browse chat rooms"))
 		self.ui.browser.setIcon(QtGui.QIcon('images/16x16/actions/service-discovery.png'))
+		self.ui.serverName.setDuplicatesEnabled(False)
 
 		self.ui.nickname.setText(self.main.selfName)
 		mucjid = []
-		for jid in self.main.client.disco[self.main.client.jid.host][None]['items'].iterkeys():
+		for jid,node in self.main.client.disco[self.main.client.jid.host][(self.main.client.jid.host,None)]['items'].iterkeys():
 			if not self.main.client.disco.get(jid):
 				continue
 			#print jid," : ",self.main.client.disco[jid]
-			if 'http://jabber.org/protocol/muc' in self.main.client.disco[jid][None].get('features',[]):
+			if 'http://jabber.org/protocol/muc' in self.main.client.disco[jid][(jid,node)].get('features',[]):
 				mucjid.append(jid)
 				self.ui.serverName.addItem(jid)
 				if self.main.client.hasIdentity(jid, 'conference', 'text') and jid.startswith('c'):
-					self.ui.serverName.setCurrentIndex(len(mucjid)-1)
+					self.ui.serverName.setCurrentIndex(self.ui.serverName.count()-1)
 				
 		for s in self.main.config['groupchatServerHistory']:
 			if s not in mucjid:
@@ -72,6 +73,7 @@ class joinGroupChatWindow(QtGui.QDialog):
 			self.ui.roomName.setFocus(QtCore.Qt.MouseFocusReason)
 		if len(server)!=0:
 			self.ui.serverName.insertItem(0,server)
+			self.ui.serverName.setCurrentIndex(0)
 
 	def mucBrowser(self):
 		self.d=MUCBrowserDialog(self.main,unicode(self.ui.serverName.currentText()),self,self)

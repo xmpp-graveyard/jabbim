@@ -91,10 +91,10 @@ class derived:
 		pass
 
 	def on_discoInfoReceived(self, jid, node):
-		# v self.disco[jid][node] jsou info data nebo error
+		# v self.disco[jid][(jid,node)] jsou info data nebo error
 		pass
 	def on_discoItemsReceived(self, jid, node):
-		# v self.disco[jid][node] jsou info data nebo error
+		# v self.disco[jid][(jid,node)] jsou info data nebo error
 		pass
 
 	def on_privacyReceived(self):
@@ -647,6 +647,9 @@ class derived:
 		d.addCallback(self._discoItemsReceived, node, callback, callback_par)
 		d.addErrback(self._discoItemsErrReceived, (node, jid))
 		return d
+		
+	def getDiscoInfoItems(self, jid, node = None, callback = None, callback_par = None):
+		return self.getDiscoItems(jid, node, callback, callback_par)
 
 	def getTime202(self, jid):
 		log.msg( 'requesting time202 info')
@@ -812,8 +815,8 @@ class derived:
 		except:
 			return None
 		try:
-			if self.disco[jd.host][None].has_key("identities"):
-				return self.disco[jd.host][None]["identities"]
+			if self.disco[jd.host][(jd.host,None)].has_key("identities"):
+				return self.disco[jd.host][(jd.host,None)]["identities"]
 			else:
 				return None
 		except KeyError:

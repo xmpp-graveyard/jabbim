@@ -52,7 +52,7 @@ class jabbimServiceManager(QtGui.QDialog):
 			if jid=="disk.jabbim.cz":
 				self.registerJabberDisk()
 				self.setItemRegistered(item,True)
-			elif jid in ["weather.netlab.cz","dict.jabbim.cz"]:
+			elif jid in ["weather.jabbim.com","dict.jabbim.cz"]:
 				self.configure()
 			elif jid == 'news.jabbim.cz':
 				self.main().client.setRegisterForm('news.jabbim.cz', legacy = {})
@@ -70,8 +70,8 @@ class jabbimServiceManager(QtGui.QDialog):
 			elif jid=="dict.jabbim.cz":
 				self.removeServiceContacts("dict.jabbim.cz")
 				self.setItemRegistered(item,False)
-			elif jid=="weather.netlab.cz":
-				self.removeServiceContacts("weather.netlab.cz")
+			elif jid=="weather.jabbim.com":
+				self.removeServiceContacts("weather.jabbim.com")
 				self.setItemRegistered(item,False)
 			elif jid == 'news.jabbim.cz':
 				self.removeServiceContacts("news.jabbim.cz")
@@ -118,7 +118,7 @@ class jabbimServiceManager(QtGui.QDialog):
 			d = self.discoverNewsItems()
 			d.addCallback(self.showNewsItems)
 
-		elif unicode(item.data(0,32).toString())=="weather.netlab.cz":
+		elif unicode(item.data(0,32).toString())=="weather.jabbim.com":
 			showWeather(self.main(),self.ui.jids)
 			self.ui.reg.hide()
 			self.ui.configure.hide()
@@ -148,7 +148,7 @@ class jabbimServiceManager(QtGui.QDialog):
 	def loadServices(self):
 		self.ui.treeWidget.clear()
 		trans=['fb.jabbim.cz','icq.netlab.cz','icq.jabber.cz','icq.jabbim.cz','sms.netlab.cz','sms.jabbim.cz']
-		servs=['dict.jabbim.cz','weather.netlab.cz','disk.jabbim.cz', 'news.jabbim.cz']
+		servs=['dict.jabbim.cz','weather.jabbim.com','disk.jabbim.cz', 'news.jabbim.cz']
 		transports={}
 		services={}
 		for transport in trans:
@@ -168,7 +168,7 @@ class jabbimServiceManager(QtGui.QDialog):
 
 
 		self.addService(self.tr("Dictionaries"),"dict.jabbim.cz",self.tr("<b>Dictionaries</b><br/>Dictionaries service allows you to translate words between languages from your Jabbim client."),services["dict.jabbim.cz"])
-		self.addService(self.tr("Weather"),"weather.netlab.cz",self.tr("<b>Weather</b><br/>Weather service allows you to see actual weather in big cities."),services["weather.netlab.cz"])
+		self.addService(self.tr("Weather"),"weather.jabbim.com",self.tr("<b>Weather</b><br/>Weather service allows you to see actual weather in big cities."),services["weather.jabbim.com"])
 		self.addService(self.tr("Jabber Disk"),"disk.jabbim.cz",self.tr("<b>Jabber Disk</b><br/>Jabber Disk allows you to upload files to Jabbim server where they can be downloaded by your friends."),services["disk.jabbim.cz"])
 		self.addService(self.tr('Jabbim News'), 'news.jabbim.cz', self.tr('<b>Jabbim News</b><br/>RSS service with custom RSS feeds for Jabbim VIP users'), services['news.jabbim.cz'])
 		self.addService(self.tr("SMS Vodafone/O2"),"sms.netlab.cz",self.tr("<b>SMS Vodafone/O2</b><br/>SMS Vodafone/O2 allows you to send SMS messages straight from your Jabbim Client."),transports["sms.netlab.cz"])

@@ -136,9 +136,9 @@ class MUCBrowserDialog(QtGui.QDialog):
 		item = par[1]
 		for i in range(int(item.childCount())):
 			item.takeChild(0)
-		if len(self.main.client.disco[unicode(par[0])][None]['items'])!=0:
+		if len(self.main.client.disco[unicode(par[0])][(unicode(par[0]),None)]['items'])!=0:
 			users="<b>Users:</b> "
-			for usr in self.main.client.disco[unicode(par[0])][None]['items'].itervalues():
+			for usr in self.main.client.disco[unicode(par[0])][(unicode(par[0]),None)]['items'].itervalues():
 				users+=usr['name']+", "
 		else:
 			users="There is no user"
@@ -174,7 +174,7 @@ class MUCBrowserDialog(QtGui.QDialog):
 	def _roomsReceived(self, res):
 		self.rooms = []
 		self.ui.groupchats.clear()
-		for room in self.main.client.disco[self.server][None]['items'].itervalues():
+		for room in self.main.client.disco[self.server][(self.server,None)]['items'].itervalues():
 			self.rooms.append((room['name'], room['jid'], self.getNum(room['name'])))
 
 		self.rooms.sort(self.sortRooms)

@@ -102,7 +102,7 @@ class CommandsDialog(QtGui.QMainWindow):
 		
 
 class Commands:
-	def __init__(self, main, jid, action = None):
+	def __init__(self, main, jid, action = None, node = None, getItems=True):
 		if isinstance(main,weakref.ref):
 			self.main	= main
 		else:
@@ -110,13 +110,14 @@ class Commands:
 		self.jid	= unicode(jid)
 		self.dialog	= CommandsDialog(self,self.main)
 		self.sessionid	= None
-		self.node	= None
+		self.node	= node
 		self.form	= None
 		self.name 	= None
 		self.var = self.row = None
 		self.action = action
 		self.submenu = None
-		self.requestCommandsList()
+		if getItems==True:
+			self.requestCommandsList()
 
 	def requestCommandsList(self):
 		iq		= IQ(self.main().client.xmlstream, "get")
@@ -205,7 +206,7 @@ class Commands:
 		command = iq.addElement("command")
 		command.attributes = {"node":node, "xmlns": "http://jabber.org/protocol/commands", "action":"execute"}
 		d=iq.send()
-		d.addCallback(self._formRecieved).addErrback(self._errorRecieved)
+		d.addCallback(self._formRecieved)#.addErrback(self._errorRecieved)
 		self.main().client.disp(iq["id"])
 		log.msg("Executing command %s." % node)
 	

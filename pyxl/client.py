@@ -668,7 +668,8 @@ class Client(derived):
 #		self.getMetacontacts()
 		self.getBookmarks()
 		d=self.getDiscoInfo(self.jid.host, callback = self._pepSupport)
-		self.getDiscoItems(self.jid.host, callback = self._gotServices)
+		self.getDiscoItems(self.jid.host, callback = None)
+		self.getDiscoInfoItems(self.jid.host, callback = self._gotServices)
 #		self.reactor.callFromThread(self.on_authd)
 		self.roster['users'][self.jid.userhost()] = Contact(self, self.jid.userhost(), '', 'both', [], []) #add selfcontact to our representation of roster
 		self.reactor.callLater(0,self.main._connected)
@@ -696,13 +697,12 @@ class Client(derived):
 			self.isVip=True
 
 	def _gotServices(self, res):
-		for jid in self.disco[self.jid.host][None]['items'].iterkeys():
-			self.getDiscoInfo(jid)
-
+		for (jid,node) in self.disco[self.jid.host][(self.jid.host,None)]['items'].iterkeys():
+			self.getDiscoInfo(jid,node=node)
 
 	def _pepSupport(self, res):
 		log.msg('pep support arrived')
-		for key,  val in self.disco[self.jid.host][None]['identities'].iteritems():
+		for key,  val in self.disco[self.jid.host][(self.jid.host,None)]['identities'].iteritems():
 			log.msg(key+ unicode(val))
 			if val['type'] == 'pep' :
 				log.msg( 'we got a PEP support')
@@ -1374,8 +1374,9 @@ class Client(derived):
 
 	def _discoInfoReceived(self, el, node,  callback,callback_par):
 		log.msg('disco#info received')
-		node_name = node
 		frm = el['from']
+		node_name = (frm,node)
+		node={}
 		if self.disco.has_key(frm):
 			if self.disco[frm].has_key(node_name):
 				node = self.disco[frm][node_name]
@@ -1388,6 +1389,10 @@ class Client(derived):
 		else:
 			self.disco[frm] = {}
 			node = {'features':[], 'identities':{},  'items': {}}
+		node.setdefault('features',[])
+		node.setdefault('identities',{})
+		node.setdefault('items',{})
+		
 		query = el.firstChildElement()
 		for child in query.elements():
 			if child.name == 'feature':
@@ -1423,23 +1428,23 @@ class Client(derived):
 			log.err(str(err) + str(info))
 			return
 		if self.disco.has_key(jid):
-			if self.disco[jid].has_key(node_name):
-				node = self.disco[jid][node_name]
+			if self.disco[jid].has_key((jid,node_name)):
+				node = self.disco[jid][(jid,node_name)]
 		else:
 			self.disco[jid] = {}
 			node = {'err':{'info':''}}
 
 		node['err'] = el.firstChildElement().name
-		self.disco[jid][node_name] = node
+		self.disco[jid][(jid,node_name)] = node
 
 		self.reactor.callFromThread(self.on_discoInfoReceived ,jid, node_name)
 
 
-
 	def _discoItemsReceived(self, el, node, callback, callback_par):
 		log.msg( 'disco#items received')
-		node_name = node
 		frm = el['from']
+		node_key = node
+		node_name = (frm,node)
 		if self.disco.has_key(frm):
 			if self.disco[frm].has_key(node_name):
 				node = self.disco[frm][node_name]
@@ -1454,15 +1459,21 @@ class Client(derived):
 						identities = {}
 					node = {'features':features, 'identities':identities,  'items': {}}
 					self.disco[frm] = {}
+			else:
+				node = {'features':[], 'identities':{},'items':{}}
 		else:
 			self.disco[frm] = {}
 			node = {'features':[], 'identities':{},'items':{}}
-		node['items'] = {}
+		node.setdefault('items', {})
 
 		query = el.firstChildElement()
 		for child in query.elements():
 			if child.name == 'item':
-				node['items'][child['jid']] = child.attributes
+				if child.attributes.has_key('node'):
+					node_id=child['node']
+				else:
+					node_id=None
+				node['items'].setdefault((child['jid'],node_id), child.attributes)
 
 		self.disco[frm][node_name] = node
 
@@ -1485,14 +1496,14 @@ class Client(derived):
 			log.err( err)
 			return
 		if self.disco.has_key(jid):
-			if self.disco[jid].has_key(node_name):
-				node = self.disco[jid][node_name]
+			if self.disco[jid].has_key((jid,node_name)):
+				node = self.disco[jid][(jid,node_name)]
 		else:
 			self.disco[jid] = {}
 			node = {'err':{'items':''}}
 
 		node['err'] = el.firstChildElement().name
-		self.disco[jid][node_name] = node
+		self.disco[jid][(jid,node_name)] = node
 		self.reactor.callFromThread(self.on_discoInfoReceived, jid, node_name)
 		return err
 

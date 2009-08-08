@@ -26,36 +26,54 @@ def addWeather(mainWindow,treeWidget):
 def showWeather(mainWindow,treeWidget):
 	l=unicode(QtCore.QLocale.system().name())[:2]
 	if l=="cs":
-		jids={'beroun@weather.netlab.cz':"Opava",
-		'brno@weather.netlab.cz':u'Brno',
-		'cesky_tesin@weather.netlab.cz':u'Český Těšín',
-		'frydek@weather.netlab.cz':u'Frýdek Místek',
-		'karvina@weather.netlab.cz':u'Karviná',
-		'kladno@weather.netlab.cz':u'Kladno',
-		'kolin@weather.netlab.cz':u'Kolín',
-		'opava@weather.netlab.cz':u'Opava',
-		'ostrava@weather.netlab.cz':u'Ostrava',
-		'pilsen@weather.netlab.cz':u'Plzeň',
-		'pisek@weather.netlab.cz':u'Písek',
-		'prague@weather.netlab.cz':u'Praha',
-		'rosice@weather.netlab.cz':u'Rošice',
-		'slavkov_u_brna@weather.netlab.cz':u'Slavkov u Brna',
-		'tabor@weather.netlab.cz':u'Tábor',
-		'usti_nad_labem@weather.netlab.cz':u'Ústí nad Labem',
-		'cheb@weather.netlab.cz':u'Cheb',
-		'primda@weather.netlab.cz':u'Přimda',
-		'churanov@weather.netlab.cz':u'Churáňov',
-		'milesovka@weather.netlab.cz':u'Milešovka',
-		'kocelovice@weather.netlab.cz':u'Kocelovice',
-		'praha@weather.netlab.cz':u'Praha',
-		'liberec@weather.netlab.cz':u'Liberec',
-		'kostelni_myslova@weather.netlab.cz':u'Kostelní Myslová',
-		'pribyslav@weather.netlab.cz':u'Přibyslav',
-		'usti_nad_orlici@weather.netlab.cz':u'Ústí nad Labem',
-		'cervena@weather.netlab.cz':u'Červená',
-		'holesov@weather.netlab.cz':u'Holešov',
-		'lysa_hora@weather.netlab.cz':u'Lysá Hora',
-		'ceskebudejovice@weather.netlab.cz':u'České Budějovice'}
+		jids={'ezxx0001@weather.jabbim.com':u'Beroun'
+    , 'ezxx0002@weather.jabbim.com':u'Brno'
+    , 'ezxx0027@weather.jabbim.com':u'Červená'
+    , 'ezxx0003@weather.jabbim.com':u'Český Těšín'
+    , 'ezxx0017@weather.jabbim.com':u'Cheb'
+    , 'ezxx0019@weather.jabbim.com':u'Churáňov'
+    , 'ezxx0004@weather.jabbim.com':u'Frýdek-Místek'
+    , 'ezxx0028@weather.jabbim.com':u'Holešov'
+    , 'ezxx0005@weather.jabbim.com':u'Karviná'
+    , 'ezxx0006@weather.jabbim.com':u'Kladno'
+    , 'ezxx0021@weather.jabbim.com':u'Kocelovice'
+    , 'ezxx0007@weather.jabbim.com':u'Kolín'
+    , 'ezxx0024@weather.jabbim.com':u'Kostelní myslová'
+    , 'ezxx0023@weather.jabbim.com':u'Liberec'
+    , 'ezxx0029@weather.jabbim.com':u'Lysá hora'
+    , 'ezxx0020@weather.jabbim.com':u'Milešovka'
+    , 'ezxx0008@weather.jabbim.com':u'Opava'
+    , 'ezxx0009@weather.jabbim.com':u'Ostrava'
+    , 'ezxx0010@weather.jabbim.com':u'Plzeň'
+    , 'ezxx0011@weather.jabbim.com':u'Písek'
+    , 'ezxx0012@weather.jabbim.com':u'Praha'
+    , 'ezxx0022@weather.jabbim.com':u'Praha-Libuš'
+    , 'ezxx0025@weather.jabbim.com':u'Přibyslav'
+    , 'ezxx0018@weather.jabbim.com':u'Přimda'
+    , 'ezxx0013@weather.jabbim.com':u'Rosice'
+    , 'ezxx0014@weather.jabbim.com':u'Slavkov u Brna'
+    , 'ezxx0015@weather.jabbim.com':u'Tábor'
+    , 'ezxx0016@weather.jabbim.com':u'Ústí nad Labem'
+    , 'ezxx0026@weather.jabbim.com':u'Ústí nad Orlicí'
+    , 'ezxx0031@weather.jabbim.com':u'Jičín'
+    , 'ezxx0032@weather.jabbim.com':u'Jaromeř'
+    , 'ezxx0033@weather.jabbim.com':u'Trebíč'
+    , 'ezxx0034@weather.jabbim.com':u'Pardubice'
+    , 'ezxx0035@weather.jabbim.com':u'Břeclav'
+    , 'ezxx0036@weather.jabbim.com':u'Hodonín'
+    , 'ezxx0037@weather.jabbim.com':u'Jeseník'
+    , 'ezxx0038@weather.jabbim.com':u'Olomouc'
+    , 'ezxx0039@weather.jabbim.com':u'Jindřichův hradec'
+    , 'ezxx0040@weather.jabbim.com':u'Domažlice'
+    , 'ezxx0041@weather.jabbim.com':u'Klatovy'
+    , 'ezxx0042@weather.jabbim.com':u'Strakonice'
+    , 'ezxx0043@weather.jabbim.com':u'Turnov'
+    , 'ezxx0044@weather.jabbim.com':u'Chomutov'
+    , 'ezxx0045@weather.jabbim.com':u'Karlovy vary'
+    , 'ezxx0046@weather.jabbim.com':u'Trutnov'
+    , 'ezxx0047@weather.jabbim.com':u'Náchod'
+    , 'ezxx0048@weather.jabbim.com':u'Šumperk'
+    , 'ezxx0049@weather.jabbim.com': u'Prostějov'}
 		treeWidget.clear()
 		treeWidget.headerItem().setText(0,mainWindow.tr("Locality"))
 		for jid,name in jids.iteritems():
@@ -174,13 +192,13 @@ class addContactDialog(QtGui.QDialog):
 		srv = unicode(self.main().client.jid.host)
 		if srv in self.main().client.disco.keys():
 			print self.main().client.disco[srv]
-			if self.main().client.disco[srv][None].has_key("identities"):
-				if self.main().client.disco[srv][None].has_key("items"):
-					for item,d in self.main().client.disco[srv][None]['items'].iteritems():
+			if self.main().client.disco[srv][(srv,None)].has_key("identities"):
+				if self.main().client.disco[srv][(srv,None)].has_key("items"):
+					for (item,node),d in self.main().client.disco[srv][(srv,None)]['items'].iteritems():
 						key=d['jid']
 						if key in self.main().client.disco.keys():
-							if self.main().client.disco[key][None].has_key("identities"):
-								for identity,values in self.main().client.disco[key][None]["identities"].iteritems():
+							if self.main().client.disco[key][(key,node)].has_key("identities"):
+								for identity,values in self.main().client.disco[key][(key,node)]["identities"].iteritems():
 									if values.has_key('category'):
 										if values.has_key('name'):
 											#[u'conference', u'service', u'headline', u'component', u'server', u'services', u'proxy', u'directory', u'gateway', u'store', u'pubsub']
@@ -201,7 +219,7 @@ class addContactDialog(QtGui.QDialog):
 															self.ui.service.insertItem(0,self.main().getIcon(size="16x16",usertype=typ),values['name'],QtCore.QVariant(unicode(key)))
 														else:
 															self.ui.service.addItem(self.main().getIcon(size="16x16",usertype=typ),values['name'],QtCore.QVariant(unicode(key)))
-			elif self.main().client.disco[key][None].has_key("err"):
+			elif self.main().client.disco[key][(key,None)].has_key("err"):
 				print key,"error"
 		self.ui.service.insertItem(0,self.main().getIcon(size="16x16",usertype="jabber"),"Jabber",QtCore.QVariant(unicode(self.main().client.jid.host)))
 		self.ui.service.setCurrentIndex(0)
@@ -261,7 +279,7 @@ class addContactDialog(QtGui.QDialog):
 			return
 		jid=unicode(self.ui.service.itemData(index).toString())
 		print jid
-		print list(self.main().client.disco[jid][None]['features'])
+		print list(self.main().client.disco[jid][(jid,None)]['features'])
 		self.ui.lineEdit.show()
 		self.ui.search.show()
 		if not self.isServiceRegistered(jid):
@@ -270,7 +288,7 @@ class addContactDialog(QtGui.QDialog):
 				#self.discovery2=wizards.jabbimservicemanager.jabbimServiceManager(self.main(),self.main())
 				#self.discovery2.registerICQ()
 				#self.discovery2.show()
-			if jid=="weather.netlab.cz":
+			if jid=="weather.jabbim.com":
 				self.ui.picture.hide()
 				self.ui.search.hide()
 				self.ui.add.hide()
@@ -298,7 +316,7 @@ class addContactDialog(QtGui.QDialog):
 				self.ui.addToRoster.hide()
 		else:
 			#if "jabber:iq:gateway" in list(self.main().client.disco[jid][None]['features']):
-			if jid=="weather.netlab.cz":
+			if jid=="weather.jabbim.com":
 				self.ui.picture.hide()
 				self.ui.search.hide()
 				self.ui.add.hide()

@@ -68,6 +68,8 @@ class table(QtGui.QTreeWidget):
 	def menuTriggered(self,action):
 		cmd=action.objectName()
 		jid=unicode(self.currentItem().text(3))
+		name=unicode(self.currentItem().text(1))
+		node=unicode(self.currentItem().text(5))
 		if cmd=="add_to_roster":
 			dialog=addcontact.addContactDialog(self.service.main(),self.service.main(),jid=jid,name=jid.split('@')[0])
 			dialog.exec_()
@@ -78,8 +80,13 @@ class table(QtGui.QTreeWidget):
 			d=self.service.main().client.getSearchForm(jid)
 			d.addCallback(self.service._gotSearchForm)
 		elif cmd=="command":
-			cmds = commands.Commands(self.service.main(), jid)
+			if node:
+				cmds = commands.Commands(self.service.main(), jid, getItems=False)
+				cmds.execCommand(node, name, jid)
+			else:
+				cmds = commands.Commands(self.service.main(), jid)
 			cmds.dialog.show()
+			
 
 
 
@@ -125,7 +132,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 
 #d=self.main().client.getRegisterForm(jid)
 		#self.load()
-
+		
 		self.main().client.getDiscoItems(self.main().client.jid.host, callback = self.load).addErrback(self._discoErr)
 
 		#for key in self.main().client.disco.keys():
@@ -159,7 +166,12 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 			d=self.main().client.getSearchForm(b.jid)
 			d.addCallback(self._gotSearchForm)
 		elif b.typ=="cmds":
-			cmds = commands.Commands(self.main, b.jid)
+			if b.node:
+				cmds = commands.Commands(self.main, b.jid, getItems=False)
+				cmds.execCommand(b.node, b.name, b.jid)
+			else:
+				cmds = commands.Commands(self.main, b.jid)
+			#cmds = commands.Commands(self.main, b.jid)
 			cmds.dialog.show()
 
 
@@ -207,12 +219,11 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		jid=unicode(item.text(3))
 		if len(jid)==0:
 			return
-		if self.main().client.hasIdentity(jid, 'conference', 'text'):
+		if self.main().client.hasIdentity(jid, 'conference'):
 			#self.done(1)
 			self.main().mucBrowser()
 			self.main().joingroupchatwizard.ui.serverName.addItem(jid)
 			self.main().joingroupchatwizard.ui.serverName.setCurrentIndex(self.main().joingroupchatwizard.ui.serverName.count()-1)
-
 			return
 		
 		#self.main().client.getDiscoItems(jid, callback = self._discoItemsReceived, callback_par = (item,True))
@@ -227,14 +238,14 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 			return
 		if self.main().client.hasIdentity(jid, 'conference', 'text'):
 			return
+		self.main().client.getDiscoItems(jid, node = node, callback = self._discoItemsReceived, callback_par = (item,False,node))
 
-		self.main().client.getDiscoItems(jid, node = node, callback = self._discoItemsReceived, callback_par = (item,False))
-
-	def _discoinfo(self,item):
-		key=self.main().getJid(unicode(item.text(3))).host
+	def _discoinfo(self,item,node_key=None):
+		(item,node_key) = item
+		key = unicode(item.text(3))
 		#print key,self.main().client.disco.keys()
-		if self.main().client.disco[key][None].has_key("features"):
-			if "jabber:iq:register" in list(self.main().client.disco[key][None]['features']):
+		if self.main().client.disco[key][(key,node_key)].has_key("features"):
+			if "jabber:iq:register" in list(self.main().client.disco[key][(key,node_key)]['features']):
 				register=QtGui.QPushButton(self.ui.tree)
 				#register.setMaximumWidth(40)
 				#register.setMinimumWidth(24)
@@ -244,9 +255,10 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 				register.setFlat(True)
 				register.jid=item.text(3)
 				register.typ="register"
+				register.setToolTip(self.tr("Register service"))
 				self.group.addButton(register)
 				self.ui.tree.setItemWidget(item,2,register)
-			if "jabber:iq:search" in list(self.main().client.disco[key][None]['features']):
+			if "jabber:iq:search" in list(self.main().client.disco[key][(key,node_key)]['features']):
 				search=QtGui.QPushButton(self.ui.tree)
 				#search.setMaximumWidth(16)
 				#search.setMinimumWidth(24)
@@ -256,29 +268,34 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 				search.setFlat(True)
 				search.jid=item.text(3)
 				search.typ="search"
+				search.setToolTip(self.tr("Search service for users"))
 				self.group.addButton(search)
 				self.ui.tree.setItemWidget(item,1,search)
-			if "http://jabber.org/protocol/commands" in list(self.main().client.disco[key][None]['features']):
+			if "http://jabber.org/protocol/commands" in list(self.main().client.disco[key][(key,node_key)]['features']):
 				cmds=QtGui.QPushButton(self.ui.tree)
 				cmds.setIcon(QtGui.QIcon("images/32x32/actions/exec.png"))
 				cmds.setIconSize(QtCore.QSize(32,32))
 				cmds.setFlat(True)
 				cmds.jid=item.text(3)
+				cmds.node=node_key
+				cmds.name=unicode(item.text(1))
 				cmds.typ="cmds"
+				cmds.setToolTip(self.tr("Execute extra action"))
 				self.group.addButton(cmds)
 				self.ui.tree.setItemWidget(item,4,cmds)
-			item.setData(32,0,QtCore.QVariant(list(self.main().client.disco[key][None]['features'])))
+			item.setData(32,0,QtCore.QVariant(list(self.main().client.disco[key][(key,node_key)]['features'])))
 		else:
 			item.setData(32,0,QtCore.QVariant(list([])))
 
-	def _discoItemsReceived(self,data):
+	def _discoItemsReceived(self,data,node_key=None):
 		item=data[0]
 		expand=data[1]
+		node_key=data[2]
 		jid=unicode(item.text(3))
 		for i in range(item.childCount()):
 			item.takeChild(0)
 		print self.main().client.disco[jid]
-		for key,values in self.main().client.disco[jid][None]['items'].iteritems():
+		for (key,node),values in self.main().client.disco[jid][(jid,node_key)]['items'].iteritems():
 			#print values
 			it=QtGui.QTreeWidgetItem(item)
 			it.setText(3,self.main().getJid(values['jid']).full())
@@ -290,13 +307,13 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 				it.setText(5,values["node"])
 			it.setIcon(0,item.icon(0))
 			it.setToolTip(0,values['jid'])
-			self.main().client.getDiscoInfo(values['jid'],callback=self._discoinfo, callback_par = (it))
+			self.main().client.getDiscoInfo(values['jid'],node=node,callback=self._discoinfo, callback_par = (it,node))
 		self.ui.tree.sortItems(0,QtCore.Qt.AscendingOrder)
 		item.setExpanded(expand)
 		
 		self.ui.tree.resizeColumnToContents(0)
 
-	def load(self,data=None):
+	def load(self,data=None,node_key=None):
 		self.ui.reload.setEnabled(True)
 		categories={}
 		self.services=QtGui.QTreeWidgetItem(self.ui.tree)
@@ -312,25 +329,26 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		#key=self.main().client.jid.host
 		key = self.server
 		if key in self.main().client.disco.keys():
-			if self.main().client.disco[key][None].has_key("identities"):
-				if self.main().client.disco[key][None].has_key("items"):
-					for item,values in self.main().client.disco[key][None]['items'].iteritems():
+			if self.main().client.disco[key][(key,node_key)].has_key("identities"):
+				if self.main().client.disco[key][(key,node_key)].has_key("items"):
+					for item,values in self.main().client.disco[key][(key,node_key)]['items'].iteritems():
 						print "disco items for "+values['jid']
-						self.main().client.getDiscoInfo(values['jid'], callback = self.root,callback_par=(values['jid']))
+						(key,node) = item
+						self.main().client.getDiscoInfo(values['jid'], node=node, callback = self.root,callback_par=(values['jid']))
 
 				
-			elif self.main().client.disco[key][None].has_key("err"):
+			elif self.main().client.disco[key][(key,node_key)].has_key("err"):
 				print key,"error"
-			print self.main().client.disco[key]
+			print self.main().client.disco.get(key)
 		print categories.keys()
 		return categories
 
-	def root(self,data=None):
+	def root(self,data=None,node_key=None):
 		key=data
 		print "get disco items "+data
 		if key in self.main().client.disco.keys():
-			if self.main().client.disco[key][None].has_key("identities"):
-				for identity,values in self.main().client.disco[key][None]["identities"].iteritems():
+			if self.main().client.disco[key][(key,node_key)].has_key("identities"):
+				for identity,values in self.main().client.disco[key][(key,node_key)]["identities"].iteritems():
 					parentitem=None
 					if values.has_key('category'):
 						#if not values['category'] in categories.keys():
@@ -357,10 +375,10 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 									parentitem.setIcon(0,self.main().getIcon(size="22x22",usertype=typ))
 									parentitem.setText(3,key)
 									parentitem.setToolTip(0,key)
-					if self.main().client.disco[key][None].has_key("features") and parentitem:
-						parentitem.setData(32,0,QtCore.QVariant(list(self.main().client.disco[key][None]['features'])))
+					if self.main().client.disco[key][(key,node_key)].has_key("features") and parentitem:
+						parentitem.setData(32,0,QtCore.QVariant(list(self.main().client.disco[key][(key,node_key)]['features'])))
 	
-						if "jabber:iq:register" in list(self.main().client.disco[key][None]['features']):
+						if "jabber:iq:register" in list(self.main().client.disco[key][(key,node_key)]['features']):
 							register=QtGui.QPushButton(self.ui.tree)
 							#register.setMaximumWidth(40)
 							#register.setMinimumWidth(24)
@@ -373,7 +391,7 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 							register.setToolTip(self.tr("Register service"))
 							self.group.addButton(register)
 							self.ui.tree.setItemWidget(parentitem,2,register)
-						if "jabber:iq:search" in list(self.main().client.disco[key][None]['features']):
+						if "jabber:iq:search" in list(self.main().client.disco[key][(key,node_key)]['features']):
 							search=QtGui.QPushButton(self.ui.tree)
 							#search.setMaximumWidth(16)
 							#search.setMinimumWidth(24)
@@ -386,13 +404,15 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 							search.setToolTip(self.tr("Search service for users"))
 							self.group.addButton(search)
 							self.ui.tree.setItemWidget(parentitem,1,search)
-						if "http://jabber.org/protocol/commands" in list(self.main().client.disco[key][None]['features']):
+						if "http://jabber.org/protocol/commands" in list(self.main().client.disco[key][(key,node_key)]['features']):
 							cmds=QtGui.QPushButton(self.ui.tree)
 							cmds.setMaximumWidth(34)
 							cmds.setIcon(QtGui.QIcon("images/32x32/actions/exec.png"))
 							cmds.setIconSize(QtCore.QSize(32,32))
 							cmds.setFlat(True)
 							cmds.jid=parentitem.text(3)
+							cmds.node=node_key
+							cmds.name=unicode(parentitem.text(1))
 							cmds.typ="cmds"
 							cmds.setToolTip(self.tr("Execute extra action"))
 							self.group.addButton(cmds)

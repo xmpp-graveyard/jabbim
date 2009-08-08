@@ -47,12 +47,12 @@ class addContactDialog(QtGui.QDialog):
 
 		for key in self.main.client.disco.keys():
 			got=False
-			if self.main.client.disco[key][None].has_key("identities"):
-				for identity in self.main.client.disco[key][None]["identities"].itervalues():
+			if self.main.client.disco[key][(key,None)].has_key("identities"):
+				for identity in self.main.client.disco[key][(key,None)]["identities"].itervalues():
 					if identity['category']=="directory" and identity['type']=='user':
 						got=True
-			if self.main.client.disco[key][None].has_key("features") and got:
-				if "jabber:iq:search" in list(self.main.client.disco[key][None]['features']):
+			if self.main.client.disco[key][(key,None)].has_key("features") and got:
+				if "jabber:iq:search" in list(self.main.client.disco[key][(key,None)]['features']):
 					#print self.main.client.disco[key]
 					self.searchJid=unicode(key)
 		print 'searchJid',self.searchJid
@@ -68,8 +68,8 @@ class addContactDialog(QtGui.QDialog):
 			if self.main.client.bookmarksEnabled:
 				host = jid.host
 				self.muc = False
-				if self.main.client.disco.has_key(host) and self.main.client.disco[host][None].has_key('identities'):
-					for id in self.main.client.disco[host][None]['identities'].itervalues():
+				if self.main.client.disco.has_key(host) and self.main.client.disco[host][(host,None)].has_key('identities'):
+					for id in self.main.client.disco[host][(host,None)]['identities'].itervalues():
 						if id.get('category') == 'conference' and id.get('type') == 'text':
 							self.muc = True
 				if self.muc == True:

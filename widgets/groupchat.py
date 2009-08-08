@@ -400,7 +400,7 @@ class groupChatWidget(abstractChatWidget):
 		"""
 		Called By pyxl when disco#info is received
 		"""
-		self.disco_features = self.main().client.disco[self.jid][None]["features"]
+		self.disco_features = self.main().client.disco[self.jid][(self.jid,None)]["features"]
 		features = []
 		possible_features = {
 				# http://jabber.org/protocol/muc#register

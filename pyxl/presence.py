@@ -149,9 +149,9 @@ class PresenceInit:
 			wantAvatar=True
 			if self.client.groupchats.has_key(fromjid):
 				if self.client.disco.has_key(frm.host):
-					if self.client.disco[frm.host][None].has_key("identities"):
-						if self.client.disco[frm.host][None].has_key("identities"):
-							for identity,values in self.client.disco[frm.host][None]["identities"].iteritems():
+					if self.client.disco[frm.host][(frm.host,None)].has_key("identities"):
+						if self.client.disco[frm.host][(frm.host,None)].has_key("identities"):
+							for identity,values in self.client.disco[frm.host][(frm.host,None)]["identities"].iteritems():
 								if values['type']=='irc':
 									wantAvatar=False
 

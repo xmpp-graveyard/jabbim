@@ -667,8 +667,8 @@ class clientClass(pyxl.client.Client):
 	def getHostType(self,host,jid):
 		host=host.split('/')[0]
 		try:
-			name=self.disco[host][None]['identities'].keys()[0]
-			typ=self.disco[host][None]['identities'][name]['type']
+			name=self.disco[host][(host,None)]['identities'].keys()[0]
+			typ=self.disco[host][(host,None)]['identities'][name]['type']
 		except:
 			typ=None
 		if typ!=None:
