@@ -206,7 +206,7 @@ class Commands:
 		command = iq.addElement("command")
 		command.attributes = {"node":node, "xmlns": "http://jabber.org/protocol/commands", "action":"execute"}
 		d=iq.send()
-		d.addCallback(self._formRecieved)#.addErrback(self._errorRecieved)
+		d.addCallback(self._formRecieved).addErrback(self._errorRecieved)
 		self.main().client.disp(iq["id"])
 		log.msg("Executing command %s." % node)
 	

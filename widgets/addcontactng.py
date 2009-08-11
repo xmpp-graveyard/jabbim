@@ -202,7 +202,7 @@ class addContactDialog(QtGui.QDialog):
 									if values.has_key('category'):
 										if values.has_key('name'):
 											#[u'conference', u'service', u'headline', u'component', u'server', u'services', u'proxy', u'directory', u'gateway', u'store', u'pubsub']
-											if values['category'] in ['service','services','store','directory','component','gateway']:
+											if values['category'] in ['service','services','store','directory','component','gateway','headline']:
 												if values.has_key("type"):
 													if not key in ['disk.jabbim.cz',"brebex.jabbim.cz","tv.jabbim.cz","smtp.jabbim.cz"]:
 														typ=values['type']
