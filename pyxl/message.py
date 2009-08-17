@@ -42,7 +42,7 @@ class Message:
 				encrypted_message.addContent(self.gpg_encrypted_body)
 				message.addChild(encrypted_message)
 			else:
-				message.addElement('body', content = escape(self.body))
+				message.addElement('body', content = self.body)
 		message['type'] = self.typ
 
 #		if self.groupchats.has_key(JID.userhost()):
