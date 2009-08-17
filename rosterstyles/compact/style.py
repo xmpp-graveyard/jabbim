@@ -58,13 +58,13 @@ class rosterStyle:
 		#painter.restore()
 
 		# write the name of the group
-		doc.setHtml("<font color=\""+self.roster.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+item.escapedName+"</font>")
+		doc.setHtml("<font color=\""+unicode(self.roster.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name())+"\">"+unicode(item.escapedName)+"</font>")
 		painter.save()
 		painter.translate(x+30,y+(22-fontHeight)/2)
 		doc.drawContents(painter, QtCore.QRectF(0,0,self.roster.width(),y+22))
 		painter.restore()
 		width=int(font.width("("+str(item.online)+"/"+str(item.all)+")"))
-		doc.setHtml("<font color=\""+self.roster.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">("+str(item.online)+"/"+str(item.all)+")</font>")
+		doc.setHtml("<font color=\""+unicode(self.roster.main.ui.groupStyleWidget.palette().color(QtGui.QPalette.Text).name())+"\">("+str(item.online)+"/"+str(item.all)+")</font>")
 		painter.save()
 		painter.translate((int(self.roster.width())-width-6),y+(22-fontHeight)/2)
 		doc.drawContents(painter, QtCore.QRectF(0,0,width+15,y+20))
