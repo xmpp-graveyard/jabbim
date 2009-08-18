@@ -418,13 +418,11 @@ class derived:
 		iq.addElement('vCard', 'vcard-temp')
 		self.disp(iq['id'])
 		iq.timeout = 300
-		log.msg("Sending VCARD IQ")
+		log.msg("Sending VCARD IQ to %s: %s" % (jid, iq.toXml()))
 		d = iq.send()
-		log.msg("XML LOG")
+#		log.msg("XML LOG")
 #		self.on_xml(iq.toXml())
-		log.msg("ADDING: callback")
 		d.addCallback(self._vcardReceived).addErrback(self._noVcard, jid)
-		log.msg("END: getVCard")
 		return d
 
 	def getTransportForm(self, jid):
