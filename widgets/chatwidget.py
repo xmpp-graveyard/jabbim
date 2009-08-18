@@ -604,14 +604,14 @@ class chatWidget(abstractChatWidget):
 				if el.name == 'text':
 					txt = unicode(el)
 				else:
-					m = self.main().moods.get(el.name)
+					m = unicode(self.main().moods.get(el.name))
 					if self.main().moodIcons.has_key(el.name):
 						icon="<img src=\"file:///%s\" />" % self.main().moodIcons[el.name].src
 						ic=QtGui.QPixmap(self.main().moodIcons[el.name].src)
 					else:
 						icon=""
 			if txt != '':
-				t = m+ ' - %s'%txt
+				t = '%s - %s' % (m, txt)
 			else:
 				t = m
 			#text+='<br />%s <font size="-1">&nbsp; %s</font>' % (icon.replace("file:///",""),t)

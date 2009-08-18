@@ -1154,14 +1154,14 @@ class rosterWidget(QtGui.QWidget):
 								if el.name == 'text':
 									txt = unicode(el)
 								else:
-									m = self.main.moods.get(el.name)
+									m = unicode(self.main.moods.get(el.name))
 									if self.main.moodIcons.has_key(el.name):
 										self.tool.ui.mood.setPixmap(QtGui.QPixmap(self.main.moodIcons[el.name].src))
 										self.tool.ui.mood.show()
 									else:
 										self.tool.ui.mood.hide()
 							if txt != '':
-								self.tool.mood = m+ ' - %s'%txt
+								self.tool.mood = '%s - %s' % (m, txt)
 							else:
 								self.tool.mood = m
 						else:

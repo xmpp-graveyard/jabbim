@@ -3004,13 +3004,13 @@ class mainWindow(QtGui.QMainWindow):
 						if el.name == 'text':
 							txt = unicode(el)
 						else:
-							m = self.moods.get(el.name)
+							m = unicode(self.moods.get(el.name))
 							if self.moodIcons.has_key(el.name):
 								icon="<img src=\"%s\" />" % self.moodIcons[el.name].src
 							else:
 								icon=""
 					if txt != '':
-						t = m+ ' - %s'%txt
+						t = '%s - %s' % (m, txt)
 					else:
 						t = m
 					text+='<br />%s<font size="-1">%s</font>' % (icon,t)
