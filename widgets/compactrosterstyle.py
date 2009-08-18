@@ -257,7 +257,6 @@ class rosterStyle:
 
 			if self.roster.metaItems.has_key(useritem.metajid) and background:
 				if not useritem in self.roster.metaItems[useritem.metajid]:
-					print "painting"
 					painter.save()
 					painter.translate(x,y)
 					painter.setPen(QtCore.Qt.transparent)
@@ -360,7 +359,6 @@ class rosterStyle:
 
 			if self.roster.metaItems.has_key(useritem.metajid) and background:
 				if not useritem in self.roster.metaItems[useritem.metajid]:
-					print "painting"
 					painter.save()
 					painter.translate(x,y)
 					painter.setPen(QtCore.Qt.transparent)

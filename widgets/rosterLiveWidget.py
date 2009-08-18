@@ -1353,7 +1353,6 @@ class rosterWidget(QtGui.QWidget):
 		self.rosterStyle.paintUserItem(painter,useritem,x,y,last)
 
 	def paintEvent(self,event):
-		start=time.time()
 		QtGui.QWidget.paintEvent(self,event)
 		painter=QtGui.QPainter(self)
 		painter.setClipping(True)
@@ -1375,7 +1374,6 @@ class rosterWidget(QtGui.QWidget):
 				else:
 					self.paintUserItem(painter,item,0,y,last)
 				y+=item.height
-		print "paintEvent last",time.time()-start
 		#if self.reshow:
 			#self.statusLabel.hide()
 
