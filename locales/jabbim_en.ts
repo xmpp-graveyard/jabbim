@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="en">
+<!DOCTYPE TS>
+<TS version="2.0" language="en">
 <context>
     <name></name>
     <message>
@@ -208,32 +209,32 @@
     <message>
         <location filename="widgets/commands.py" line="174"/>
         <source>Sorry. No extra actions available.</source>
-        <translation type="unfinished">Sorry. No extra actions available.</translation>
+        <translation>Sorry. No extra actions available.</translation>
     </message>
     <message>
         <location filename="widgets/commands.py" line="181"/>
         <source>Choose action to execute.</source>
-        <translation type="unfinished">Choose action to execute.</translation>
+        <translation>Choose action to execute.</translation>
     </message>
     <message>
         <location filename="widgets/commands.py" line="238"/>
         <source>Completed!</source>
-        <translation type="unfinished">Completed!</translation>
+        <translation>Completed!</translation>
     </message>
     <message>
         <location filename="widgets/commands.py" line="284"/>
         <source>Error</source>
-        <translation type="unfinished">Error</translation>
+        <translation>Error</translation>
     </message>
     <message>
         <location filename="widgets/commands.py" line="286"/>
         <source>Warning</source>
-        <translation type="unfinished">Warning</translation>
+        <translation>Warning</translation>
     </message>
     <message>
         <location filename="widgets/commands.py" line="288"/>
         <source>Info</source>
-        <translation type="unfinished">Info</translation>
+        <translation>Info</translation>
     </message>
 </context>
 <context>
@@ -267,37 +268,37 @@
     <message>
         <location filename="widgets/commands_ui.py" line="94"/>
         <source>Extra action</source>
-        <translation type="unfinished">Command</translation>
+        <translation>Command</translation>
     </message>
     <message>
         <location filename="widgets/commands_ui.py" line="95"/>
         <source>Cancel</source>
-        <translation type="unfinished">Cancel</translation>
+        <translation>Cancel</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="widgets/commands_ui.py" line="97"/>
         <source>Next →</source>
-        <translation type="unfinished">Next →</translation>
+        <translation>Next →</translation>
     </message>
     <message>
         <location filename="widgets/commands_ui.py" line="96"/>
         <source>Finish</source>
-        <translation type="unfinished">Finish</translation>
+        <translation>Finish</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="widgets/commands_ui.py" line="99"/>
         <source>← Back</source>
-        <translation type="unfinished">← Back</translation>
+        <translation>← Back</translation>
     </message>
     <message>
         <location filename="widgets/commands_ui.py" line="98"/>
         <source>Close</source>
-        <translation type="unfinished">Close</translation>
+        <translation>Close</translation>
     </message>
     <message>
         <location filename="widgets/commands_ui.py" line="100"/>
         <source>Menu</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="wizards/jsm_ui.py" line="79"/>
@@ -315,22 +316,22 @@
     <message>
         <location filename="widgets/extra_ui.py" line="75"/>
         <source>Close</source>
-        <translation type="unfinished">Close</translation>
+        <translation>Close</translation>
     </message>
     <message>
         <location filename="widgets/extra_ui.py" line="74"/>
         <source>Jabbim Extra</source>
-        <translation type="unfinished"></translation>
+        <translation>Jabbim Extra</translation>
     </message>
     <message>
         <location filename="widgets/extra_ui.py" line="76"/>
         <source>Install</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="widgets/extra_ui.py" line="77"/>
         <source>&lt;h2&gt;Emoticons&lt;/h2&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
 </context>
 <context>
@@ -1303,7 +1304,7 @@ p, li { white-space: pre-wrap; }
      &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
      &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Version:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="widgets/about.py" line="116"/>
         <source>0.2 - DAŽBOG</source>
         <translation type="obsolete">0.2 - DAŽBOG</translation>
@@ -1337,7 +1338,7 @@ p, li { white-space: pre-wrap; }
      &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
      &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Main developers:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="widgets/about.py" line="141"/>
         <source>Jan &apos;HanzZ&apos; Kaluža
      Jiří­ &apos;Sef&apos; Gabryš</source>
@@ -1355,7 +1356,7 @@ p, li { white-space: pre-wrap; }
      &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
      &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Other developers:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="widgets/about.py" line="147"/>
         <source>Josef &apos;Cornelius&apos; Vybí­ral
      Josef &apos;Pepeq&apos; Halíček
@@ -1388,7 +1389,7 @@ Jáchym &apos;kamahl&apos; Barvínek</translation>
      &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;Sans Serif&apos;; font-size:9pt; font-weight:400; font-style:normal; text-decoration:none;&quot;&gt;
      &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Thanks to:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="widgets/about.py" line="130"/>
         <source>Josef &apos;Cornelius&apos; Vybí­ral
 Josef &apos;Pepeq&apos; Halíček
@@ -1402,7 +1403,7 @@ and many translators and patchers</source>
     <message>
         <location filename="widgets/about.py" line="137"/>
         <source>Conference: &lt;a href=&apos;xmpp:jabbim@conf.netlab.cz?join&apos;&gt;jabbim@conf.netlab.cz&lt;/a&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>Chat Room: &lt;a href=&apos;xmpp:jabbim@conf.netlab.cz?join&apos;&gt;jabbim@conf.netlab.cz&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="widgets/about.py" line="139"/>
@@ -2068,7 +2069,7 @@ p, li { white-space: pre-wrap; }
         <source>Welcome</source>
         <translation type="obsolete">Welcome</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/firststart.py" line="17"/>
         <source>Vítejte .........</source>
         <translation type="obsolete">Welcome to the open world of Jabber. This wizzard will help you with creating your account, so you can chat with your friends in no time </translation>
@@ -2477,7 +2478,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="widgets/groupchatadmin_ui.py" line="67"/>
         <source>MUC Configuration</source>
-        <translation type="unfinished">MUC Configuration</translation>
+        <translation>Chat Room Configuration</translation>
     </message>
     <message>
         <location filename="widgets/groupchatadmin_ui.py" line="68"/>
@@ -3655,7 +3656,7 @@ Do you realy want to leave this room?</translation>
     <message>
         <location filename="jabbim.py" line="433"/>
         <source>Groupchat Error</source>
-        <translation type="unfinished"></translation>
+        <translation>Room Error</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="512"/>
@@ -4931,7 +4932,7 @@ Do you realy want to leave this room?</translation>
     <message>
         <location filename="widgets/preferences/view.py" line="374"/>
         <source>Groupchat theme</source>
-        <translation type="unfinished"></translation>
+        <translation>Theme for rooms</translation>
     </message>
     <message>
         <location filename="widgets/preferences/view.py" line="380"/>
@@ -5908,7 +5909,7 @@ Version: %3</translation>
         <source>Your avatar was too big. He had to be resized to smaller size.</source>
         <translation type="unfinished">Your avatar was too big. It had to be resized.</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/registration.py" line="354"/>
         <source>Hesla nejsou stejná.</source>
         <translation type="obsolete">Passwords differ.</translation>
@@ -5918,12 +5919,12 @@ Version: %3</translation>
         <source>Introduction</source>
         <translation type="unfinished">Introduction</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/registration.py" line="24"/>
         <source>Server je místo, kde jsou uložena Vaše uživatelská data.</source>
         <translation type="obsolete">Server is where user data are stored.</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/registration.py" line="31"/>
         <source>Jabber ID (JID) je obdoba emailové adresy. Je to Váš identifikátor v sítich jabber a ostatní uživatelé Vám na tuto adresu mohou pomocí jabberu psát.</source>
         <translation type="obsolete">Jabber ID is like email address. It is your identity in Jabber network.</translation>
@@ -5953,32 +5954,32 @@ Version: %3</translation>
         <source>Choose server</source>
         <translation type="unfinished">Choose server</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/registration.py" line="77"/>
         <source>Vaše Jabber ID:</source>
         <translation type="obsolete">Your Jabber ID:</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/registration.py" line="197"/>
         <source>Registrace Jabber účtu</source>
         <translation type="obsolete">Jabber account registration</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/registration.py" line="85"/>
         <source>Vyberte server, na kterém chcete účet zaregistrovat a svoji přezdívku.</source>
         <translation type="obsolete">Choose server, where you want to register.</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/registration.py" line="102"/>
         <source>Právě probíhá registrace Vašeho účtu. Prosím vyčkejte.</source>
         <translation type="obsolete">Registration in progress, please wait.</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/registration.py" line="198"/>
         <source>Vaše registrace byla úspěšně dokončena.</source>
         <translation type="obsolete">Your registration was successfully completed.</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/registration.py" line="158"/>
         <source>Váš účet byl zaregistrován. Nyní stačí jen vyplnit informace o Vás.</source>
         <translation type="obsolete">Your accont was registered. Now it is recomended to fill in some info about you.</translation>
@@ -6008,7 +6009,7 @@ Version: %3</translation>
         <source>Open</source>
         <translation type="unfinished">Open</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/registration.py" line="159"/>
         <source>Vyberte si Jabber ID a napište heslo k Vašemu budoucímu účtu.</source>
         <translation type="obsolete">Choose Jabber ID and password to your account.</translation>
@@ -6230,7 +6231,7 @@ Version: %3</translation>
     <message>
         <location filename="widgets/rosterLiveWidget.py" line="2492"/>
         <source>Invite to conference</source>
-        <translation type="unfinished">Invite to conference</translation>
+        <translation>Invite to chat room</translation>
     </message>
     <message>
         <location filename="widgets/rosterLiveWidget.py" line="2732"/>
@@ -6873,7 +6874,7 @@ Version: %3</translation>
     <message>
         <location filename="widgets/servicediscovery.py" line="309"/>
         <source>Conferences</source>
-        <translation type="unfinished">Conferences</translation>
+        <translation>Chat Rooms</translation>
     </message>
     <message>
         <location filename="widgets/servicediscovery.py" line="373"/>
@@ -7297,7 +7298,7 @@ p, li { white-space: pre-wrap; }
         <source>Type of contact</source>
         <translation type="obsolete">Type of contact</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/addcontact.py" line="22"/>
         <source>Vyberte typ kontaktu, který chcete přidat.</source>
         <translation type="obsolete">Vyberte typ kontaktu, který chcete přidat.</translation>
@@ -7327,17 +7328,17 @@ p, li { white-space: pre-wrap; }
         <source>Choose server</source>
         <translation type="obsolete">Choose server</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/addcontact.py" line="69"/>
         <source>Vaše Jabber ID:</source>
         <translation type="obsolete">Your Jabber ID:</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/addcontact.py" line="75"/>
         <source>Registrace Jabber účtu</source>
         <translation type="obsolete">Jabber account registration</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/addcontact.py" line="76"/>
         <source>Vyberte server, na kterém chcete účet zaregistrovat a svoji přezdívku.</source>
         <translation type="obsolete">Choose server, where you want to register.</translation>
@@ -7347,7 +7348,7 @@ p, li { white-space: pre-wrap; }
         <source>Welcome</source>
         <translation type="obsolete">Welcome</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/firststart.py" line="17"/>
         <source>Vítejte .........</source>
         <translation type="obsolete">Welcome .........</translation>
@@ -7397,27 +7398,27 @@ p, li { white-space: pre-wrap; }
         <source>Introduction</source>
         <translation type="obsolete">Introduction</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/registration.py" line="24"/>
         <source>Server je místo, kde jsou uložena Vaše uživatelská data.</source>
         <translation type="obsolete">Server is where user data are stored.</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/registration.py" line="27"/>
         <source>Jabber ID (JID) je obdoba emailové adresy. Je to Váš identifikátor v sítich jabber a ostatní uživatelé Vám na tuto adresu mohou pomocí jabberu psát.</source>
         <translation type="obsolete">Jabber ID is like email address. It is your identity in Jabber network.</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/registration.py" line="88"/>
         <source>Právě probíhá registrace Vašeho účtu. Prosím vyčkejte.</source>
         <translation type="obsolete">Registration in progress, please wait.</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/registration.py" line="102"/>
         <source>Vaše registrace byla úspěšně dokončena.</source>
         <translation type="obsolete">Your registration was successfully completed.</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/registration.py" line="118"/>
         <source>Váš účet byl zaregistrován. Nyní stačí jen vyplnit informace o Vás.</source>
         <translation type="obsolete">Your accont was registered. Now it is recomended to fill in some info about you.</translation>
@@ -7447,7 +7448,7 @@ p, li { white-space: pre-wrap; }
         <source>Open</source>
         <translation type="obsolete">Open</translation>
     </message>
-    <message encoding="UTF-8">
+    <message utf8="true">
         <location filename="wizards/registration.py" line="159"/>
         <source>Vyberte si Jabber ID a napište heslo k Vašemu budoucímu účtu.</source>
         <translation type="obsolete">Choose Jabber ID and password to your accont.</translation>
