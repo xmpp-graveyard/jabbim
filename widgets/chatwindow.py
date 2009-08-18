@@ -531,7 +531,6 @@ class chatWindow(QtGui.QMainWindow):
 			# write message
 			if countMessage:
 				w.chat.unread+=1
-			print message
 			w.chat.textEditWrite(message,insert)
 			w.chat.lastMessageFrom=unicode(user)
 			return
