@@ -166,9 +166,9 @@ class PresenceInit:
 				avatarjid = fromjid
 
 			print "will look for avatar for %s" % avatarjid
-			if self.client.avatarDef.has_key(avatarjid):
+			if self.client.main.avatarDef.has_key(avatarjid):
 				print "I have this jid in avatarDef"
-				if self.client.avatarDef[avatarjid] == hash:
+				if self.client.main.avatarDef[avatarjid] == hash:
 					# good, we already have the right avatar
 					print "hash matches, I already have this avatar"
 					pass

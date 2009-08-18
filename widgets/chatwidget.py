@@ -536,18 +536,18 @@ class chatWidget(abstractChatWidget):
 	def loadAvatars(self):
 		# avatar of user who is chatting with us
 		self.file=""
-		if self.main().client.avatarDef.has_key(unicode(jidT.JID(self.jid).userhost())):
-			self.file=self.main().realHomeDir+'/avatars/'+str(self.main().client.avatarDef[unicode(jidT.JID(self.jid).userhost())]) #: path to users avatar
-		elif self.main().client.avatarDef.has_key(unicode(jidT.JID(self.jid).full())):
-			self.file=self.main().realHomeDir+'/avatars/'+str(self.main().client.avatarDef[unicode(jidT.JID(self.jid).full())]) #: path to users avatar
+		if self.main().avatarDef.has_key(unicode(jidT.JID(self.jid).userhost())):
+			self.file=self.main().realHomeDir+'/avatars/'+str(self.main().avatarDef[unicode(jidT.JID(self.jid).userhost())]) #: path to users avatar
+		elif self.main().avatarDef.has_key(unicode(jidT.JID(self.jid).full())):
+			self.file=self.main().realHomeDir+'/avatars/'+str(self.main().avatarDef[unicode(jidT.JID(self.jid).full())]) #: path to users avatar
 		if not os.path.isfile(self.file):
 			# use default avatar if users avatar doesn't exist
 			self.file=os.getcwd()+"/images/32x32/apps/jabbim.png"
 
 		# our avatar
 		f=""
-		if self.main().client.avatarDef.has_key(self.main().client.jid.userhost()):
-			f=self.main().realHomeDir+'/avatars/'+str(self.main().client.avatarDef[self.main().client.jid.userhost()])
+		if self.main().avatarDef.has_key(self.main().client.jid.userhost()):
+			f=self.main().realHomeDir+'/avatars/'+str(self.main().avatarDef[self.main().client.jid.userhost()])
 		if not os.path.isfile(f):
 			self.selfFile="images/32x32/apps/jabbim.png"
 		else:

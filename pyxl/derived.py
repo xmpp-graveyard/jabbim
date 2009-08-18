@@ -185,8 +185,8 @@ class derived:
 				c['hash'] = 'sha-1'
 
 		x = presence.addElement('x', 'vcard-temp:x:update')
-		if self.avatarDef.has_key(self.jid.userhost()) and self.avatarDef[self.jid.userhost()] != 'None':
-			x.addElement('photo', content = self.avatarDef[self.jid.userhost()])
+		if self.main.avatarDef.has_key(self.jid.userhost()) and self.main.avatarDef[self.jid.userhost()] != 'None':
+			x.addElement('photo', content = self.main.avatarDef[self.jid.userhost()])
 		else:
 			x.addElement('photo')
 

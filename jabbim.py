@@ -1874,7 +1874,7 @@ class clientClass(pyxl.client.Client):
 		"""
 		Called when avatar is upated.
 		"""
-		if not self.avatarDef.has_key(jid):
+		if not self.main.avatarDef.has_key(jid):
 			return None
 		# get avatar for this jid
 		pixmap=self.main.getAvatar(jid,frame=False,status=None)
@@ -2623,7 +2623,13 @@ class mainWindow(QtGui.QMainWindow):
 
 		self.reconnect = True # :# True = Jabbim will reconnect after disconnect
 		self.active=True
-		# fill login form
+
+		try:
+			self.avatarDef = ConfigObj(self.realHomeDir+'/avatars/avatars.def',encoding='UTF8')
+		except ConfigObjError, e:
+			self.avatarDef = e.config
+			self.avatarDef.write()
+
 		self.fillLoginForm()
 		# load cache and create tables
 		if sys.platform != 'win32':
@@ -2899,14 +2905,14 @@ class mainWindow(QtGui.QMainWindow):
 		text='<table><tr>'
 #		if self.userRating.users.has_key(jid):
 #			text+="<td>rating: "+str(self.userRating.users[jid].rating)+"</td>"
-		if self.client.avatarDef.get(jid, False):
-			if self.client.avatarImg.has_key(self.client.avatarDef[jid]):
-				if self.client.avatarImg[self.client.avatarDef[jid]] and self.client.avatarDef[jid]!="None":
-					width=self.client.avatarImg[self.client.avatarDef[jid]][1]
+		if self.avatarDef.get(jid, False):
+			if self.client.avatarImg.has_key(self.avatarDef[jid]):
+				if self.client.avatarImg[self.avatarDef[jid]] and self.avatarDef[jid]!="None":
+					width=self.client.avatarImg[self.avatarDef[jid]][1]
 					if width!=0:
-						height=self.client.avatarImg[self.client.avatarDef[jid]][2]
+						height=self.client.avatarImg[self.avatarDef[jid]][2]
 						height=height/(float(width)/64.0)
-						text+='<td><img src="'+self.realHomeDir+'/avatars/'+unicode(self.client.avatarDef[jid])+'" width="64" height="'+str(height)+'"/></td>'
+						text+='<td><img src="'+self.realHomeDir+'/avatars/'+unicode(self.avatarDef[jid])+'" width="64" height="'+str(height)+'"/></td>'
 		else:
 			#if there is no avatar for given JID, then try to use avatar from any metacontact
 			meta = self.ui.roster.getMetaItems(jid)
@@ -2914,14 +2920,14 @@ class mainWindow(QtGui.QMainWindow):
 			for itm in meta:
 				j = itm[1]
 
-				if self.client.avatarDef.get(j, False):
-					if self.client.avatarImg.has_key(self.client.avatarDef[j]):
-						if self.client.avatarImg[self.client.avatarDef[j]] and self.client.avatarDef[j]!="None":
-							width=self.client.avatarImg[self.client.avatarDef[j]][1]
+				if self.avatarDef.get(j, False):
+					if self.client.avatarImg.has_key(self.avatarDef[j]):
+						if self.client.avatarImg[self.avatarDef[j]] and self.avatarDef[j]!="None":
+							width=self.client.avatarImg[self.avatarDef[j]][1]
 							if width!=0:
-								height=self.client.avatarImg[self.client.avatarDef[j]][2]
+								height=self.client.avatarImg[self.avatarDef[j]][2]
 								height=height/(float(width)/64.0)
-								text+='<td><img src="'+self.realHomeDir+'/avatars/'+unicode(self.client.avatarDef[j])+'" width="64" height="'+str(height)+'"/></td>'
+								text+='<td><img src="'+self.realHomeDir+'/avatars/'+unicode(self.avatarDef[j])+'" width="64" height="'+str(height)+'"/></td>'
 								break
 
 		if name != None:
@@ -3206,8 +3212,8 @@ class mainWindow(QtGui.QMainWindow):
 
 	def getAvatarSrc(self,jid):
 		hash=""
-		if self.client.avatarDef.has_key(jid):
-			hash=self.client.avatarDef[jid]
+		if self.avatarDef.has_key(jid):
+			hash=self.avatarDef[jid]
 		if hash=="":
 			file=os.getcwd()+"/images/32x32/apps/jabbim.png"
 		else:
@@ -3242,8 +3248,8 @@ class mainWindow(QtGui.QMainWindow):
 			return None
 		if isinstance(pixmap,unicode) or isinstance(pixmap,str):
 			hash=""
-			if self.client.avatarDef.has_key(pixmap):
-				hash=self.client.avatarDef[pixmap]
+			if self.avatarDef.has_key(pixmap):
+				hash=self.avatarDef[pixmap]
 			if hash=="":
 				file=self.realHomeDir+'/avatars/'+unicode(pixmap)
 			else:
@@ -4106,12 +4112,6 @@ class mainWindow(QtGui.QMainWindow):
 		Fill login form according to config file and existing profiles
 		"""
 		profiles=utils.getProfiles(self.realHomeDir)
-		try:
-			avatarDef = ConfigObj(self.realHomeDir+'/avatars/avatars.def',encoding='UTF8')
-		except ConfigObjError, e:
-			avatarDef = e.config
-			avatarDef.write()
-
 		# show profiles only if their count is more than 1
 		if len(profiles)<=1:
 			self.ui.profilesList.hide()
@@ -4130,8 +4130,8 @@ class mainWindow(QtGui.QMainWindow):
 				jid=profile.replace('-profile','')
 				# load profile avatar
 				file=""
-				if avatarDef.has_key(unicode(jid)):
-					file=self.realHomeDir+"/avatars/"+avatarDef[unicode(jid)]
+				if self.avatarDef.has_key(unicode(jid)):
+					file=self.realHomeDir + "/avatars/" + self.avatarDef[unicode(jid)]
 				if os.path.isfile(file):
 					avatar=QtGui.QPixmap(file)
 					if avatar.isNull():
@@ -4174,8 +4174,8 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.login_savePassword.setChecked(False)
 			self.ui.login_autoconnect.setEnabled(False)
 		file=""
-		if avatarDef.has_key(self.config['jid']):
-			file=self.realHomeDir+"/avatars/"+avatarDef[self.config['jid']]
+		if self.avatarDef.has_key(self.config['jid']):
+			file=self.realHomeDir + "/avatars/" + self.avatarDef[self.config['jid']]
 		if os.path.isfile(file):
 			pixmap=QtGui.QIcon(file)
 			avatar=pixmap.pixmap(100,112)
@@ -4591,6 +4591,8 @@ class mainWindow(QtGui.QMainWindow):
 		f=open(self.realHomeDir+"/config",'w')
 		self.config.write(f)
 		f.close()
+		# save avatar cache index
+		self.avatarDef.write()
 	def trayActivated(self,reason=QtGui.QSystemTrayIcon.Trigger):
 		"""
 		Shows or hides mainWindow. Called when is tray activated.
@@ -5254,29 +5256,29 @@ class mainWindow(QtGui.QMainWindow):
 
 
 		path = self.realHomeDir+'/avatars/'
-		if self.client.avatarDef.has_key(self.client.jid.userhost()):
-			self.client.avatarImg[self.client.avatarDef[self.client.jid.userhost()]] = self.loadAvatar(self.client.avatarDef[self.client.jid.userhost()])
+		if self.avatarDef.has_key(self.client.jid.userhost()):
+			self.client.avatarImg[self.avatarDef[self.client.jid.userhost()]] = self.loadAvatar(self.avatarDef[self.client.jid.userhost()])
 		img=self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"))
 		img.file=None
 		self.client.avatarImg[None]=[img,32,32]
 		img.file="None"
 		self.client.avatarImg[u'None']=[img,32,32]
-		#d=threads.deferToThread(self.loadAvatars,unicode(path),dict(self.client.avatarDef))
+		#d=threads.deferToThread(self.loadAvatars,unicode(path),dict(self.avatarDef))
 		#d.addCallback(self.gotAvatars)
 
 		# sets None for all avatars
 		hashe = []
-		for hash in self.client.avatarDef.itervalues():
+		for hash in self.avatarDef.itervalues():
 			if not hash in hashe and hash and hash!="None":
 				hashe.append(unicode(str(hash)))
 		for key in hashe:
 			self.client.avatarImg[key]=None
 		# load avatars
-		self.imageLoader=avatarLoader(self,unicode(path),dict(self.client.avatarDef))
+		self.imageLoader=avatarLoader(self,unicode(path),dict(self.avatarDef))
 		QtCore.QObject.connect(self.imageLoader,QtCore.SIGNAL("imageLoaded(QString,QImage,int,int)"),self.avatarLoaded,QtCore.Qt.QueuedConnection)
 		self.imageLoader.start(QtCore.QThread.LowestPriority)
 
-		#self.gotAvatars(self.loadAvatars(unicode(path),dict(self.client.avatarDef)))
+		#self.gotAvatars(self.loadAvatars(unicode(path),dict(self.avatarDef)))
 		try:
 			self.client.xmlLang= unicode(QtCore.QLocale.system().name())[:2]
 		except:

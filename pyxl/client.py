@@ -153,7 +153,6 @@ class Client(derived):
 #			fd.close()
 #			self.avatars[jd] = hash
 		self.avatars = {}
-		self.avatarDef = ConfigObj(self.main.realHomeDir+'/avatars/avatars.def',encoding='UTF8')
 		self.avatarImg = {} #hash:QPixmap
 		self.bobDef = ConfigObj(self.main.realHomeDir+'/bobCache/bob.def',encoding='UTF8')
 		self.bobCacheDir =self.main.realHomeDir+'/bobCache/'
@@ -210,10 +209,10 @@ class Client(derived):
 			jid = jd.full()
 		else:
 			jid = jd.userhost()
-		if self.avatarDef.has_key(jid):
-			ret = self.avatarImg.get(self.avatarDef[jid], None)
+		if self.main.avatarDef.has_key(jid):
+			ret = self.avatarImg.get(self.main.avatarDef[jid], None)
 			if ret:
-				ret+=[self.avatarDef[jid]]
+				ret+=[self.main.avatarDef[jid]]
 			return ret
 
 	def cacheCaps(self, ext, features, identity):
@@ -812,8 +811,8 @@ class Client(derived):
 		log.msg('chci ulozit ' + jid )
 #		self.reactor.callFromThread(self.main.cache.set_avatar,jid, ['nic', 'nic'])
 #		self.avatars[jid] = None
-		self.avatarDef[jid] = 'None'
-		#self.avatarDef.write()
+		self.main.avatarDef[jid] = 'None'
+		#self.main.avatarDef.write()
 		self.reactor.callFromThread(self.on_avatarUpdate,jid)
 
 		return err
@@ -845,8 +844,8 @@ class Client(derived):
 			f.write(image)
 			f.close()
 
-			self.avatarDef[el['from']] = hash
-			#self.avatarDef.write() # uncomment only if you really know what are you doing
+			self.main.avatarDef[el['from']] = hash
+			#self.main.avatarDef.write() # uncomment only if you really know what are you doing
 			#try:
 			self.avatarImg[hash] = self.main.loadAvatar(hash)#self.main.getAvatar(hash,size="32x32",frame=True)
 			#except:
@@ -856,8 +855,8 @@ class Client(derived):
 			#except:
 				#print 'chyba v updatu avatara'
 		else:
-			self.avatarDef[el['from']] = None
-			#self.avatarDef.write()
+			self.main.avatarDef[el['from']] = None
+			#self.main.avatarDef.write()
 		self.reactor.callFromThread(self.on_vcardReceived,el['from'],el)
 		return vcard
 

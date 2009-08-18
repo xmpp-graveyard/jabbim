@@ -180,12 +180,12 @@ class groupChatWidget(abstractChatWidget):
 
 		#nick=self.main().getJid(jid).resource
 		#status=self.main().icons[unicode(item.text(1))[0]]
-		#if self.main().client.avatarDef.get(jid, False):
-			#if self.main().client.avatarImg[self.main().client.avatarDef[jid]] and self.main().client.avatarDef[jid]!="None":
-				#width=self.main().client.avatarImg[self.main().client.avatarDef[jid]][1]
-				#height=self.main().client.avatarImg[self.main().client.avatarDef[jid]][2]
+		#if self.main().avatarDef.get(jid, False):
+			#if self.main().client.avatarImg[self.main().avatarDef[jid]] and self.main().avatarDef[jid]!="None":
+				#width=self.main().client.avatarImg[self.main().avatarDef[jid]][1]
+				#height=self.main().client.avatarImg[self.main().avatarDef[jid]][2]
 				#height=height/(float(width)/64.0)
-				#text+='<td><img src="'+self.main().realHomeDir+'/avatars/'+unicode(self.main().client.avatarDef[jid])+'" width="64" height="'+str(height)+'"/></td>'
+				#text+='<td><img src="'+self.main().realHomeDir+'/avatars/'+unicode(self.main().avatarDef[jid])+'" width="64" height="'+str(height)+'"/></td>'
 		##if os.path.isfile(self.main().homeDir+'/avatars/'+unicode(jid).replace("/","%")):
 			##f=open(self.main().homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
 			##image = f.read()
@@ -234,10 +234,10 @@ class groupChatWidget(abstractChatWidget):
 				jid=self.jid+"/"+unicode(item.text(0))
 				nick=unicode(item.text(0))
 				avatar=None
-				if self.main().client.avatarDef.get(jid, False):
-					if self.main().client.avatarImg.has_key(self.main().client.avatarDef[jid]):
-						if self.main().client.avatarImg[self.main().client.avatarDef[jid]] and self.main().client.avatarDef[jid]!="None":
-							avatar=QtGui.QPixmap(self.main().realHomeDir+'/avatars/'+unicode(self.main().client.avatarDef[jid]))
+				if self.main().avatarDef.get(jid, False):
+					if self.main().client.avatarImg.has_key(self.main().avatarDef[jid]):
+						if self.main().client.avatarImg[self.main().avatarDef[jid]] and self.main().avatarDef[jid]!="None":
+							avatar=QtGui.QPixmap(self.main().realHomeDir+'/avatars/'+unicode(self.main().avatarDef[jid]))
 				if avatar:
 					avatar=avatar.scaled(64,64,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
 				else:
@@ -966,12 +966,12 @@ class groupChatWidget(abstractChatWidget):
 		text='<table><tr>'
 		nick=self.main().getJid(jid).resource
 		status=self.main().icons[unicode(item.text(1))[0]]
-		if self.main().client.avatarDef.get(jid, False):
-			if self.main().client.avatarImg[self.main().client.avatarDef[jid]] and self.main().client.avatarDef[jid]!="None":
-				width=self.main().client.avatarImg[self.main().client.avatarDef[jid]][1]
-				height=self.main().client.avatarImg[self.main().client.avatarDef[jid]][2]
+		if self.main().avatarDef.get(jid, False):
+			if self.main().client.avatarImg[self.main().avatarDef[jid]] and self.main().avatarDef[jid]!="None":
+				width=self.main().client.avatarImg[self.main().avatarDef[jid]][1]
+				height=self.main().client.avatarImg[self.main().avatarDef[jid]][2]
 				height=height/(float(width)/64.0)
-				text+='<td><img src="'+self.main().realHomeDir+'/avatars/'+unicode(self.main().client.avatarDef[jid])+'" width="64" height="'+str(height)+'"/></td>'
+				text+='<td><img src="'+self.main().realHomeDir+'/avatars/'+unicode(self.main().avatarDef[jid])+'" width="64" height="'+str(height)+'"/></td>'
 		#if os.path.isfile(self.main().homeDir+'/avatars/'+unicode(jid).replace("/","%")):
 			#f=open(self.main().homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
 			#image = f.read()
