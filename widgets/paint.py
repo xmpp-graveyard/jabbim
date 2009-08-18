@@ -186,7 +186,7 @@ class paintArea(QtGui.QWidget):
 
 	def paintPen(self, painter):
 		self.setupPainter(painter)
-		painter.drawLine(self.mouseActual[0], self.mouseActual[1], self.mouseActual[0], self.mouseActual[1])
+		painter.drawPoint(self.mouseActual[0], self.mouseActual[1])
 
 	def paintInsertImage(self, painter):
 		img = self.insert.scaled(abs(self.mouseActual[0] - self.mousePress[0]),
