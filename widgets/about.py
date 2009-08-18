@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'about.ui'
 #
-# Created: Tue Aug 18 18:46:06 2009
+# Created: Tue Aug 18 18:59:52 2009
 #      by: PyQt4 UI code generator 4.5.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -65,8 +65,8 @@ class Ui_about_window(object):
         self.label_12.setOpenExternalLinks(True)
         self.label_12.setObjectName("label_12")
         self.version = QtGui.QLabel(self.widget_2)
-        self.version.setGeometry(QtCore.QRect(100, 30, 61, 16))
-        self.version.setAlignment(QtCore.Qt.AlignCenter)
+        self.version.setGeometry(QtCore.QRect(50, 30, 161, 61))
+        self.version.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
         self.version.setObjectName("version")
         self.label_4 = QtGui.QLabel(self.widget_2)
         self.label_4.setGeometry(QtCore.QRect(300, 30, 171, 30))
@@ -77,8 +77,8 @@ class Ui_about_window(object):
         self.label_5.setAlignment(QtCore.Qt.AlignCenter)
         self.label_5.setObjectName("label_5")
         self.label_13 = QtGui.QLabel(self.widget_2)
-        self.label_13.setGeometry(QtCore.QRect(280, 220, 209, 16))
-        self.label_13.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_13.setGeometry(QtCore.QRect(270, 220, 209, 41))
+        self.label_13.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignTop)
         self.label_13.setObjectName("label_13")
         self.label_3 = QtGui.QLabel(self.widget_2)
         self.label_3.setGeometry(QtCore.QRect(330, 0, 117, 32))
