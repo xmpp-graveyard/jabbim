@@ -44,7 +44,6 @@ class PresenceInit:
 		#log.msg('presence > ')
 		try:
 			frm = jid.JID(el['from'])
-			print "onPresence: frm=%s" % repr(frm)
 		except:
 			try:
 				log.err("onPresence, jid mallformed" + unicode([el['from']]))
@@ -157,7 +156,6 @@ class PresenceInit:
 									wantAvatar=False
 
 		if wantAvatar:
-			print "wantAvatar for %s" % frm.full()
 			if self.client.groupchats.has_key(fromjid):
 				# want avatar for room@conf.server/somebody
 				avatarjid = frm.full()
@@ -165,20 +163,13 @@ class PresenceInit:
 				# want avatar for somebody@server
 				avatarjid = fromjid
 
-			print "will look for avatar for %s" % avatarjid
 			if self.client.main.avatarDef.has_key(avatarjid):
-				print "I have this jid in avatarDef"
 				if self.client.main.avatarDef[avatarjid] == hash:
 					# good, we already have the right avatar
-					print "hash matches, I already have this avatar"
 					pass
 				elif hash != 'None':
-					print "different avatar hash: %s" % hash
 					self.client.getVCard(avatarjid)
-				else:
-					print "no avatar hash told, I assume no change"
 			else:
-				print "completely new one, let's get the avatar"
 				self.client.getVCard(avatarjid)
 
 		if self.client.groupchats.has_key(fromjid):
