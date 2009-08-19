@@ -1043,10 +1043,10 @@ class rosterWidget(QtGui.QWidget):
 					self.tool.focus=False
 				jid=item.jid
 				avatar=None
-				if self.main.client.avatarDef.get(jid, False):
-					if self.main.client.avatarImg.has_key(self.main.client.avatarDef[jid]):
-						if self.main.client.avatarImg[self.main.client.avatarDef[jid]] and self.main.client.avatarDef[jid]!="None":
-							avatar=QtGui.QPixmap(self.main.realHomeDir+'/avatars/'+unicode(self.main.client.avatarDef[jid]))
+				if self.main.avatarDef.get(jid, False):
+					if self.main.client.avatarImg.has_key(self.main.avatarDef[jid]):
+						if self.main.client.avatarImg[self.main.avatarDef[jid]] and self.main.avatarDef[jid]!="None":
+							avatar=QtGui.QPixmap(self.main.realHomeDir+'/avatars/'+unicode(self.main.avatarDef[jid]))
 				else:
 					#if there is no avatar for given JID, then try to use avatar from any metacontact
 					meta = self.main.ui.roster.getMetaItems(jid)
@@ -1054,10 +1054,10 @@ class rosterWidget(QtGui.QWidget):
 					for itm in meta:
 						j = itm[1]
 						print j
-						if self.main.client.avatarDef.get(j, False):
-							if self.main.client.avatarImg.has_key(self.main.client.avatarDef[j]):
-								if self.main.client.avatarImg[self.main.client.avatarDef[j]] and self.main.client.avatarDef[j]!="None":
-									avatar=QtGui.QPixmap(self.main.realHomeDir+'/avatars/'+unicode(self.main.client.avatarDef[j]))
+						if self.main.avatarDef.get(j, False):
+							if self.main.client.avatarImg.has_key(self.main.avatarDef[j]):
+								if self.main.client.avatarImg[self.main.avatarDef[j]] and self.main.avatarDef[j]!="None":
+									avatar=QtGui.QPixmap(self.main.realHomeDir+'/avatars/'+unicode(self.main.avatarDef[j]))
 									break
 				if self.main.client.roster['users'][jid].tag!=None:
 					tag=self.main.client.roster['users'][jid].tag
