@@ -217,160 +217,33 @@ class groupChatWidget(abstractChatWidget):
 		# tooltip request:
 		#print "event",event.type()
 		if int(event.type())==110:
-			#print "2"
-			item=self.ui.users.itemAt(int(event.x()),int(event.y())) # get item in coordinates
-			#self.setToolTip("")
+			x = int(event.x())
+			y = int(event.y())
+			item = self.ui.users.itemAt(x, y)
 			if item and item.parent():
-				#print "tooltip"
-				#if item!=None and item.typ=="user": # tooltips are only for contacts (not for groups)
-					#text = self.main().getToolTip(item.jid, item.escapedName)
-					#self.setToolTip(text)
-				w=QtGui.QDesktopWidget()
 				if not self.tool:
 					#self._mouseLeaveEvent(None)
-					self.tool = ToolTip(self.main())
-					self.tool.leaveEvent=self.tooltipLeaveEvent
-					self.tool.focus=False
-				jid=self.jid+"/"+unicode(item.text(0))
-				nick=unicode(item.text(0))
-				avatar=None
-				if self.main().avatarDef.get(jid, False):
-					if self.main().client.avatarImg.has_key(self.main().avatarDef[jid]):
-						if self.main().client.avatarImg[self.main().avatarDef[jid]] and self.main().avatarDef[jid]!="None":
-							avatar=QtGui.QPixmap(self.main().realHomeDir+'/avatars/'+unicode(self.main().avatarDef[jid]))
-				if avatar:
-					avatar=avatar.scaled(64,64,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
-				else:
-					avatar=QtGui.QPixmap(self.main().getAvatarSrc("default"))
-				self.tool.ui.label.setPixmap(avatar)
-					#self.tool.ui.label.show()
-				#else:
-					#self.tool.ui.label.hide()
-				self.tool.ui.nickname.setText("<b>"+unicode(item.text(0))+"</b>")
-				if self.main().client.groupchats[self.jid].users[nick].truejid:
-					truejid=self.main().client.groupchats[self.jid].users[nick].truejid
-				else:
-					truejid=jid
-				self.tool.ui.jid.setText(truejid)
-				self.tool.jid=unicode(truejid)
-				
-				contact = self.main().client.getContactByJid(jid)
+					nick = unicode(item.text(0))
+					jid = self.jid + "/" + nick
+					g = self.ui.users.mapToGlobal(QtCore.QPoint(x, y))
+					self.tool = ToolTip(self.main(), jid, nick, g, True)
+					self.tool.leaveEvent = self.tooltipLeaveEvent
 
-				#if contact != None:
-					#status = contact.status
-					##text+='<img src="images/16x16/status/jabber-%s.png">' % contact.show
-					##text+='<b>%s</b> '%unicode(self.status.get(contact.show, ''))
-					#if len(status) != 0:
-						#if not status[1]:
-							#status = ""
-						#else:
-							#status=status[1]
-						#if len(status)==0:
-							#self.tool.ui.status.hide()
-						#else:
-							#self.tool.ui.status.setHtml(replace_url(status.replace('\n', '<br />'),self.main))
-							#self.tool.ui.status.show()
-					#else:
-						#self.tool.ui.status.hide()
-				#else:
-				status=unicode(self.main().client.groupchats[self.jid].users[nick].status).replace("None","")
-				if status!="":
-					status=utils.replace_url(status,self.main())
-					self.tool.ui.status.setHtml(status)
-					self.tool.ui.status.show()
-				else:
-					self.tool.ui.status.hide()
-				self.tool.ui.subscription.hide()
-
-				#tune = contact.getPEP('http://jabber.org/protocol/tune')
-				#if type(tune) == list:
-					#for x in tune:
-						#print x
-					#self.tool.ui.tune.hide()
-				#elif tune!=None:
-					#artist = title = ''
-					#for el in tune.elements():
-						#if el.name == 'artist':
-							#artist = unicode(el)
-						#elif el.name == 'title':
-							#title = unicode(el)
-					#t = '%s: %s'%(artist, title)
-					#if len(t.strip())>1:
-						#self.tool.ui.tune.setPixmap(QtGui.QPixmap("images/22x22/icons/headphones.png"))
-						#self.tool.tune=t
-					#else:
-						#self.tool.ui.tune.hide()
-				#else:
-					#self.tool.ui.tune.hide()
-		
-				#mood = contact.getPEP('http://jabber.org/protocol/mood')
-				#if mood != None:
-						#if isinstance(mood,list):
-							#print "mood is list",mood
-							#if len(mood)!=0:
-								#mood=mood[0]
-							#else:
-								#mood=None
-						#if mood:
-							#t = ''
-							#m = txt = icon = ''
-							#for el in mood.elements():
-								#if el.name == 'text':
-									#txt = unicode(el)
-								#else:
-									#m = self.main().moods.get(el.name)
-									#if self.main().moodIcons.has_key(el.name):
-										#self.tool.ui.mood.setPixmap(QtGui.QPixmap(self.main().moodIcons[el.name].src))
-										#self.tool.ui.mood.show()
-									#else:
-										#self.tool.ui.mood.hide()
-							#if txt != '':
-								#self.tool.mood = m+ ' - %s'%txt
-							#else:
-								#self.tool.mood = m
-						#else:
-							#self.tool.ui.mood.hide()
-				#else:
-				self.tool.ui.mood.hide()
-							#if txt != '':
-								#t = m+ ' - %s'%txt
-							#else:
-								#t = m
-							#text+='<br />%s<font size="-1">%s</font>' % (icon,t)
-
-
-				g=self.ui.users.mapToGlobal(QtCore.QPoint(event.x(),event.y()))
-				
-				hint=self.tool.sizeHint()
-
-				if w.availableGeometry().y()+w.availableGeometry().height()<g.y()+10+hint.height():
-					if g.x()-hint.width()-10>0:
-						self.tool.setGeometry(g.x()-hint.width()-10,g.y()-10-hint.height(),hint.width(),hint.height())
-					else:
-						self.tool.setGeometry(g.x()+10,g.y()-10-hint.height(),hint.width(),hint.height())
-				else:
-					if g.x()-hint.width()-10>0:
-						self.tool.setGeometry(g.x()-hint.width()-10,g.y()+10,hint.width(),hint.height())
-					else:
-						self.tool.setGeometry(g.x()+10,g.y()+10,hint.width(),hint.height())
 				self.tool.show()
 
 		return QtGui.QTreeWidget.viewportEvent(self.ui.users,event)
 
-	def usersLeaveEvent(self,event):
-		self.main().reactor.callLater(0.2,self.tooltipLeaveEvent)
+	def tooltipLeaveEvent(self,event):
+		self.tool.hide()
+		self.tool.deleteLater()
+		self.tool = None
 
-	def tooltipLeaveEvent(self,event=None):
-		if event:
-			if self.tool:
-				self.tool.hide()
-				self.tool.deleteLater()
-				self.tool=None
-		else:
-			if self.tool and self.tool.focus==False:
-				self.tool.hide()
-				self.tool.deleteLater()
-				self.tool=None
+	def usersLeaveEvent(self,event):
+		self.main().reactor.callLater(0.2,self._usersLeaveEvent)
+
+	def _usersLeaveEvent(self):
+		if self.tool and not self.tool.focus:
+			self.tooltipLeaveEvent(None)
 
 	def addToBookmark(self):
 		"""

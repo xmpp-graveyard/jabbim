@@ -36,7 +36,6 @@ import miniroster
 from locale import strcoll
 import operator
 import weakref
-from include.utils import replace_url
 import tooltip
 
 class emptyRosterWidget(QtGui.QWidget):
@@ -917,218 +916,35 @@ class rosterWidget(QtGui.QWidget):
 	def event(self,event):
 		# tooltip request:
 		if int(event.type())==110:
-			item=self.itemAt(int(event.x()),int(event.y())) # get item in coordinates
+			x = int(event.x())
+			y = int(event.y())
+			item = self.itemAt(x, y) # get item in coordinates
 			#self.setToolTip("")
 			if item and isinstance(item, userItem):
 				#if item!=None and item.typ=="user": # tooltips are only for contacts (not for groups)
 					#text = self.main.getToolTip(item.jid, item.escapedName)
 					#self.setToolTip(text)
-				w=QtGui.QDesktopWidget()
 				if not self.tool:
 					#self._mouseLeaveEvent(None)
-					self.tool = tooltip.ToolTip(self.main)
-					self.tool.leaveEvent=self._leaveEvent
-					self.tool.focus=False
-				jid=item.jid
-				avatar=None
-				if self.main.avatarDef.get(jid, False):
-					if self.main.client.avatarImg.has_key(self.main.avatarDef[jid]):
-						if self.main.client.avatarImg[self.main.avatarDef[jid]] and self.main.avatarDef[jid]!="None":
-							avatar=QtGui.QPixmap(self.main.realHomeDir+'/avatars/'+unicode(self.main.avatarDef[jid]))
-				else:
-					#if there is no avatar for given JID, then try to use avatar from any metacontact
-					meta = self.main.ui.roster.getMetaItems(jid)
-					print meta
-					for itm in meta:
-						j = itm[1]
-						print j
-						if self.main.avatarDef.get(j, False):
-							if self.main.client.avatarImg.has_key(self.main.avatarDef[j]):
-								if self.main.client.avatarImg[self.main.avatarDef[j]] and self.main.avatarDef[j]!="None":
-									avatar=QtGui.QPixmap(self.main.realHomeDir+'/avatars/'+unicode(self.main.avatarDef[j]))
-									break
-				if self.main.client.roster['users'][jid].tag!=None:
-					tag=self.main.client.roster['users'][jid].tag
-					meta=[]
-					for j,user in self.main.client.roster['users'].iteritems():
-						if user.tag==tag:
-							meta.append(j)
-					for mJid in meta:
-						print 'meta',mJid
-					self.tool.hideMetaContacts()
-					self.tool.showMetaContacts(meta)
-				else:
-					self.tool.hideMetaContacts()
-				if avatar:
-					avatar=avatar.scaled(64,64,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
-				else:
-					avatar=QtGui.QPixmap(self.main.getAvatarSrc("default"))
-				self.tool.ui.label.setPixmap(avatar)
-					#self.tool.ui.label.show()
-				#else:
-					#self.tool.ui.label.hide()
-				self.tool.ui.nickname.setText("<b>"+unicode(item.escapedName)+"</b>")
-				self.tool.ui.jid.setText(unicode(item.jid))
-				self.tool.jid=unicode(item.jid)
-
-				contact = self.main.client.getContactByJid(jid)
-
-				if contact != None:
-					status = contact.status
-					#text+='<img src="images/16x16/status/jabber-%s.png">' % contact.show
-					#text+='<b>%s</b> '%unicode(self.status.get(contact.show, ''))
-					if len(status) != 0:
-						if not status[1]:
-							status = ""
-						else:
-							status=status[1]
-						if len(status)==0:
-							self.tool.ui.status.hide()
-						else:
-							self.tool.ui.status.setHtml(replace_url(status.replace('\n', '<br />'),self.main))
-							self.tool.ui.status.show()
-					else:
-						self.tool.ui.status.hide()
-					
-					subscription= contact.subscription
-					if unicode(contact.subscription) == 'from':
-						self.tool.ui.subscription.setText('<b>'+self.main.tr("Subscription:")+'</b> '+self.main.tr(" from"))
-						self.tool.ui.subscription.show()
-					elif unicode(contact.subscription) == 'to':
-						self.tool.ui.subscription.setText('<b>'+self.main.tr("Subscription:")+'</b> '+self.main.tr(" to"))
-						self.tool.ui.subscription.show()
-					elif unicode(contact.subscription) == 'none':
-						self.tool.ui.subscription.setText('<b>'+self.main.tr("Subscription:")+'</b> '+self.main.tr(" none"))
-						self.tool.ui.subscription.show()
-					else:
-						self.tool.ui.subscription.hide()
-				else:
-					self.tool.ui.subscription.hide()
-					self.tool.ui.status.hide()
-
-				tune = contact.getPEP('http://jabber.org/protocol/tune')
-				if type(tune) == list:
-					for x in tune:
-						print x
-					self.tool.ui.tune.hide()
-				elif tune!=None:
-					artist = title = ''
-					for el in tune.elements():
-						if el.name == 'artist':
-							artist = unicode(el)
-						elif el.name == 'title':
-							title = unicode(el)
-					t = '%s: %s'%(artist, title)
-					if len(t.strip())>1:
-						self.tool.ui.tune.setPixmap(QtGui.QPixmap("images/22x22/icons/headphones.png"))
-						self.tool.tune=t
-					else:
-						self.tool.ui.tune.hide()
-				else:
-					self.tool.ui.tune.hide()
-
-				mood = contact.getPEP('http://jabber.org/protocol/mood')
-				if mood != None:
-						if isinstance(mood,list):
-							print "mood is list",mood
-							if len(mood)!=0:
-								mood=mood[0]
-							else:
-								mood=None
-						if mood:
-							t = ''
-							m = txt = icon = ''
-							for el in mood.elements():
-								if el.name == 'text':
-									txt = unicode(el)
-								else:
-									m = unicode(self.main.moods.get(el.name))
-									if self.main.moodIcons.has_key(el.name):
-										self.tool.ui.mood.setPixmap(QtGui.QPixmap(self.main.moodIcons[el.name].src))
-										self.tool.ui.mood.show()
-									else:
-										self.tool.ui.mood.hide()
-							if txt != '':
-								self.tool.mood = '%s - %s' % (m, txt)
-							else:
-								self.tool.mood = m
-						else:
-							self.tool.ui.mood.hide()
-				else:
-					self.tool.ui.mood.hide()
-
-				activity = contact.getPEP('http://jabber.org/protocol/activity')
-				if activity != None:
-					txt = ''
-					general = ''
-					spec = ''
-					for el in activity.elements():
-						if el.name == 'text':
-							txt = unicode(el)
-						else :
-							general = el.name
-							#if self.main.activityGroups.has_key(general):
-								#general=self.main.activityGroups[general][0]
-							spec = el.firstChildElement()
-							if spec:
-								spec=spec.name
-							#if self.main.activities.has_key(spec):
-								#spec=self.main.activities[spec]
-							if self.main.activityIcons.has_key(spec):
-								self.tool.ui.activity.setPixmap(QtGui.QPixmap(self.main.activityIcons[spec].src))
-								if self.main.activities.has_key(spec):
-									self.tool.activity=self.main.activities[spec]
-								else:
-									self.tool.activity=spec
-								self.tool.ui.activity.show()
-							elif self.main.activityIcons.has_key(general):
-								self.tool.ui.activity.setPixmap(QtGui.QPixmap(self.main.activityIcons[general].src))
-								if self.main.activities.has_key(general):
-									self.tool.activity=self.main.activities[general]
-								else:
-									self.tool.activity=general
-								self.tool.ui.activity.show()
-							else:
-								self.tool.activity=""
-								self.tool.ui.activity.hide()
-
-					#text+='<br /><font size="-1"><b>%s</b> %s %s</font>' % (general, spec, txt)
-				else:
-					self.tool.ui.activity.hide()
-
-
-				g=self.mapToGlobal(QtCore.QPoint(event.x(),event.y()))
-
-				hint=self.tool.sizeHint()
-
-				if w.availableGeometry().y()+w.availableGeometry().height()<g.y()+10+hint.height():
-					if g.x()-hint.width()-10>0:
-						self.tool.setGeometry(g.x()-hint.width()-10,g.y()-10-hint.height(),hint.width(),hint.height())
-					else:
-						self.tool.setGeometry(g.x()+10,g.y()-10-hint.height(),hint.width(),hint.height())
-				else:
-					if g.x()-hint.width()-10>0:
-						self.tool.setGeometry(g.x()-hint.width()-10,g.y()+10,hint.width(),hint.height())
-					else:
-						self.tool.setGeometry(g.x()+10,g.y()+10,hint.width(),hint.height())
+					g = self.mapToGlobal(QtCore.QPoint(x, y))
+					self.tool = tooltip.ToolTip(self.main, item.jid, unicode(item.escapedName), g, False)
+					self.tool.leaveEvent = self.tooltipLeaveEvent
+					# XXX leaveEvent -> nastavit None
 				self.tool.show()
 
 		return QtGui.QWidget.event(self,event)
 
-	def leaveEvent(self,event):
-		self.main.reactor.callLater(0.2,self._leaveEvent)
+	def tooltipLeaveEvent(self, event):
+		self.tool.hide()
+		self.tool.deleteLater()
+		self.tool = None
 
-	def _leaveEvent(self,event=None):
-		if event:
-			if self.tool:
-				self.tool.hide()
-				self.tool.deleteLater()
-				self.tool=None
-		else:
-			if self.tool and self.tool.focus==False:
-				self.tool.hide()
-				self.tool.deleteLater()
-				self.tool=None
+	def leaveEvent(self,event):
+		self.main.reactor.callLater(0.2, self._leaveEvent)
+
+	def _leaveEvent(self):
+		if self.tool and not self.tool.focus:
+			self.tooltipLeaveEvent(None)
 
 	def mouseMoveEvent(self,event):
 		"""
