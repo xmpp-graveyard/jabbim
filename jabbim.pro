@@ -60,7 +60,6 @@ widgets/statuseditor_ui.py \
 widgets/status.py \
 widgets/statuswidget_ui.py \
 widgets/subscription.py \
-widgets/tooltip_ui.py \
 widgets/vcardeditor.py \
 widgets/vcardeditor_ui.py \
 widgets/vcardview.py \

@@ -1,5 +1,4 @@
 import mainWindow
-import rosterWidget
 import status
 import subscription
 import chatwindow
