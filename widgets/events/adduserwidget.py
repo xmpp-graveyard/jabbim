@@ -33,8 +33,7 @@ class addUserWidget(QtGui.QWidget):
 		menu.popup(QtCore.QPoint(QtGui.QCursor.pos()))
 
 	def showVCard(self,b=False):
-		self.ve=vcardeditor.vcardEditorDialog(self.event.parent.main,self.jid,self.event.parent.main,False)
-		self.ve.show()
+		vcardeditor.vcardEditorDialog(self.event.parent.main, self.jid, self.event.parent.main, False).show()
 
 	def openChat(self,b=False):
 		self.event.parent.main.chat.addChatTab(self.jid,self.jid,self.event.parent.main.getIcon(self.jid,'online',size="16x16"))

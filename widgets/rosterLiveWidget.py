@@ -2783,8 +2783,7 @@ class rosterWidget(QtGui.QWidget):
 			jid=action.data()
 			jid=unicode(jid.toString())
 			#self.main.client.getVCard(jid)
-			self.ve=vcardeditor.vcardEditorDialog(self.main,jid,self.main,False)
-			self.ve.show()
+			vcardeditor.vcardEditorDialog(self.main,jid,self.main,False).show()
 			#d=self.main.client.getVCard(jid)
 			#d.addCallback(self.vcardArrived)
 		elif cmd=="chat":

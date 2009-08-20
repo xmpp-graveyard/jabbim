@@ -655,8 +655,7 @@ class groupChatWidget(abstractChatWidget):
 		elif cmd == "vcard":
 			jid=action.data()
 			jid=unicode(jid.toString())
-			self.ve=vcardeditor.vcardEditorDialog(self.main(),jid,self,False)
-			self.ve.show()
+			vcardeditor.vcardEditorDialog(self.main(), jid, self, False).show()
 		elif cmd == "pm":
 			jid=action.data()
 			jid, nick, ic=[unicode(val.toString()) for val in action.data().toList()]

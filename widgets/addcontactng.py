@@ -429,9 +429,7 @@ class addContactDialog(QtGui.QDialog):
 
 	def buttonClicked(self,b):
 		if b.jid:
-			self.ve=vcardeditor.vcardEditorDialog(self.main(),b.jid,self,False)
-			self.ve.show()
-
+			vcardeditor.vcardEditorDialog(self.main(),b.jid,self,False).show()
 
 	def search(self):
 		if self.gateway:

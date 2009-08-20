@@ -89,8 +89,7 @@ class ToolTip(QtGui.QFrame):
 		self.ui.metaWidget.show()
 
 	def vcardMousePressEvent(self, event):
-		self.roster().ve = vcardeditor.vcardEditorDialog(self.roster().main, self.jid, self.roster().main, False)
-		self.roster().ve.show()
+		vcardeditor.vcardEditorDialog(self.main, self.jid, self.main, False).show()
 		self.hide()
 
 	def vcardEnterEvent(self, event):

@@ -4308,8 +4308,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Shows Vcard Editor. Called by QAction from main menu.
 		"""
-		self.ve=widgets.vcardeditor.vcardEditorDialog(self,self.client.jid.userhost(),self)
-		self.ve.show()
+		widgets.vcardeditor.vcardEditorDialog(self, self.client.jid.userhost(), self).show()
 
 	def mucBrowser(self,bool=False):
 		"""
