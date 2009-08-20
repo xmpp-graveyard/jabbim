@@ -169,7 +169,8 @@ class FileBackend:
 		if not maxTime:
 			for msg in fp.xreadlines():
 				parsed=msg.split('|')
-				ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8").replace('<', '&lt;')])
+				#ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8").replace('<', '&lt;')])
+				ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8")])
 		# return only messages which is younger that maxTime
 		else:
 			maxTime=maxTime.split(":") # [20,0,0]
@@ -306,7 +307,7 @@ class Plugin(plugins.PluginBase):
 		self.description = self.tr('Message Archiving')
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = self.tr('Archive Plugin')
-		self.version = '0.195'
+		self.version = '0.196'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 
