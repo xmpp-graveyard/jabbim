@@ -926,7 +926,7 @@ class rosterWidget(QtGui.QWidget):
 				w=QtGui.QDesktopWidget()
 				if not self.tool:
 					#self._mouseLeaveEvent(None)
-					self.tool = tooltip.ToolTip(self)
+					self.tool = tooltip.ToolTip(self.main)
 					self.tool.leaveEvent=self._leaveEvent
 					self.tool.focus=False
 				jid=item.jid

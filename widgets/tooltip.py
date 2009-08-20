@@ -4,7 +4,7 @@ import weakref
 import vcardeditor
 
 class ToolTip(QtGui.QFrame):
-	def __init__(self, roster):
+	def __init__(self, mainwindow):
 		QtGui.QFrame.__init__(self, None, QtCore.Qt.ToolTip | QtCore.Qt.X11BypassWindowManagerHint | QtCore.Qt.WindowStaysOnTopHint | QtCore.Qt.FramelessWindowHint | QtCore.Qt.CustomizeWindowHint)
 		self.setFrameStyle(QtGui.QFrame.Plain|QtGui.QFrame.Box)
 		self.ui = Ui_RosterToolTip()
@@ -14,7 +14,7 @@ class ToolTip(QtGui.QFrame):
 		p = QtGui.QPalette()
 		p.setColor(QtGui.QPalette.Base, QtGui.QColor(self.palette().window().color()))
 		self.ui.status.setPalette(p)
-		self.roster = weakref.ref(roster)
+		self.main = mainwindow
 		self.focus = False
 		self.ui.mood.setMouseTracking(True)
 		self.ui.mood.enterEvent = self.moodEnterEvent
@@ -59,29 +59,30 @@ class ToolTip(QtGui.QFrame):
 			widget = QtGui.QLabel(self.ui.metaWidget)
 			widget.setMouseTracking(True)
 			widget.setCursor(QtCore.Qt.PointingHandCursor)
-			widget.setPixmap(self.roster().main.getIcon(item, status=unicode('online'), size="16x16").pixmap(16,16))
+			widget.setPixmap(self.main.getIcon(item, status=unicode('online'), size="16x16").pixmap(16,16))
 			widget.leaveEvent = self.tuneLeaveEvent
 			def gen_enterEvent(item):
 				def enterEvent(event):
 					self.ui.jid.setText(item)
 				return enterEvent
 			def gen_mousePressEvent(item):
+				roster = weakref.ref(self.main.ui.roster)
 				def mousePressEvent(event):
 					if event.button() == QtCore.Qt.RightButton:
-						it = self.roster().getUserItems(item)
+						it = roster().getUserItems(item)
 						if len(it) == 0:
-							it = self.roster().getMetaItems(item)
+							it = roster().getMetaItems(item)
 							it = it[0][0]
 						else:
 							it = it[0]
 						group = it.group
 						jid = it.jid
 						#if self.main.client.roster['users'].has_key(jid):
-						contactMenu = self.roster().buildContactMenu(unicode(jid), group)
+						contactMenu = roster().buildContactMenu(unicode(jid), group)
 						#contactMenu.move(event.globalX(),event.globalY())
 						contactMenu.popup(QtCore.QPoint(event.globalX(), event.globalY()))
 					else:
-						self.roster().openChat(item)
+						roster().openChat(item)
 				return mousePressEvent
 			widget.enterEvent = gen_enterEvent(item)
 			widget.mousePressEvent = gen_mousePressEvent(item)
