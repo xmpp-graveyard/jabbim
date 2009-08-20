@@ -166,7 +166,7 @@ from twisted.web.client import downloadPage
 import shutil #xmlrpc
 from twisted.python.filepath import FilePath
 from widgets.extra import extraDialog
-from widgets import bookmarks, dataforms
+from widgets import bookmarks, dataforms, tooltip
 from locale import strcoll
 import weakref
 
@@ -2110,6 +2110,7 @@ class AvatarLabel(QtGui.QLabel):
 		self.setContextMenuPolicy(QtCore.Qt.DefaultContextMenu)
 		self.setMinimumWidth(64)
 		self.setAlignment(QtCore.Qt.AlignCenter)
+		self.tool = None
 
 	def mouseDoubleClickEvent(self,event):
 		self.main.identityEditor()
@@ -2120,10 +2121,34 @@ class AvatarLabel(QtGui.QLabel):
 		self.main.offlineMenu.popup(QtCore.QPoint(event.globalX(),event.globalY()))
 		event.accept()
 
+	def event(self, event):
+		# tooltip request
+		if int(event.type()) == 110:
+			x = int(event.globalX())
+			y = int(event.globalY())
+			if not self.tool:
+				jid = self.main.client.jid.userhost()
+				self.tool = tooltip.ToolTip(self.main, jid, jid, QtCore.QPoint(x, y), False)
+				self.tool.leaveEvent = self.tooltipLeaveEvent
+			self.tool.show()
+		return QtGui.QWidget.event(self,event)
+
+	def tooltipLeaveEvent(self, event):
+		self.tool.hide()
+		self.tool.deleteLater()
+		self.tool = None
+
+	def leaveEvent(self,event):
+		self.main.reactor.callLater(0.2, self._leaveEvent)
+
+	def _leaveEvent(self):
+		if self.tool and not self.tool.focus:
+			self.tooltipLeaveEvent(None)
+
 	def refreshToolTip(self):
 		if self.main.client:
 			text = self.main.getToolTip(self.main.client.jid.userhost())
-			self.setToolTip(text)
+#			self.setToolTip(text)
 			# set tooltip also for tray icon
 			# and utils.getWindowsVersion()!="vista"
 			if sys.platform == 'win32':
