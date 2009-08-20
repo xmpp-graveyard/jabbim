@@ -33,7 +33,7 @@ from abstractchatwidget import abstractChatWidget,abstractTextView
 import addcontact
 import pyxl
 import weakref
-from rosterLiveWidget import rosterToolTip
+from tooltip import ToolTip
 
 class textView(abstractTextView):
 	"""
@@ -228,7 +228,7 @@ class groupChatWidget(abstractChatWidget):
 				w=QtGui.QDesktopWidget()
 				if not self.tool:
 					#self._mouseLeaveEvent(None)
-					self.tool=rosterToolTip(self.ui.users)
+					self.tool = ToolTip(self.ui.users)
 					self.tool.leaveEvent=self.tooltipLeaveEvent
 					self.tool.focus=False
 				jid=self.jid+"/"+unicode(item.text(0))
