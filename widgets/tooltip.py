@@ -100,12 +100,9 @@ class ToolTip(QtGui.QFrame):
 			self.hideMetaContacts()
 
 	def initJid(self):
-		if not self.in_muc:
-			self.ui.jid.setText(unicode(self.jid))
-		else:
-			if self.contact.truejid:
-				self.jid = unicode(self.contact.truejid)
-				self.ui.jid.setText(self.jid)
+		if self.in_muc and self.contact.truejid:
+			self.jid = unicode(self.contact.truejid)
+		self.ui.jid.setText(self.jid)
 
 	def initStatus(self):
 		try:
