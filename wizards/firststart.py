@@ -99,7 +99,7 @@ class firstStartWizard(QtGui.QDialog):
 		self.state="pre"
 		
 		self.ui.servers.addItems(QtCore.QStringList([self.tr("Choose server")] + main.jabbimServers))
-		self.ui.nickname.setValidator(QtGui.QRegExpValidator(QtCore.QRegExp("^([!#$%(-.0-9;=?a-zA-Z]+)$"),self.ui.nickname))
+		self.ui.nickname.setValidator(QtGui.QRegExpValidator(QtCore.QRegExp("^([!#$%(-.0-9;=?a-zA-Z_]+)$"),self.ui.nickname))
 		self.ui.registerButton.setEnabled(False)
 		
 		self.ui.movieLabel=QtGui.QLabel(self.ui.waitWidget)
