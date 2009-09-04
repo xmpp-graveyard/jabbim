@@ -215,16 +215,16 @@ class PluginBase(object):
 		wid.translate=self._translate
 		return self._loadUi(file,wid)
 
-	def installTranslator(self):
+	def installTranslator(self, directory=""):
 		"""
 		Installs translator and loads translation file according to locales.
 		Files are stored in the same directory as main plugin python file of this plugin.
 		File name must be in format xx.qm . For example cs.qm or en.qm .
 		@see: L{tr}
 		"""
-		self._translator = utils.loadTranslator(self.pluginDir + '/')
+		self._translator = utils.loadTranslator(self.pluginDir + '/'+ directory)
 
-	def tr(self,text,cl=None):
+	def tr(self,text,cl=None,comment=None,numeric=None):
 		"""
 		Translate text. L{installTranslator} must be called first otherwise returns untrasnlated text.
 		@type text: str
@@ -237,16 +237,28 @@ class PluginBase(object):
 		"""
 		if not self._translator:
 			return text
-		if cl:
-			trans=self._translator.translate(cl,text)
-		else:
-			trans=self._translator.translate("Plugin",text)
-		if len(trans)==0:
-			trans=self._translator.translate("self.main",text)
+		if numeric!=None: #plural forms
+			if cl:
+				trans=self._translator.translate(cl,text,comment,numeric)
+			else:
+				trans=self._translator.translate("Plugin",unicode(text),comment,numeric)
 			if len(trans)==0:
-				#print "cant translate'",text,"'"
-				return text
-		return trans
+				trans=self._translator.translate("self.main",text,comment,numeric)
+				if len(trans)==0:
+					#print "cant translate'",text,"'"
+					return text.replace("%n",str(numeric))
+			return trans.replace("%n",str(numeric))
+		else:
+			if cl:
+				trans=self._translator.translate(cl,text)
+			else:
+				trans=self._translator.translate("Plugin",text)
+			if len(trans)==0:
+				trans=self._translator.translate("self.main",text)
+				if len(trans)==0:
+					#print "cant translate'",text,"'"
+					return text
+			return trans
 
 	def on_configChanged(self):
 		pass

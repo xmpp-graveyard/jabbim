@@ -1997,7 +1997,7 @@ class clientClass(pyxl.client.Client):
 			filename = self.main.config['autoDownloadPath']+'/'+self.ft[sid].fileprops['name']
 			autoDownload=True
 		if autoDownload:
-			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].tojid.full()),filename,"",sid,self.ft[sid].fileprops['size'])
+			self.main.events.addFTDownloadEvent(unicode(self.ft[sid].fromjid.full()),filename,"",sid,self.ft[sid].fileprops['size'])
 			self.receiveFile(sid, id,  filename)
 		else:
 			if unicode(self.ft[sid].fromjid).find("rpc@jabbim.cz")==-1:
@@ -4928,7 +4928,7 @@ class mainWindow(QtGui.QMainWindow):
 
 	def loadRosterStyle(self):
 		self.rosterStyle=None
-		if len(self.config['rosterStyle'])==0:
+		if self.config['rosterStyle']==None or len(self.config['rosterStyle'])==0:
 			self.config['rosterStyle']="ng/config.cfg"
 			self.config.write()
 		path="rosterstyles/"+unicode(self.config['rosterStyle'].split("/")[0])+"/style.py"
@@ -5281,7 +5281,8 @@ class mainWindow(QtGui.QMainWindow):
 
 		path = self.realHomeDir+'/avatars/'
 		if self.avatarDef.has_key(self.client.jid.userhost()):
-			self.client.avatarImg[self.avatarDef[self.client.jid.userhost()]] = self.loadAvatar(self.avatarDef[self.client.jid.userhost()])
+			if self.avatarDef[self.client.jid.userhost()]:
+				self.client.avatarImg[self.avatarDef[self.client.jid.userhost()]] = self.loadAvatar(self.avatarDef[self.client.jid.userhost()])
 		img=self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"))
 		img.file=None
 		self.client.avatarImg[None]=[img,32,32]

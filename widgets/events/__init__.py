@@ -576,6 +576,7 @@ class events:
 		widget=self.addWidget(widget,"filetransfers")
 		event.addWidget(widget)
 		event.setCurrentFile(file)
+		print "SHOWJID",showJid, jid
 		event.setJid(showJid)
 		event.setFileSize(int(size))
 		event.SID=sid

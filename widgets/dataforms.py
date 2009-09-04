@@ -148,22 +148,19 @@ def makeDataForm(parent,layout,form,row=1):
 				layout.addWidget(label,row,0)
 				widget=QtGui.QListWidget(parent)
 				widget.setSelectionMode(QtGui.QAbstractItemView.MultiSelection)
-				cur=[]
+				default=[]
 				for child in x.elements():
-					default=''
 					if child.name == 'value':
-						default=unicode(child)
+						default.append(unicode(child))
 					elif child.name=="option":
 						for ch in child.elements():
 							if ch.name=="value":
 								item=QtGui.QListWidgetItem(unicode(child['label']))
 								item.setData(32,QtCore.QVariant(unicode(ch)))
-								if unicode(ch) == default:
-									cur.append(item)
 								widget.addItem(item)
+								if unicode(ch) in default:
+									item.setSelected(True)
 				#widget.setCurrentIndex(0)
-				for ite in cur:
-					ite.setSelected(True)
 				layout.addWidget(widget,row,1)
 				var[x['var']]={'widget':widget,'type':x['type']}
 				for d in x.elements():

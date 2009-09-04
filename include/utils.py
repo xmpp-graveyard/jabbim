@@ -444,38 +444,43 @@ distro_info = {
 	'Redhat Linux': '/etc/redhat-release'
 }
 
-def getWindowsVersion():
-	if os.name == 'nt':
-		ver = os.sys.getwindowsversion()
-		ver_format = ver[3], ver[0], ver[1]
-		win_version = {
-			(1, 4, 0): '95',
-			(1, 4, 10): '98',
-			(1, 4, 90): 'me',
-			(2, 4, 0): 'nt',
-			(2, 5, 0): '2000',
-			(2, 5, 1): 'xp',
-			(2, 5, 2): '2003',
-			(2, 6, 0): 'vista',
-		}
-		if win_version.has_key(ver_format):
-			return win_version[ver_format]
-		else:
-			return 'unknown'
+#def getWindowsVersion():
+	#if os.name == 'nt':
+		#ver = os.sys.getwindowsversion()
+		#ver_format = ver[3], ver[0], ver[1]
+		#win_version = {
+			#(1, 4, 0): '95',
+			#(1, 4, 10): '98',
+			#(1, 4, 90): 'me',
+			#(2, 3, 51): 'NT 3.51',
+			#(2, 4, 0): 'nt',
+			#(2, 5, 0): '2000',
+			#(2, 5, 1): 'xp',
+			#(2, 5, 2): '2003',
+			#(2, 6, 0): 'vista',
+			#(2, 6, 1): '7'
+		#}
+		#if win_version.has_key(ver_format):
+			#return win_version[ver_format]
+		#else:
+			#return 'unknown'
 		
 def get_os_info():
 	if os.name == 'nt':
-		ver = os.sys.getwindowsversion()
+		ver = os.sys.getwindowsversion() #(5, 1, 2600, 2, 'Service Pack 2') = W XP profesional
 		ver_format = ver[3], ver[0], ver[1]
 		win_version = {
+			#(type,major,minor)
 			(1, 4, 0): '95',
 			(1, 4, 10): '98',
 			(1, 4, 90): 'ME',
-			(2, 4, 0): 'NT',
+			(2, 3, 51): 'NT 3.51',
+			(2, 4, 0): 'NT 4',
 			(2, 5, 0): '2000',
 			(2, 5, 1): 'XP',
-			(2, 5, 2): '2003',
+			(2, 5, 2): 'Server 2003',
 			(2, 6, 0): 'Vista',
+			(2, 6, 1): '7'
 		}
 		if win_version.has_key(ver_format):
 			return 'Windows' + ' ' + win_version[ver_format]
