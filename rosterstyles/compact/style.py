@@ -148,9 +148,9 @@ class rosterStyle:
 					res=" ("+str(len(self.roster.main.client.roster['users'][useritem.jid].resources))+")"
 
 				if self.roster.theme:
-					doc.setHtml("<font color=\""+self.roster.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name()+"\">"+useritem.escapedName+res+"</font>")
+					doc.setHtml("<font color=\""+unicode(self.roster.main.ui.userStyleWidget.palette().color(QtGui.QPalette.Text).name())+"\">"+useritem.escapedName+res+"</font>")
 				else:
-					doc.setHtml("<font color=\""+self.roster.palet.color(QtGui.QPalette.HighlightedText).name()+"\">"+useritem.escapedName+res+"</font>")
+					doc.setHtml("<font color=\""+unicode(self.roster.palet.color(QtGui.QPalette.HighlightedText).name())+"\">"+useritem.escapedName+res+"</font>")
 
 				painter.save()
 				painter.translate(x+41,y+(22-fontHeight)/2)
