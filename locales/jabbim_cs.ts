@@ -5342,7 +5342,7 @@ Opravdu chcete odejít?</translation>
     <message>
         <location filename="jabbim.py" line="901"/>
         <source> is sending you contact. Do you want to receive them?</source>
-        <translation>vám chce přidat kontakt do seznamu kontaktů. Chcete je přijmout?</translation>
+        <translation> vám chce přidat kontakt do seznamu kontaktů. Chcete je přijmout?</translation>
     </message>
     <message>
         <location filename="jabbim.py" line="2088"/>
