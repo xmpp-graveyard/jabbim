@@ -303,12 +303,12 @@ class chatWindow(QtGui.QMainWindow):
 					return w,i # tab, index
 		return None,0
 
-
 	def changeTab(self,index):
+		if index == -1:
+			return
 		try:
 			self.ui.chatTab.widget(index).chat.ui.line.setFocus(QtCore.Qt.MouseFocusReason)
 		except: pass
-		#try:
 		jid=unicode(self.ui.chatTab.widget(index).jid)
 		typ=unicode(self.ui.chatTab.widget(index).typ)
 		if len(unicode(jid).rsplit("/"))!=1:
@@ -318,7 +318,6 @@ class chatWindow(QtGui.QMainWindow):
 
 			#show=self.main.icons[unicode(res[resource].text(1))[0]]
 			#icon=self.main.getIcon(jid,show,size="16x16")
-		#else:
 		if typ=="chat":
 			#icon=self.main.getIcon(jid,self.main.icons[unicode(self.main.ui.roster.getUserItems(jid)[0].status)],size="16x16")
 			self.ui.chatTab.setTabIcon(index,self.ui.chatTab.widget(index).ic)
@@ -327,9 +326,6 @@ class chatWindow(QtGui.QMainWindow):
 
 		color=self.ui.chatTab.tabBar().palette().color(QtGui.QPalette.Foreground)
 		self.ui.chatTab.tabBar().setTabTextColor(index,color)
-
-
-
 
 		widget=self.ui.chatTab.widget(self.ui.chatTab.currentIndex())
 		if not widget:
@@ -378,8 +374,6 @@ class chatWindow(QtGui.QMainWindow):
 						w.chat.separator=True
 					else:
 						w.chat.separator=False
-		#except:
-			#pass
 
 	def isActiveWindow(self):
 		if sys.platform=="win32":
