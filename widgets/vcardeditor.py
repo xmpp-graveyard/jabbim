@@ -488,7 +488,7 @@ class vcardEditorDialog(QtGui.QDialog):
 		#print self.photo
 		if self.photo != None:
 			hash = sha1(self.photo).hexdigest()
-		self.main.avatarDef[self.main.client.jid.userhost()] = hash
+			self.main.avatarDef[self.main.client.jid.userhost()] = hash
 		self.main.sendPresence(None, show = show, message = status)
 		
 		self.done(1)
