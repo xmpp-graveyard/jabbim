@@ -5287,7 +5287,7 @@ class mainWindow(QtGui.QMainWindow):
 		hashe = []
 		for hash in self.avatarDef.itervalues():
 			if not hash in hashe and hash and hash!="None":
-				hashe.append(unicode(str(hash)))
+				hashe.append(hash)
 		for key in hashe:
 			self.client.avatarImg[key]=None
 		# load avatars
