@@ -239,6 +239,13 @@ def loadConfig(main,status):
 		# => salvage lines that are syntactically correct
 		main.config = e.config
 		rewrite = True
+	except UnicodeDecodeError, e:
+		# complete nonsense bytes in the config file. we
+		# don't get even a partial result here, so we must
+		# create a completely new config.
+		print "UnicodeDecodeError parsing the ConfigObj. Will create new config."
+		main.config = ConfigObj(encoding='UTF8')
+		main.config.filename = main.homeDir+'/config'
 
 	# If no line at all was parsed, a reasonable explanation is that the
 	# homeDir does not even exist yet, so try to create it. If it in fact
