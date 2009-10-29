@@ -105,8 +105,14 @@ class PresenceInit:
 			if child.name == 'x' and child.defaultUri == 'http://jabber.org/protocol/muc#user':
 				for item in child.elements():
 					if item.name == 'item':
-						affiliation = item['affiliation']
-						role = item['role']
+						if item.hasAttribute('affiliation'):
+							affiliation = item['affiliation']
+						else:
+							affiliation = 'none'
+						if item.hasAttribute('role'):
+							role = item['role']
+						else:
+							role = 'none'
 						if item.hasAttribute('nick'):
 							nick=unicode(item['nick'])
 						if item.hasAttribute('jid'):
