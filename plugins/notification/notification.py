@@ -388,7 +388,7 @@ class Plugin(plugins.PluginBase):
 				self.main.snarlMessages[int(s.getID())]=[self.addChatTab,[jid]]
 			else:
 				pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
-				self.osd.view(pixmap,user+self.tr(" is now ")+self.main.status[unicode(show)],unicode(status),self.addChatTab,[jid])
+				self.osd.view(pixmap,user+unicode(self.tr(" is now "))+self.main.status[unicode(show)],unicode(status),self.addChatTab,[jid])
 		if self.config['sound_presence']=="True" and int(time.time())>self.main.connectStarted+30:
 			if show=="offline":
 				self.main.playsound("contact_offline")
@@ -432,11 +432,11 @@ class Plugin(plugins.PluginBase):
 				# get avatar for OSD
 				pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
 				# inform user about newly opened tab
-				self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),event)
+				self.osd.view(pixmap,unicode(self.tr("New message from "))+user,unicode(traytext),event)
 		if self.config['sound_first_message']=="True":
 			self.main.playsound('new_message')
 		if self.config['tray_first_message']=='True':
-			self.main.tray.showMessage(self.tr("New message from ")+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
+			self.main.tray.showMessage(unicode(self.tr("New message from "))+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
 
 	def on_chatMessageEvent(self,msg,event=None):
 		if msg.body == None or not self.isNotificationEnabled():
@@ -461,7 +461,7 @@ class Plugin(plugins.PluginBase):
 				# get avatar for OSD
 				pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
 				# inform user about newly opened tab
-				self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext),event)
+				self.osd.view(pixmap,unicode(self.tr("New message from "))+user,unicode(traytext),event)
 		if self.config['sound_message']=="True":
 			self.main.playsound('message')
 	
@@ -488,7 +488,7 @@ class Plugin(plugins.PluginBase):
 				# get avatar for OSD
 				pixmap=self.main.getAvatar(jid.userhost(),frame=False,size="64x64")
 				# inform user about newly opened tab
-				self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext), None)
+				self.osd.view(pixmap,unicode(self.tr("New message from "))+user,unicode(traytext), None)
 		#if self.config['sound_gc_message']=="True":
 			#self.main.playsound('message')
 	
@@ -512,7 +512,7 @@ class Plugin(plugins.PluginBase):
 			else:
 #				self.main.tray.showMessage(self.tr("New groupchat message for you"), traytext, QtGui.QSystemTrayIcon.Information, 4000)
 				pixmap=self.main.getAvatar(frm.userhost()+"/"+user,frame=False,size="64x64")
-				self.osd.view(pixmap,self.tr("New message from ")+user,unicode(traytext), None)
+				self.osd.view(pixmap,unicode(self.tr("New message from "))+user,unicode(traytext), None)
 
 		if self.config['sound_gc_message']=="True":
 			self.main.playsound('message')
