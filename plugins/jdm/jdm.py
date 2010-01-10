@@ -1864,9 +1864,9 @@ class Plugin(plugins.PluginBase):
 		
 		if unicode(frm).find("public@disk.jabbim.cz")!=-1 or unicode(frm).find("private@disk.jabbim.cz")!=-1 or unicode(frm).find("album@disk.jabbim.cz")!=-1 :
 			self.updateView(parent=None,msg=msg)
-			return False
-			#if not self.window.isHidden() or not self.wizard.isHidden():
-				#return False
+			#return False
+			if not self.window.isHidden() or not self.wizard.isHidden():
+				return False
 		return True
 
 	def on_ftEnd(self, sid, error = None): #pokud je error None je vse v poradku, jinak strucny popis chyby.
