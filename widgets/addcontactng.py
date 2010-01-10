@@ -253,6 +253,10 @@ class addContactDialog(QtGui.QDialog):
 		self.ui.picture.setAlignment(QtCore.Qt.AlignCenter)
 		self.ui.picture.setSizePolicy(QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Expanding)
 
+		if jid:
+			self.ui.lineEdit.setText(jid)
+			self.textChanged(jid)
+
 #def getTransportForm(self, jid): 
 #def getTransportJid(self, jid, prompt):
 	
