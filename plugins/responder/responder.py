@@ -9,7 +9,7 @@ class config:
 	def __init__(self,main):
 		self.main=main
 		self.config={}
-		self.config['message']={'type':'text-multi','label':self.main.tr("Auto reply"),'value':self.main.tr('This is an automatic reply. This ICQ number has been discontinued by its owner, who now uses Jabber exclusively. You can contact him/her on the JabberID [JID]. If you do not know how, visit http://www.jabbim.com/services-start.html\nHave a nice day.')}
+		self.config['message']={'type':'text-multi','label':unicode(self.main.tr("Auto reply")),'value':unicode(self.main.tr('This is an automatic reply. This ICQ number has been discontinued by its owner, who now uses Jabber exclusively. You can contact him/her on the JabberID [JID]. If you do not know how, visit http://www.jabbim.com/services-start.html\nHave a nice day.'))}
 		self.config['exclude']={'type':'jid-list','label':self.main.tr("Allow JIDs"),'value':[]}
 
 class Plugin(plugins.PluginBase):
