@@ -53,7 +53,7 @@ class textView(abstractTextView):
 			event.ignore()
 
 class groupChatWidget(abstractChatWidget):
-	def __init__(self,main,jid,tab,nickname="",parent=None,ui=Ui_groupchatwidget):
+	def __init__(self,main,jid,parent=None,nickname="",ui=Ui_groupchatwidget):
 		self.typ="groupchat"
 		self.main=weakref.ref(main)
 		abstractChatWidget.__init__(self,ui,textView,main,jid,True,parent)
