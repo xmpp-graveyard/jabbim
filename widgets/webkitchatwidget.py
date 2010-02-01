@@ -249,9 +249,9 @@ class webkitChatWidget(QtWebKit.QWebView):
 			# find server when we can host the room
 			mucjid = None
 			for jid, node in self.chatwidget().main().client.disco.iteritems():
-				if not node[None].has_key('identities'):
+				if not node[(jid,None)].has_key('identities'):
 					continue
-				for id in node[None]['identities'].itervalues():
+				for id in node[(jid,None)]['identities'].itervalues():
 					#print jid, id
 					if id.get('category') == 'conference' and id.get('type') == 'text' and jid.startswith('c'):
 						mucjid = jid
