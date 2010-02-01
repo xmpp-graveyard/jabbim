@@ -57,7 +57,7 @@ class bookmarksClass:
 			password = unicode(lst[2].toString())
 			if self.main.chat.addGroupChatTab(jid,nickname):
 				self.main.client.joinGC(jid, nickname, password,self.main.config['sendRooms']=="True")
-		else:
+		elif item.text(1):
 			j=self.main.getJid(unicode(item.text(1)))
 			self.joingroupchatwizard=joingroupchat.joinGroupChatWindow(self.main,room=unicode(j.userhost()).split("@")[0],server=unicode(j.userhost()).split("@")[1],parent=self.main)
 			self.joingroupchatwizard.show()
