@@ -29,7 +29,8 @@ from pyxl import jid as jidT
 from pyxl.message import Message
 import time
 from include import utils
-from abstractchatwidget import abstractChatWidget,abstractTextView
+from abstractchatwidget import abstractChatWidget
+from webkitchatwidget import webkitChatWidget
 import sys
 import weakref
 
@@ -378,7 +379,7 @@ class chatWidget(abstractChatWidget):
 		self.main=weakref.ref(main)
 		xhtml=main.client.hasFeature(jid,'http://jabber.org/protocol/xhtml-im')
 		self.typ="chat"
-		abstractChatWidget.__init__(self,Ui_chatwidget,abstractTextView,main,jid,xhtml,parent)
+		abstractChatWidget.__init__(self, Ui_chatwidget, webkitChatWidget, main, jid, xhtml, parent)
 
 		self.coolWidgets=[]
 		self.coolLayout=QtGui.QHBoxLayout(self.ui.cool)

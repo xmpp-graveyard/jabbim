@@ -29,34 +29,18 @@ from twisted.words.protocols.jabber import jid as jidT
 import vcardeditor
 from include import utils
 #import filetransfer
-from abstractchatwidget import abstractChatWidget,abstractTextView
+from abstractchatwidget import abstractChatWidget
+from webkitchatwidget import webkitGroupChatWidget
 import addcontact
 import pyxl
 import weakref
 from tooltip import ToolTip
 
-class textView(abstractTextView):
-	"""
-	QTextEdit for conversation.
-	"""
-	def dropEvent(self, event):
-		if event.mimeData().hasText():
-			jid=self.main.getJid(unicode(event.mimeData().text()))
-			if not jid:
-				event.ignore()
-				return
-			room=unicode(self.parent.jid)
-			reason = self.tr("Hi! I'd love to see you in multichat at ") + room
-			self.main.client.sendInvitation(jid.full(), room, reason,cont=True)
-			event.acceptProposedAction()
-		else:
-			event.ignore()
-
 class groupChatWidget(abstractChatWidget):
 	def __init__(self,main,jid,parent=None,nickname="",ui=Ui_groupchatwidget):
 		self.typ="groupchat"
 		self.main=weakref.ref(main)
-		abstractChatWidget.__init__(self,ui,textView,main,jid,True,parent)
+		abstractChatWidget.__init__(self, ui, webkitGroupChatWidget, main, jid, True, parent)
 		
 		self.nick = nickname #: MUC Jabber ID
 		self.affiliation="" #: user affiliation

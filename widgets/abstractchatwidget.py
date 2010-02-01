@@ -11,7 +11,7 @@ from include import utils
 from emoticonswidget import *
 from linkeditor import linkEditorDialog
 import weakref
-from webkitchatwidget import webkitChatWidget,searchWidget
+from webkitchatwidget import searchWidget
 import paint
 from pyxl.message import Message
 try:
@@ -74,148 +74,6 @@ except:
 		##self.emit(QtCore.SIGNAL("ready()"))
 		#print test
 		##pass
-
-
-class abstractTextView(QtGui.QTextEdit):
-	"""
-	Text view for chat conversation.
-	"""
-	def __init__(self,main,parent):
-		QtGui.QTextEdit.__init__(self,parent)
-		self.parent=main
-		self.main=self.parent.main
-		self.setMouseTracking(True)
-		self.setReadOnly(True)
-		self.data=[]
-		self.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
-		self.setAcceptDrops(True)
-		self.setObjectName("chatView")
-		self.setWordWrapMode(QtGui.QTextOption.WrapAtWordBoundaryOrAnywhere)
-
-	def dragEnterEvent(self, event):
-		if event.mimeData().hasText():
-			if self.main.getJid(unicode(event.mimeData().text())):
-				event.acceptProposedAction()
-			else:
-				event.ignore()
-		else:
-			event.ignore()
-
-	def dragMoveEvent(self, event):
-		event.acceptProposedAction()
-
-	def dropEvent(self, event):
-		"""
-		Called when something is dropped to this widget.
-		If there is JID dropped, new MUC is created and the jid is invited to the room.
-		"""
-		if event.mimeData().hasText():
-			# test if it is JID
-			jid2=self.main.getJid(unicode(event.mimeData().text()))
-			if not jid2:
-				event.ignore()
-				return
-
-			room=str(int(time.time())) # define room name
-			# find server when we can host the room
-			mucjid = None
-			for jid, node in self.main.client.disco.iteritems():
-				if not node[None].has_key('identities'):
-					continue
-				for id in node[None]['identities'].itervalues():
-					#print jid, id
-					if id.get('category') == 'conference' and id.get('type') == 'text' and jid.startswith('c'):
-						mucjid = jid
-						break
-				if mucjid:
-					break
-			room+="@"+mucjid # room jabber id
-			
-			name=self.parent.parent.tabName # get name of tab where is this widget showed
-			rmIndex=int(self.main.chat.ui.chatTab.currentIndex()) # get index of this tab
-			# join to the room and send invitation
-			if self.main.chat.addGroupChatTab(room,self.main.client.jid.user,name=name):
-				tab,index=self.main.chat.findTab(room)
-				tab.chat.invitation=[unicode(jid2.full()),unicode(self.parent.jid)]
-				self.main.client.joinGC(room, self.main.client.jid.user,sendRooms=self.main.config['sendRooms']=="True")
-			# remove old user2user conversation tab
-			self.main.chat.removeTab(rmIndex)
-			event.acceptProposedAction()
-		else:
-			event.ignore()
-
-	def mouseMoveEvent(self,event):
-		"""
-		Changes mouse pointer if it is above link.
-		"""
-		anchor = self.anchorAt(event.pos())
-		if len(anchor)!=0:
-			self.viewport().setCursor(QtCore.Qt.PointingHandCursor)
-		else:
-			self.viewport().setCursor(QtCore.Qt.ArrowCursor)
-		return QtGui.QTextEdit.mouseMoveEvent(self,event)
-
-	def mousePressEvent(self,event):
-		"""
-		Opens link under mouse pointer.
-		"""
-		anchor = self.anchorAt(event.pos())
-		if event.button()==QtCore.Qt.LeftButton:
-			if len(anchor)!=0:
-				QtGui.QDesktopServices.openUrl(QtCore.QUrl(anchor))
-		return QtGui.QTextEdit.mousePressEvent(self,event)
-	
-	#def createMimeDataFromSelection(self):
-		#"""
-		#Creates data for clipboard from selected text.
-		#"""
-		#text=unicode(self.textCursor().selection().toHtml())
-		##print text
-		#a=parseString(text)
-		#for el in a.getElementsByTagName('img'):
-			#path=el.attributes['src'].split('/')[-1]
-			#p=os.path.dirname(self.parent.main.emoticonsWidget.smileys[self.parent.main.emoticonsWidget.smileys.keys()[0]])
-			#path=p+"/"+path
-			#for k,v in self.parent.main.emoticonsWidget.smileys.iteritems():
-				#if v==path:
-					#path=k
-					#newnode = parseString("<div> "+path+"</div>").documentElement
-					#el.parentNode.replaceChild(newnode,el)
-					#break
-		#b=a.getElementsByTagName('body')
-		#try:
-			#c=parseString(unicode(b[0].toxml(),'utf-8').replace("<!--EndFragment-->","").replace("<!--StartFragment-->",""))
-		#except:
-			#c=parseString(unicode(b[0].toxml()).replace("<!--EndFragment-->","").replace("<!--StartFragment-->",""))
-		#for el in c.getElementsByTagName('br'):
-			##if self.parent.main.skin['spaces_between_lines']=='1':
-				##newnode = parseString("<div> "+unichr(2028)+unichr(2028)+"</div>").documentElement
-			##else:
-			#newnode = parseString("<div> 123456789123456789987654321</div>").documentElement
-			#el.parentNode.replaceChild(newnode,el)
-		#for el in c.getElementsByTagName('table'):
-			#newnode = parseString(unicode("<div>123456789123456789987654321123456789123456789987654321</div>")).documentElement
-			##print [newnode.toxml()]
-			##el.parentNode.replaceChild(newnode,el)
-			#el.appendChild(newnode)
-			
-		#text=gatherTextNodes(c)
-		#u=False
-		#text=text.replace("123456789123456789987654321","\n")
-		#print [text]
-		##print [text]
-		#try:
-			#text=unicode(text, 'utf-8')
-			#u=True
-		#except:
-			#text=unicode(text)
-		##if u:
-		##print [text]
-		##print unicode(text)
-
-		#self.data.append(QtCore.QMimeData())
-		#self.data[-1].setText(unicode(text).replace("&gt;",">").replace("&lt;","<").replace("&amp;","&").replace("&quot;","\""))
-		#return self.data[-1]
 
 
 class normalLineEditWidget(QtGui.QTextEdit):
@@ -419,7 +277,7 @@ class normalLineEditWidget(QtGui.QTextEdit):
 
 
 class abstractChatWidget(QtGui.QWidget):
-	def __init__(self,initClass,textEditClass,main,jid,xhtml=True,parent=None):
+	def __init__(self, initClass, webkitClass, main, jid, xhtml=True, parent=None):
 		apply(QtGui.QWidget.__init__,(self,parent))
 		self.ui=initClass()
 		self.ui.setupUi(self)
@@ -437,7 +295,7 @@ class abstractChatWidget(QtGui.QWidget):
 		#self.ui.textEdit=textEditClass(self,self.ui.viewWidget)
 		#self.ui.textEdit.hide()
 		#self.ui.webkit=QtWebKit.QWebView(self)
-		self.ui.webkit=webkitChatWidget(self,self)
+		self.ui.webkit = webkitClass(self, self)
 		#self.ui.webkit.settings().setAttribute(QtWebKit.QWebSettings.JavascriptEnabled,True)
 
 		#self.loadWebkit()
