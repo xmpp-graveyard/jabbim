@@ -86,7 +86,7 @@ class normalLineEditWidget(QtGui.QTextEdit):
 		self.parent=parent #: parent
 		self.setObjectName("line")
 		self.composing=False #: True if user is typing
-		self.timer=QtCore.QTimer() # timer to determine if user paused typing
+		self.timer = QtCore.QTimer(self) # timer to determine if user paused typing
 		QtCore.QObject.connect(self.timer, QtCore.SIGNAL("timeout()"),self.paused)
 		self.text=""
 		self.t=False
