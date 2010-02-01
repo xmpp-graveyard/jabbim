@@ -596,16 +596,14 @@ class groupChatWidget(abstractChatWidget):
 
 	def toggleInfo(self, b):
 		"""
-		depracted?
+		Show/hide room info
 		"""
 		log.msg("Info toggled:"+`b`)
 		if b:
 			self._getInfo()
 			self.ui.disco_info.show()
-			self.ui.toggleInfo.setToolTip(self.tr("Hide room info"))
 		else:
 			self.ui.disco_info.hide()
-			self.ui.toggleInfo.setToolTip(self.tr("Show room info"))
 
 	def changeNick(self):
 		"""
