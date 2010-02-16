@@ -52,7 +52,7 @@ class autoAwayThread(QtCore.QThread):
 				break
 			self.main.finish_cond.wait(self.main.mutex, sleeptime)
 			self.main.mutex.unlock()
-		self.main.mutex.unlock()
+		#self.main.mutex.unlock()
 
 class XScreenSaverInfo( ctypes.Structure):
 	""" typedef struct { ... } XScreenSaverInfo; """
@@ -196,7 +196,7 @@ class Plugin(plugins.PluginBase):
 		self.threadRun=False
 		self.mutex.unlock()
 		self.finish_cond.wakeAll()
-		self.thread.wait()
+		self.thread.join()
 
 	#def on_idle(self, cas):
 		#self.idletime += cas
