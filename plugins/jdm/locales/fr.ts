@@ -273,12 +273,12 @@ p, li { white-space: pre-wrap; }
         <translation>Copier le lien dans le bloc-note</translation>
     </message>
     <message>
-        <location filename="../jdm.py" line="36"/>
+        <location filename="../jdm.py" line="35"/>
         <source>Jabbim disk manager</source>
         <translation>Gestionnaire de disques Jabbim</translation>
     </message>
     <message>
-        <location filename="../jdm.py" line="38"/>
+        <location filename="../jdm.py" line="37"/>
         <source>JDM Plugin</source>
         <translation>Gestionnaire de disques Jabbim Plugin</translation>
     </message>
@@ -491,12 +491,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../jdm.py" line="975"/>
+        <location filename="../jdm.py" line="974"/>
         <source>Wrong Jabber ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../jdm.py" line="976"/>
+        <location filename="../jdm.py" line="975"/>
         <source>You are entered wrong jabber ID</source>
         <translation type="unfinished"></translation>
     </message>
@@ -542,12 +542,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../jdm.py" line="978"/>
+        <location filename="../jdm.py" line="977"/>
         <source>Wrong full Jabber ID</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../jdm.py" line="979"/>
+        <location filename="../jdm.py" line="978"/>
         <source>You need enter full (with resource) Jabber ID user@server/resource</source>
         <translation type="unfinished"></translation>
     </message>

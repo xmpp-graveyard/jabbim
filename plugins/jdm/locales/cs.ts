@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS>
-<TS version="2.0" language="cs_CZ">
+<!DOCTYPE TS><TS version="1.1" language="cs_CZ">
 <context>
     <name>JDW</name>
     <message>
@@ -283,12 +282,12 @@ p, li { white-space: pre-wrap; }
         <translation>Kopírovat odkaz do schránky</translation>
     </message>
     <message>
-        <location filename="../jdm.py" line="36"/>
+        <location filename="../jdm.py" line="35"/>
         <source>Jabbim disk manager</source>
         <translation>Umožňuje zobrazovat Jabber Disk a Album jiných kontaktu a spravovat Vaše Album a Jabber Disk</translation>
     </message>
     <message>
-        <location filename="../jdm.py" line="38"/>
+        <location filename="../jdm.py" line="37"/>
         <source>JDM Plugin</source>
         <translation>Správce Jabber Disku</translation>
     </message>
@@ -517,12 +516,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Vložte Jabber ID (uživatel@server):</translation>
     </message>
     <message>
-        <location filename="../jdm.py" line="975"/>
+        <location filename="../jdm.py" line="974"/>
         <source>Wrong Jabber ID</source>
         <translation type="unfinished">Špatné Jabber ID</translation>
     </message>
     <message>
-        <location filename="../jdm.py" line="976"/>
+        <location filename="../jdm.py" line="975"/>
         <source>You are entered wrong jabber ID</source>
         <translation type="unfinished">Vložil jsi špatné Jabber ID</translation>
     </message>
@@ -570,12 +569,12 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">Vložte celé Jabber ID (uživatel@server/zdroj):</translation>
     </message>
     <message>
-        <location filename="../jdm.py" line="978"/>
+        <location filename="../jdm.py" line="977"/>
         <source>Wrong full Jabber ID</source>
         <translation type="unfinished">Špatně zadané celé Jabber ID</translation>
     </message>
     <message>
-        <location filename="../jdm.py" line="979"/>
+        <location filename="../jdm.py" line="978"/>
         <source>You need enter full (with resource) Jabber ID user@server/resource</source>
         <translation type="unfinished">Musíte zadat celé Jabber ID uživatel@server/zdroj</translation>
     </message>

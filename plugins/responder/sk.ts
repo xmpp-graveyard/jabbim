@@ -3,7 +3,7 @@
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="responder.py" line="26"/>
+        <location filename="responder.py" line="20"/>
         <source>CAREFUL!
 Do not enable this plugin unless you intend to cut down a little on your ICQ usage.
 
@@ -12,7 +12,7 @@ If you enable this plugin, contacts trying to write to you over ICQ will receive
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="responder.py" line="52"/>
+        <location filename="responder.py" line="55"/>
         <source>ICQ Responder</source>
         <translation type="unfinished"></translation>
     </message>
@@ -22,7 +22,7 @@ If you enable this plugin, contacts trying to write to you over ICQ will receive
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="responder.py" line="52"/>
+        <location filename="responder.py" line="55"/>
         <source>Messages sent: </source>
         <translation type="unfinished"></translation>
     </message>
@@ -40,7 +40,7 @@ If you enable this plugin, contacts trying to write to you over ICQ will receive
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="responder.py" line="13"/>
+        <location filename="responder.py" line="12"/>
         <source>This is an automatic reply. This ICQ number has been discontinued by its owner, who now uses Jabber exclusively. You can contact him/her on the JabberID [JID]. If you do not know how, visit http://www.jabbim.com/services-start.html
 Have a nice day.</source>
         <translation type="unfinished"></translation>

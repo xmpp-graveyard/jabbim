@@ -21,17 +21,17 @@
 <context>
     <name>self.main</name>
     <message>
-        <location filename="news.py" line="15"/>
+        <location filename="news.py" line="19"/>
         <source>Notify in tray</source>
         <translation>Notify in tray</translation>
     </message>
     <message>
-        <location filename="news.py" line="16"/>
+        <location filename="news.py" line="20"/>
         <source>Show window on new</source>
         <translation>Show window on new</translation>
     </message>
     <message>
-        <location filename="news.py" line="52"/>
+        <location filename="news.py" line="98"/>
         <source>Show news</source>
         <translation type="unfinished">Show news</translation>
     </message>

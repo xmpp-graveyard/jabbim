@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="pl_PL">
-<defaultcodec></defaultcodec>
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="autoaway.py" line="121"/>
+        <location filename="autoaway.py" line="120"/>
         <source>Auto away</source>
         <translation type="unfinished">Status bezczynności</translation>
     </message>
     <message>
-        <location filename="autoaway.py" line="123"/>
+        <location filename="autoaway.py" line="122"/>
         <source>Autoaway Plugin</source>
         <translation type="unfinished">Status bezczynności</translation>
     </message>
@@ -27,7 +26,7 @@
         <translation type="unfinished">Tekst bezczynności</translation>
     </message>
     <message>
-        <location filename="autoaway.py" line="113"/>
+        <location filename="autoaway.py" line="112"/>
         <source>I&apos;m not here since [last].</source>
         <translation type="unfinished">Nie ma mnie tu od [last].</translation>
     </message>

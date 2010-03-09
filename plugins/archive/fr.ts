@@ -36,7 +36,7 @@
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="archive.py" line="484"/>
+        <location filename="archive.py" line="463"/>
         <source>History</source>
         <translation>Historique</translation>
     </message>
@@ -64,12 +64,12 @@
 <context>
     <name>self.main</name>
     <message>
-        <location filename="archive.py" line="298"/>
+        <location filename="archive.py" line="299"/>
         <source>Number of last messages shown:</source>
         <translation>Nombre des derniers messages:</translation>
     </message>
     <message>
-        <location filename="archive.py" line="299"/>
+        <location filename="archive.py" line="300"/>
         <source>Don&apos;t show messages older than:</source>
         <translation>Ne pas montrer les messages plus anciens que:</translation>
     </message>

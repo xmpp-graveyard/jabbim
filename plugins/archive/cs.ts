@@ -46,7 +46,7 @@
         <translation type="obsolete">Ostatní</translation>
     </message>
     <message>
-        <location filename="archive.py" line="484"/>
+        <location filename="archive.py" line="463"/>
         <source>History</source>
         <translation>Historie</translation>
     </message>
@@ -69,12 +69,12 @@
         <translation type="obsolete">Počet zpráv z archivu, které jsou načteny do rozhovoru:</translation>
     </message>
     <message>
-        <location filename="archive.py" line="298"/>
+        <location filename="archive.py" line="299"/>
         <source>Number of last messages shown:</source>
         <translation>Počet zpráv z archivu, které jsou načteny do rozhovoru:</translation>
     </message>
     <message>
-        <location filename="archive.py" line="299"/>
+        <location filename="archive.py" line="300"/>
         <source>Don&apos;t show messages older than:</source>
         <translation>Nezobrazovat v rozhovoru zprávy starší než:</translation>
     </message>

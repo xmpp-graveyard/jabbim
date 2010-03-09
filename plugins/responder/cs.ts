@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs_CZ">
-<defaultcodec></defaultcodec>
 <context>
     <name>Plugin</name>
     <message>
@@ -16,7 +15,7 @@
  Přeji pekný den.</translation>
     </message>
     <message>
-        <location filename="responder.py" line="26"/>
+        <location filename="responder.py" line="20"/>
         <source>CAREFUL!
 Do not enable this plugin unless you intend to cut down a little on your ICQ usage.
 
@@ -29,7 +28,7 @@ ICQ odpovídač je určen uživatelům ICQ transportu, kteří chtějí s ICQ na
 Zapnete-li tento plugin, pak lidé, kteří Vám napíšou přes ICQ, dostanou automatickou odpověď sdělující jim, jak Vás mají kontaktovat. Jejich zprávy NEUVIDÍTE. Konkrétní text automatické odpovědi si můžete upravit.</translation>
     </message>
     <message>
-        <location filename="responder.py" line="52"/>
+        <location filename="responder.py" line="55"/>
         <source>ICQ Responder</source>
         <translation>ICQ odpovídač</translation>
     </message>
@@ -39,7 +38,7 @@ Zapnete-li tento plugin, pak lidé, kteří Vám napíšou přes ICQ, dostanou a
         <translation>Ukázat statistiku</translation>
     </message>
     <message>
-        <location filename="responder.py" line="52"/>
+        <location filename="responder.py" line="55"/>
         <source>Messages sent: </source>
         <translation>Posláno zpráv:</translation>
     </message>
@@ -57,7 +56,7 @@ Zapnete-li tento plugin, pak lidé, kteří Vám napíšou přes ICQ, dostanou a
         <translation>Povolit zprávy od</translation>
     </message>
     <message>
-        <location filename="responder.py" line="13"/>
+        <location filename="responder.py" line="12"/>
         <source>This is an automatic reply. This ICQ number has been discontinued by its owner, who now uses Jabber exclusively. You can contact him/her on the JabberID [JID]. If you do not know how, visit http://www.jabbim.com/services-start.html
 Have a nice day.</source>
         <translation>Toto je automatická odpověď. Toto ICQ číslo je mimo provoz, jeho uživatel nyní používá pouze Jabber. Můžete ho kontaktovat na jeho JabberID [JID]. Pokud nevíte, jak na to, navštivte http://www.jabbim.cz/services-start.html

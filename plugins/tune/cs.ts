@@ -3,12 +3,12 @@
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="tune.py" line="322"/>
+        <location filename="tune.py" line="346"/>
         <source>Plugin for User Tune</source>
         <translation>Zobrazí informace o právě přehráváné skladbě</translation>
     </message>
     <message>
-        <location filename="tune.py" line="324"/>
+        <location filename="tune.py" line="348"/>
         <source>tune</source>
         <translation>Právě poslouchám</translation>
     </message>

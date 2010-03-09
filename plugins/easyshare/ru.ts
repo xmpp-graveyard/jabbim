@@ -3,12 +3,12 @@
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="easyshare.py" line="292"/>
+        <location filename="easyshare.py" line="291"/>
         <source>Easy filesharing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="easyshare.py" line="503"/>
+        <location filename="easyshare.py" line="513"/>
         <source>EasyShare</source>
         <translation type="unfinished"></translation>
     </message>

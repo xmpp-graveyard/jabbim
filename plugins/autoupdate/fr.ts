@@ -33,7 +33,7 @@
         <translation>Voulez-vous mettre à jour ce plugin?</translation>
     </message>
     <message>
-        <location filename="autoupdate.py" line="44"/>
+        <location filename="autoupdate.py" line="43"/>
         <source>Updates plugins</source>
         <translation>Mettre à jour les plugins</translation>
     </message>

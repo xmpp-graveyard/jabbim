@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="pl_PL">
-<defaultcodec></defaultcodec>
 <context>
     <name>Plugin</name>
     <message>
@@ -34,7 +33,7 @@
         <translation type="unfinished">Czy chcesz zaktualizować tę wtyczkę?</translation>
     </message>
     <message>
-        <location filename="autoupdate.py" line="44"/>
+        <location filename="autoupdate.py" line="43"/>
         <source>Updates plugins</source>
         <translation type="unfinished">Aktualizacje wtyczek</translation>
     </message>

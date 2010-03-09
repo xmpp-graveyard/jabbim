@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS><TS version="1.1" language="cs_CZ">
-<defaultcodec></defaultcodec>
 <context>
     <name>Plugin</name>
     <message>
-        <location filename="festival.py" line="86"/>
+        <location filename="festival.py" line="85"/>
         <source>Festival voice synthesizer</source>
         <translation>Hlasový syntezátor Festival</translation>
     </message>
@@ -14,7 +13,7 @@
         <translation>%s píše: %s</translation>
     </message>
     <message>
-        <location filename="festival.py" line="84"/>
+        <location filename="festival.py" line="83"/>
         <source>Reads messages with synthesized voice via Festival
 
 For this plugin to work, you need to have Festival installed and found in $PATH. To verify that Festival works for you, run the command:
@@ -43,7 +42,7 @@ echo Ahoj | festival --tts</translation>
         <translation>zapnuto</translation>
     </message>
     <message>
-        <location filename="festival.py" line="14"/>
+        <location filename="festival.py" line="13"/>
         <source>previous state</source>
         <translation>předchozí stav</translation>
     </message>
