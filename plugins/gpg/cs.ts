@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="cs_CZ">
+<!DOCTYPE TS>
+<TS version="2.0" language="cs_CZ">
 <context>
     <name>Plugin</name>
     <message>
@@ -30,17 +31,20 @@ Tato verze NENÍ řádně zabezpečena, fráze k vašemu gpg klíčí je uložen
 
 This plugin requires your gpg system to be setup already.
 If you enable this plugin, you can receive gpg encrypted messages set gpg key ids for jids and select to which people you send encrypted messages.</source>
-        <translation type="unfinished"></translation>
+        <translation>Rozšíření, které umožňuje používat PGP/GPG (nebo podobný nástroj podporovaný pomocí GPGME).
+
+Toto rozšíření vyžaduje správně nainstalovaný a funkční GPG systém.
+Pokud zapnete toto rozšíření, můžete dostávat šifrované zprávy nastavením GPG klíče pro jednotlivé uživatele.</translation>
     </message>
     <message>
         <location filename="gpg.py" line="66"/>
         <source>Can not decrypt, agent problem? Here is original:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nemohu dekryptovat, problém s GPG systémem? Zde je originál zprávy:</translation>
     </message>
     <message>
         <location filename="gpg.py" line="122"/>
         <source>GPG key ID</source>
-        <translation type="unfinished"></translation>
+        <translation>GPG ID klíče</translation>
     </message>
 </context>
 <context>

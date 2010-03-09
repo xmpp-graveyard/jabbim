@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="cs_CZ">
+<!DOCTYPE TS>
+<TS version="2.0" language="cs_CZ">
 <context>
     <name>MainWindow</name>
     <message>
@@ -81,12 +82,12 @@
     <message>
         <location filename="devconsole.ui.py" line="147"/>
         <source>&amp;Enable</source>
-        <translation>aktivovat</translation>
+        <translation>&amp;Aktivovat</translation>
     </message>
     <message>
         <location filename="devconsole.ui.py" line="148"/>
         <source>Clea&amp;r</source>
-        <translation>Vymazat</translation>
+        <translation>&amp;Vymazat</translation>
     </message>
     <message>
         <location filename="devconsole.ui.py" line="149"/>
@@ -121,7 +122,7 @@
     <message>
         <location filename="devconsole.ui.py" line="141"/>
         <source>Filter</source>
-        <translation type="unfinished"></translation>
+        <translation>Filtr</translation>
     </message>
 </context>
 <context>

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE TS><TS version="1.1" language="cs_CZ">
+<!DOCTYPE TS>
+<TS version="2.0" language="cs_CZ">
 <context>
     <name>JDW</name>
     <message>
         <location filename="../jdw_ui.py" line="245"/>
         <source>Jabbim Disk Wizard</source>
-        <translation type="unfinished"></translation>
+        <translation>Správce Jabbim Disku</translation>
     </message>
     <message>
         <location filename="../jdw_ui.py" line="246"/>
@@ -45,22 +46,22 @@
     <message>
         <location filename="../jdw_ui.py" line="253"/>
         <source>...</source>
-        <translation type="unfinished"></translation>
+        <translation>...</translation>
     </message>
     <message>
         <location filename="../jdw_ui.py" line="258"/>
         <source>New Item</source>
-        <translation type="unfinished"></translation>
+        <translation>Nová položka</translation>
     </message>
     <message>
         <location filename="../jdw_ui.py" line="260"/>
         <source>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.mp3</source>
-        <translation type="unfinished"></translation>
+        <translation>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.mp3</translation>
     </message>
     <message>
         <location filename="../jdw_ui.py" line="261"/>
         <source>aaa.mp3</source>
-        <translation type="unfinished"></translation>
+        <translation>aaa.mp3</translation>
     </message>
     <message>
         <location filename="../jdw_ui.py" line="262"/>
@@ -344,27 +345,27 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../jdm.py" line="1938"/>
         <source>This folder contains all files shared by user.</source>
-        <translation type="unfinished">Tato složka obsahuje všechny soubory sdílené uživatelem.</translation>
+        <translation>Tato složka obsahuje všechny soubory sdílené uživatelem.</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1947"/>
         <source>This folder contains photos shared through Jabbim Album Service.</source>
-        <translation type="unfinished">Tato složka obsahuje fotografie sdílené pomocí služby Jabbim Album.</translation>
+        <translation>Tato složka obsahuje fotografie sdílené pomocí služby Jabbim Album.</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1949"/>
         <source>This folder contains files shared through Jabbim Disk Service.</source>
-        <translation type="unfinished">Tato složka obsahuje soubory sdílené pomocí služby Jabbim Disk.</translation>
+        <translation>Tato složka obsahuje soubory sdílené pomocí služby Jabbim Disk.</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1951"/>
         <source>This folder contains files shared you private files.</source>
-        <translation type="unfinished">Tato složka obsahuje soubory přístupné pouze vám.</translation>
+        <translation>Tato složka obsahuje soubory přístupné pouze vám.</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1953"/>
         <source>This folder contains shared folders and files.</source>
-        <translation type="unfinished">Tato složka obsahuje sdílené soubory a složky.</translation>
+        <translation>Tato složka obsahuje sdílené soubory a složky.</translation>
     </message>
     <message numerus="yes">
         <location filename="../jdm.py" line="1971"/>
@@ -423,12 +424,12 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../jdm.py" line="1201"/>
         <source>manually enter JID</source>
-        <translation type="unfinished">ručně vložit Jabber ID</translation>
+        <translation>ručně vložit Jabber ID</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1202"/>
         <source>from roster</source>
-        <translation type="unfinished">ze seznamu kontaktů</translation>
+        <translation>ze seznamu kontaktů</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="890"/>
@@ -438,22 +439,22 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../jdm.py" line="1095"/>
         <source>Download all files and subfolders inside this folder</source>
-        <translation type="unfinished">Stáhnout všechny soubory a podsložky v této složce</translation>
+        <translation>Stáhnout všechny soubory a podsložky v této složce</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1074"/>
         <source>Remove folder and all files and subfolders inside this folder</source>
-        <translation type="unfinished">Odstranit složku a všechny soubory a podsložky v této složce</translation>
+        <translation>Odstranit složku a všechny soubory a podsložky v této složce</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1109"/>
         <source>Download selected files</source>
-        <translation type="unfinished">Stáhnout vybrané soubory</translation>
+        <translation>Stáhnout vybrané soubory</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1111"/>
         <source>Remove selected files</source>
-        <translation type="unfinished">Odstranit vybrané soubory</translation>
+        <translation>Odstranit vybrané soubory</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="925"/>
@@ -463,75 +464,76 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../jdm.py" line="1155"/>
         <source>Download all files and subfolders inside selected folders</source>
-        <translation type="unfinished">Stáhnout všechny soubory včetně podsložek ve vybraných složkách</translation>
+        <translation>Stáhnout všechny soubory včetně podsložek ve vybraných složkách</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1157"/>
         <source>Remove folders and all files and subfolders inside selected folders</source>
-        <translation type="unfinished">Odstranit složky a všechny soubory a podsložky ve vybraných složkách</translation>
+        <translation>Odstranit složky a všechny soubory a podsložky ve vybraných složkách</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1174"/>
         <source>Download selected files and all files inside selected folders</source>
-        <translation type="unfinished">Stáhnout vybrané soubory a všechny soubory ve vybraných složkách</translation>
+        <translation>Stáhnout vybrané soubory a všechny soubory ve vybraných složkách</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1196"/>
         <source>Create new folder</source>
-        <translation type="unfinished">Vytvořit novou složku</translation>
+        <translation>Vytvořit novou složku</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1197"/>
         <source>Upload new file here</source>
-        <translation type="unfinished">Nahrát nový soubor zde</translation>
+        <translation>Nahrát nový soubor zde</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1200"/>
         <source>Add new user</source>
-        <translation type="unfinished">Přidat nového uživatele</translation>
+        <translation>Přidat nového uživatele</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1264"/>
         <source>Wrong file/folder name</source>
-        <translation type="unfinished">Špatný název souboru/složky</translation>
+        <translation>Špatný název souboru/složky</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1303"/>
         <source>Copy filename to clipboard</source>
-        <translation type="unfinished">Kopírovat název souboru do schránky</translation>
+        <translation>Kopírovat název souboru do schránky</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1307"/>
         <source>Copy filenames to clipboard</source>
-        <translation type="unfinished">Kopírovat názvy souborů do schránky</translation>
+        <translation>Kopírovat názvy souborů do schránky</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="787"/>
         <source>Enter Jabber ID</source>
-        <translation type="unfinished">Vložte Jabber ID</translation>
+        <translation>Vložte Jabber ID</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="787"/>
         <source>Enter Jabber ID (user@server):</source>
-        <translation type="unfinished">Vložte Jabber ID (uživatel@server):</translation>
+        <translation>Vložte Jabber ID (uživatel@server):</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="974"/>
         <source>Wrong Jabber ID</source>
-        <translation type="unfinished">Špatné Jabber ID</translation>
+        <translation>Špatné Jabber ID</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="975"/>
         <source>You are entered wrong jabber ID</source>
-        <translation type="unfinished">Vložil jsi špatné Jabber ID</translation>
+        <translation>Vložil jsi špatné Jabber ID</translation>
     </message>
     <message numerus="yes">
         <location filename="../jdm.py" line="859"/>
         <source>No files in subfolder/s for download</source>
-        <translation type="unfinished">
-            <numerusform>Ve vybrané složce není žádný soubor</numerusform>
-            <numerusform>Ve vybraných složkách není žádný soubor</numerusform>
-            <numerusform>Ve vybraných složkách není žádný soubor</numerusform>
+        <translatorcomment>ok</translatorcomment>
+        <translation>
+            <numerusform>Ve vybrané složce není žádný soubor %n</numerusform>
+            <numerusform>Ve vybraných složkách není žádný soubor %n</numerusform>
+            <numerusform>Ve vybraných složkách není žádný soubor %n</numerusform>
         </translation>
     </message>
     <message>
@@ -542,7 +544,7 @@ p, li { white-space: pre-wrap; }
     <message numerus="yes">
         <location filename="../jdm.py" line="892"/>
         <source>You want delete %n files and folders. Are you sure?</source>
-        <translation type="unfinished">
+        <translation>
             <numerusform>Chcete smazat %n soubor nebo složku. Jsi si jistý?</numerusform>
             <numerusform>Chcete smazat %n soubory a/nebo složky. Jsi si jistý?</numerusform>
             <numerusform>Chcete smazat %n souborů a/nebo složek. Jsi si jistý?</numerusform>
@@ -561,67 +563,67 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../jdm.py" line="956"/>
         <source>Enter full jid</source>
-        <translation type="unfinished">Vložte celé Jabber ID</translation>
+        <translation>Vložte celé Jabber ID</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="956"/>
         <source>Enter full JID (user@server/resource):</source>
-        <translation type="unfinished">Vložte celé Jabber ID (uživatel@server/zdroj):</translation>
+        <translation>Vložte celé Jabber ID (uživatel@server/zdroj):</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="977"/>
         <source>Wrong full Jabber ID</source>
-        <translation type="unfinished">Špatně zadané celé Jabber ID</translation>
+        <translation>Špatně zadané celé Jabber ID</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="978"/>
         <source>You need enter full (with resource) Jabber ID user@server/resource</source>
-        <translation type="unfinished">Musíte zadat celé Jabber ID uživatel@server/zdroj</translation>
+        <translation>Musíte zadat celé Jabber ID uživatel@server/zdroj</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1054"/>
         <source>Move file to</source>
-        <translation type="unfinished">Přesunout soubor do</translation>
+        <translation>Přesunout soubor do</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1177"/>
         <source>Current location</source>
-        <translation type="unfinished">Aktuální umístění</translation>
+        <translation>Aktuální umístění</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1078"/>
         <source>Move folder to</source>
-        <translation type="unfinished">Přesunout složku do</translation>
+        <translation>Přesunout složku do</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1100"/>
         <source>You can not remove own Jabber ID</source>
-        <translation type="unfinished">Nemůžeš odstranit vlastní Jabber ID</translation>
+        <translation>Nemůžeš odstranit vlastní Jabber ID</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1103"/>
         <source>Remove user from this list</source>
-        <translation type="unfinished">Odstranit uživatele z tohoto seznamu</translation>
+        <translation>Odstranit uživatele z tohoto seznamu</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1138"/>
         <source>Move files to</source>
-        <translation type="unfinished">Přesunout soubory do</translation>
+        <translation>Přesunout soubory do</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1158"/>
         <source>Move folders to</source>
-        <translation type="unfinished">Přesunout složky do</translation>
+        <translation>Přesunout složky do</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1176"/>
         <source>Move folders and files to</source>
-        <translation type="unfinished">Přesunout soubory a složky do</translation>
+        <translation>Přesunout soubory a složky do</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1330"/>
         <source>Copy description to clipboard</source>
-        <translation type="unfinished">Kopírovat popis do schránky</translation>
+        <translation>Kopírovat popis do schránky</translation>
     </message>
 </context>
 <context>
@@ -639,7 +641,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../jdm.py" line="26"/>
         <source>JIDs for preview list</source>
-        <translation type="unfinished">Jabber ID pro náhledový seznam</translation>
+        <translation>Jabber ID pro náhledový seznam</translation>
     </message>
     <message>
         <location filename="../jdm.py" line="1431"/>
