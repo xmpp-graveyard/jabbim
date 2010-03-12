@@ -2228,7 +2228,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.senddialog = None
 		self.snarlMessages={}
 		self.autoAdd={}
-		self.version = '0.5 SVN' + utils.getSvnVersion() #: version string
+		self.version = '0.6 SVN' + utils.getSvnVersion() #: version string
 		#self.setWindowOpacity (0.5)
 		self.imageId=0
 		self.isJabbimUser=False
