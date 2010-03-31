@@ -2948,10 +2948,10 @@ class mainWindow(QtGui.QMainWindow):
 								break
 
 		if name != None:
-			text+='<td><b>'+self.tr("Name:")+'</b> '+name+'<br/>'
+			text+='<td><b>'+unicode(self.tr("Name:"))+'</b> '+name+'<br/>'
 		else:
 			text+='<td>'
-		text+='<b>'+self.tr("JID:")+'</b> '+jidfull+'<br/>'
+		text+='<b>'+unicode(self.tr("JID:"))+'</b> '+jidfull+'<br/>'
 		contact = self.client.getContactByJid(jid)
 		if contact == None:
 			contact = self.client.getMucContactByJid(jidfull)
@@ -2967,11 +2967,11 @@ class mainWindow(QtGui.QMainWindow):
 			return text
 
 		if unicode(contact.subscription) == 'from':
-			text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" from")+'<br/>'
+			text+='<b>'+unicode(self.tr("Subscription:"))+'</b> '+unicode(self.tr(" from"))+'<br/>'
 		elif unicode(contact.subscription) == 'to':
-			text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" to")+'<br/>'
+			text+='<b>'+unicode(self.tr("Subscription:"))+'</b> '+unicode(self.tr(" to"))+'<br/>'
 		elif unicode(contact.subscription) == 'none':
-			text+='<b>'+self.tr("Subscription:")+'</b> '+self.tr(" none")+'<br/>'
+			text+='<b>'+unicode(self.tr("Subscription:"))+'</b> '+unicode(self.tr(" none"))+'<br/>'
 		n =0
 
 		for res in contact.resources.keys():
@@ -2982,7 +2982,7 @@ class mainWindow(QtGui.QMainWindow):
 			#if priority == None:
 			#	priority = self.tr("Unknown")
 			if priority != None:
-				priority = "(%s: %s)" % (self.tr("Priority"),priority)
+				priority = "(%s: %s)" % (unicode(self.tr("Priority")),priority)
 			else:
 				priority = ""
 			if n>0:
@@ -3061,7 +3061,7 @@ class mainWindow(QtGui.QMainWindow):
 		if chat != None:
 			if type(chat) == list:
 
-				text+='<br /><b>'+self.tr('User is chatting in:')+'</b>'
+				text+='<br /><b>'+unicode(self.tr('User is chatting in:'))+'</b>'
 				for itm in chat:
 					uri = name = ''
 					for el in itm.elements():
@@ -3076,7 +3076,7 @@ class mainWindow(QtGui.QMainWindow):
 
 				uri = name = ''
 				if len(chat.children)>0:
-					text+='<br /><b>'+self.tr('User is chatting in:')+'</b>'
+					text+='<br /><b>'+unicode(self.tr('User is chatting in:'))+'</b>'
 					for el in chat.elements():
 						if el.name == 'uri':
 							uri = unicode(el)
