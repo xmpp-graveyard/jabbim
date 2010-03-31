@@ -27,7 +27,6 @@ import os
 from pyxl import jid as jidT
 from leaveroom_ui import *
 import ctypes
-from ctypes.util import find_library
 import sys
 class leaveMucDialog(QtGui.QDialog):
 	def __init__(self,main,jid,parent):
