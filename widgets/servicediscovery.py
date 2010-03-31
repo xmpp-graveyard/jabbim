@@ -44,6 +44,8 @@ class table(QtGui.QTreeWidget):
 	def contextMenuEvent(self,event):
 		print "context menu"
 		item=self.itemFromIndex(self.indexAt(QtCore.QPoint(event.x(),event.y())))
+		if item is None:
+			return
 		jid=unicode(item.text(3))
 		if len(jid)==0:
 			return
@@ -229,6 +231,8 @@ class serviceDiscoveryDialog(QtGui.QDialog):
 		#self.main().client.getDiscoItems(jid, callback = self._discoItemsReceived, callback_par = (item,True))
 
 	def itemSelected(self,item,old):
+		if item is None:
+			return
 		jid=unicode(item.text(3))
 		node=unicode(item.text(5))
 		if len(node)==0:
