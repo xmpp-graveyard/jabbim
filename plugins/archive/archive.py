@@ -153,7 +153,7 @@ class FileBackend:
 				if unicode(parsed[5],"utf8").find(text)!=-1:
 					if not ret.has_key(date):
 						ret[date]=[]
-					ret[date].append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8")])
+					ret[date].append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8").replace('<', '&lt;')])
 			fp.close()
 		return ret
 
@@ -169,8 +169,7 @@ class FileBackend:
 		if not maxTime:
 			for msg in fp.xreadlines():
 				parsed=msg.split('|')
-				#ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8").replace('<', '&lt;')])
-				ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8")])
+				ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8").replace('<', '&lt;')])
 		# return only messages which is younger that maxTime
 		else:
 			maxTime=maxTime.split(":") # [20,0,0]
@@ -183,9 +182,9 @@ class FileBackend:
 				intervalMin=abs(int(d[4])-int(now[4])) # 2
 				intervalSec=abs(int(d[5])-int(now[5]))
 				if intervalHour<int(maxTime[0]):
-					ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8")])
+					ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8").replace('<', '&lt;')])
 				elif intervalHour<=int(maxTime[0]) and intervalMin<=int(maxTime[1]):
-					ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8")])
+					ret.append([float(parsed[0]),str(parsed[1]),unicode(parsed[2],"utf8"),unicode(parsed[5],"utf8").replace('<', '&lt;')])
 		fp.close()
 		return ret
 
@@ -307,7 +306,7 @@ class Plugin(plugins.PluginBase):
 		self.description = self.tr('Message Archiving')
 		self.author = "Jiri 'Sef' Gabrys"
 		self.name = self.tr('Archive Plugin')
-		self.version = '0.196'
+		self.version = '0.197'
 		self.category = ['archive']
 		self.url = 'http://dev.jabbim.cz/jabbim'
 
