@@ -27,7 +27,7 @@ import os,sys, re,platform,time
 from configobj import ConfigObj, ConfigObjError
 import zipfile, socket
 from cStringIO import StringIO
-from urllib import urlopen
+#from urllib import urlopen
 
 from PyQt4 import QtCore, QtGui
 	
@@ -610,18 +610,22 @@ def replace_url(text,mainWindow,widget=None):
 					print link
 				text+='<div id="image%s"><a href="%s" title="%s">%s</a>'%(str(widget.imageId),word,word, word)+" "
 				text+='<a href="javascript:;" title="%s" onclick="showImage(\'image%s\',\'%s\',\'%s\');")>['%(word,str(widget.imageId),link,word)+unicode(mainWindow.tr("Show Image"))+']</a></div>'+" "
-			elif word.find("youtube.com/watch?")!=-1: #nahradi adresu z youtube za nazev videa
-				print 'processing youtube link: '+word
-				url=word
-				try:
-					stranka=urlopen(url).read(350)
-				except:
-					continue
-				title=re.findall('<title>(.*)</title>',stranka)
-				if title==[] or title[0].strip()=="": # pokud jsme nenasli zadny <title> tag, nebo byl prazdny
-					text+='<a href="'+url+'">'+url+'</a>'
-				else:
-					text+='<a href="'+url+'">'+title[0].decode('utf-8')+'</a>'				
+# Youtube video title replacement is a nice feature to have, but this
+# implementation reads the page synchronously, so it easily blocks Jabbim UI
+# for a long time (several minutes in pathological cases like
+# http://dev.jabbim.cz/jabbim/ticket/965 )
+#			elif word.find("youtube.com/watch?")!=-1: #nahradi adresu z youtube za nazev videa
+#				print 'processing youtube link: '+word
+#				url=word
+#				try:
+#					stranka=urlopen(url).read(350)
+#				except:
+#					continue
+#				title=re.findall('<title>(.*)</title>',stranka)
+#				if title==[] or title[0].strip()=="": # pokud jsme nenasli zadny <title> tag, nebo byl prazdny
+#					text+='<a href="'+url+'">'+url+'</a>'
+#				else:
+#					text+='<a href="'+url+'">'+title[0].decode('utf-8')+'</a>'
 			else:
 				text+='<a href="%s" title="%s">%s</a>'%(word, word, word)+" "
 		elif word.startswith("www."):
