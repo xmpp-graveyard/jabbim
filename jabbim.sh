@@ -6,5 +6,4 @@ fi
 dir_name=`dirname "$dir_name"`
 cd "$dir_name"
 
-python -OO jabbim.py $@
-
+exec python -OO jabbim.py $@
