@@ -107,7 +107,7 @@ class webkitObject(QtCore.QObject):
 					html, path = generateChatThemePreview(self.preferences().main,self.groupchatTheme)
 					frame.setHtml(html, QtCore.QUrl("file:///" + path))
 					
-		elif typ == "rosterstyles":
+	'''	elif typ == "rosterstyles":
 			self.rosterstyles = unicode(value) + "/" + self.rosterstyles.split("/")[1]
 			self.html, style = populateRosterStylesVariantList(self.preferences().main,self.rosterstyles)
 			self.rosterstyles = self.rosterstyles.split("/")[0] + "/" + style
@@ -119,7 +119,7 @@ class webkitObject(QtCore.QObject):
 		elif typ == "jabbimstyles":
 			self.theme = unicode(value)
 			self.html = generateJabbimStylePreview(self.preferences().main, self.theme)
-			self.preferences().ui.themePackage.page().mainFrame().evaluateJavaScript('document.getElementById("jabbimStyleDiv").innerHTML = webkitObject.getHtml();')
+			self.preferences().ui.themePackage.page().mainFrame().evaluateJavaScript('document.getElementById("jabbimStyleDiv").innerHTML = webkitObject.getHtml();')'''
 
 def populateJabbimStylesList(mainWindow, config):
 	ret = '<form name="jabbimStyleForm"><label>' + unicode(mainWindow.tr("Name: ")) + '<select name="jabbimstyles" size="1" onchange="webkitObject.selectChanged(\'jabbimstyles\',this.options[this.selectedIndex].value);">'
@@ -376,7 +376,7 @@ def generateThemePackagePreview(mainWindow):
 	ret += "<div id=\"groupchatThemeStyleDiv\">" + populateChatThemeStyleList(mainWindow,config["groupchatTheme"])[0].replace("\"chatTheme","\"groupchatTheme").replace("'chatTheme","'groupchatTheme") + "</div>"
 	ret += '<iframe src="blank" width="100%" height="120" frameborder="0" name="groupchatThemeFrame"></iframe>'
 	
-	#rosterstyles = generateRosterStylesPreview(mainWindow,config["rosterStyle"])
+	'''	#rosterstyles = generateRosterStylesPreview(mainWindow,config["rosterStyle"])
 	ret += "<h3>" + unicode(mainWindow.tr("Roster style")) +"</h3>"
 	ret += populateRosterStylesList(mainWindow,config["rosterStyle"])
 	ret += "<div id=\"rosterStyleDiv\">" + populateRosterStylesVariantList(mainWindow,config["rosterStyle"])[0] + "</div>"
@@ -384,8 +384,7 @@ def generateThemePackagePreview(mainWindow):
 	
 	ret += "<h3>" + unicode(mainWindow.tr("Jabbim theme")) +"</h3>"
 	ret += populateJabbimStylesList(mainWindow,config["theme"])
-	ret += "<div id=\"jabbimStyleDiv\">" + generateJabbimStylePreview(mainWindow,config["theme"]) + "</div>"
-
+	ret += "<div id=\"jabbimStyleDiv\">" + generateJabbimStylePreview(mainWindow,config["theme"]) + "</div>"'''
 
 	ret += "</body></html>"
 	return ret, (chatTheme, cPath), (groupchatTheme, gPath), emoticons
