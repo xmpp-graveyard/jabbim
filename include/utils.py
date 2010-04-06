@@ -227,7 +227,8 @@ def loadConfig(main,status):
 			'showReceipts':'True',
 			'usePsyco': 'False',
 			'lastUploadDir': getDesktopPath(),
-			'lastDownloadDir': getDesktopPath()
+			'lastDownloadDir': getDesktopPath(),
+			'remoteMucList': "True"
 			}
 
 	# Start with optimism and hope a valid config is there.

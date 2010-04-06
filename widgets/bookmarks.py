@@ -81,7 +81,8 @@ class bookmarksClass:
 				item.setText(1,unicode(v.jid.full()))
 				item.setData(1,32,QtCore.QVariant(QtCore.QStringList([unicode(v.jid.full()),unicode(v.nick),unicode(v.password)])))
 				item.setIcon(0,QtGui.QIcon("images/16x16/categories/bookmarks.png"))
-			self.main.client.callRemote('rpc@jabbim.cz/service', 'conf',('cs',)).addCallback(self.buildBookmarks)
+			if self.main.config['remoteMucList']=="True":
+				self.main.client.callRemote('rpc@jabbim.cz/service', 'conf',('cs',)).addCallback(self.buildBookmarks)
 		else:
 			data=data[0][0]
 			keys=data.keys()
