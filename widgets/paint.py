@@ -306,9 +306,11 @@ class paintWindow(QtGui.QMainWindow):
 		self.ui.backgroundColor.palette().setColor(QtGui.QPalette.Window,QtGui.QColor("#FFFFFF"))
 		defaultColors=["#000000","#000080","#0000FF","#008000","#008080","#00FF00","#800000","#800080","#808000","#808080","#C0C0C0","#FF0000","#FF0000","#FF00FF","#FFFF00","#FFFFFF"]
 		for i in range(len(self.colorWidgets)):
+			palette = QtGui.QPalette(self.colorWidgets[i].palette())
+			palette.setColor(QtGui.QPalette.Window,QtGui.QColor(defaultColors[i]))
+			self.colorWidgets[i].setPalette(palette)
 			self.colorWidgets[i].setAutoFillBackground(True)
 			self.colorWidgets[i].setToolTip(defaultColors[i])
-			self.colorWidgets[i].palette().setColor(QtGui.QPalette.Window,QtGui.QColor(defaultColors[i]))
 			self.colorWidgets[i].mousePressEvent=self._mousePressEvent
 		self.updatePreview()
 		QtCore.QObject.connect(self.ui.penSize,QtCore.SIGNAL("valueChanged ( int  )"),self.penSizeChanged)
