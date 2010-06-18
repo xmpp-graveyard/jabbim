@@ -3,6 +3,7 @@
 import sys,os,time, re
 sys.path.append('.')
 from include import plugins
+from include.constants import RESOURCEPATH
 from twisted.python import log
 from configobj import ConfigObj
 from twisted.web import xmlrpc, server
@@ -143,7 +144,7 @@ class Plugin(plugins.PluginBase):
 						loaded,config=self.main.loadJabbimExtraConfig("emoticons/"+emo,'emoticons/default/smileys.cfg')
 						if loaded:
 							for v in config['emoticons'].itervalues():
-								v =os.getcwd()+"/emoticons/"+pack+'/'+v
+								v = RESOURCEPATH+"/emoticons/"+pack+'/'+v
 								if not v in self.main.client.bobDef.values():
 									try:
 										fp = open(v, 'rb')

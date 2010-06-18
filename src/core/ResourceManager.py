@@ -104,7 +104,7 @@ class ResourceManager(object):
 			for mood in self.main.moodIcons.keys():
 				path=unicode(src+self.main.moodIcons[mood])
 				self.main.moodIcons[mood]=QtGui.QIcon(path)
-				self.main.moodIcons[mood].src=unicode(os.getcwd(), sys.getfilesystemencoding())+"/"+path
+				self.main.moodIcons[mood].src = RESOURCEPATH+"/"+path
 			self.main.moodIcons["none"]=QtGui.QIcon(self.main.moodIcons[mood].pixmap(16,16,QtGui.QIcon.Disabled))
 
 	def loadActivities(self):
@@ -123,7 +123,7 @@ class ResourceManager(object):
 			for mood in self.main.activityIcons.keys():
 				path=unicode(src+self.main.activityIcons[mood])
 				self.main.activityIcons[mood]=QtGui.QIcon(path)
-				self.main.activityIcons[mood].src=unicode(os.getcwd(), sys.getfilesystemencoding())+"/"+path
+				self.main.activityIcons[mood].src = RESOURCEPATH+"/"+path
 			self.main.activityIcons["none"]=QtGui.QIcon(self.main.activityIcons[mood].pixmap(16,16,QtGui.QIcon.Disabled))
 		#print "ACTIVITIES",self.activityIcons
 

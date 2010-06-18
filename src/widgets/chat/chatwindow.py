@@ -23,6 +23,7 @@ from chat_ui import *
 from chatwidget import *
 from groupchat import *
 from include import utils
+from include.constants import RESOURCEPATH
 import os
 from pyxl import jid as jidT
 from leaveroom_ui import *
@@ -455,13 +456,12 @@ class chatWindow(QtGui.QMainWindow):
 			#self.getVCard(frm+'/'+user) #tohle asi neni potreba
 			pass
 
-		cwd = unicode(os.getcwd(), sys.getfilesystemencoding())
 		if not os.path.isfile(unicode(file)):
 			print truejid, w.jid, user
 			#sef@njs.netlab.cz/Doma jabber@conf.netlab.cz Sef
-			file = cwd +RESOURCEPATH+ u"/images/32x32/apps/jabbim.png"
+			file = RESOURCEPATH+ u"/images/32x32/apps/jabbim.png"
 		if unicode(user)==unicode(w.jid):
-			file = cwd +RESOURCEPATH+ u"images/32x32/categories/conferences.png"
+			file = RESOURCEPATH+ u"/images/32x32/categories/conferences.png"
 		cIndex=None
 		if len(w.chat.getUserItems(user))!=0:
 			item=w.chat.getUserItems(user)[0]

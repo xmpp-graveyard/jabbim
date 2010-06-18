@@ -637,7 +637,6 @@ def replace_url(text,mainWindow,widget=None):
 			wellKnownMuc = ['conf.netlab.cz', 'conference.jabber.org', 'chat.chrome.pl', 'conference.jabber.ru']
 			user, server = word.split('@',1)
 			server = server.split('/')[0]
-			path = unicode(os.getcwd(), sys.getfilesystemencoding())
 			if word.count('@')>1 or not ('.' in server) or (widget != None and widget.main().getJid(word) is None and not(user.startswith('xmpp:') or user.startswith('mailto:'))):
 				text += word+" "
 				continue
@@ -645,14 +644,14 @@ def replace_url(text,mainWindow,widget=None):
 			if user.startswith('xmpp:') or user.startswith('mailto:'):
 				if server.endswith('?join'):
 					server = server[:-5]
-				text+='<a href="%s" title="%s"><img src="%s/images/16x16/categories/muc.png" />%s</a> '%(word, word, path, user.split(':')[1]+'@'+server)
+				text+='<a href="%s" title="%s"><img src="%s/images/16x16/categories/muc.png" />%s</a> '%(word, word, RESOURCEPATH, user.split(':')[1]+'@'+server)
 			else:
 				if (widget != None and widget.main().client.hasIdentity(server, 'server', 'im')) or server in wellKnown :
-					text+='<a href="xmpp:%s" title="%s"><img src="%s/images/16x16/apps/jabbim.png" />%s</a> '%(user+'@'+server, word, path, word)
+					text+='<a href="xmpp:%s" title="%s"><img src="%s/images/16x16/apps/jabbim.png" />%s</a> '%(user+'@'+server, word, RESOURCEPATH, word)
 				elif (widget != None and widget.main().client.hasIdentity(server, 'conference', 'text')) or server in wellKnownMuc:
-					text+='<a href="xmpp:%s?join" title="%s"><img src="%s/images/16x16/categories/muc.png" />%s</a> '%(user+'@'+server, word, path, word)
+					text+='<a href="xmpp:%s?join" title="%s"><img src="%s/images/16x16/categories/muc.png" />%s</a> '%(user+'@'+server, word, RESOURCEPATH, word)
 				else:
-					text+='<a href="mailto:%s" title="%s"><img src="%s/images/16x16/actions/message.png" />%s</a> '%(word, word, path, word)
+					text+='<a href="mailto:%s" title="%s"><img src="%s/images/16x16/actions/message.png" />%s</a> '%(word, word, RESOURCEPATH, word)
 		else:
 			text+=word+" "
 	return text[:-1]

@@ -3,6 +3,7 @@ from PyQt4 import QtCore, QtGui
 from mucbrowser_ui import *
 import pyxl
 from twisted.internet import threads
+from include.constants import RESOURCEPATH
 
 class delegate(QtGui.QItemDelegate):
 	def __init__(self,column,parent=None,space=0):

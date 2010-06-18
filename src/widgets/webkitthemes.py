@@ -78,21 +78,20 @@ class webkitThemeFactory:
 		return text[:-1]
 
 	def load(self):
-		cwd = unicode(os.getcwd(), sys.getfilesystemencoding())
 		self.chatTheme,self.chatStyle=self.fullChatTheme.split("/")
 		self.groupchatTheme,self.groupchatStyle=self.fullGroupchatTheme.split("/")
 		print "loading chatTheme",self.chatTheme,self.chatStyle
 		print "loading groupchatTheme",self.groupchatTheme,self.groupchatStyle
 
 		#print self.realHomeDir, self.gPath, self.cPath
-		self.cPath = cwd +"/"+RESOURCEPATH+ "/chatskins/%s/" % self.chatTheme
+		self.cPath = os.path.abspath(RESOURCEPATH)+"/chatskins/%s/" % self.chatTheme
 		if not os.path.exists(self.cPath + "Incoming/Content.html"):
 			self.cPath = self.realHomeDir + "/chatskins/%s/" % self.chatTheme
-		self.gPath = cwd+"/" +RESOURCEPATH+ "/chatskins/%s/" % self.groupchatTheme
+		self.gPath = os.path.abspath(RESOURCEPATH)+"/chatskins/%s/" % self.groupchatTheme
 		if not os.path.exists(self.gPath + "Incoming/Content.html"):
 			self.gPath = self.realHomeDir + "/chatskins/%s/" % self.groupchatTheme
 		#print self.realHomeDir, self.gPath, self.cPath
-		print cwd +RESOURCEPATH+ "/chatskins/%s/" % self.chatTheme, cwd
+		print os.path.abspath(RESOURCEPATH)+"/chatskins/%s/" % self.chatTheme
 		try:
 			f=open(self.cPath+"Incoming/Content.html","r")
 			self.incomingContent = unicode(f.read(), 'utf-8')

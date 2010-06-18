@@ -496,7 +496,7 @@ class chatWidget(abstractChatWidget):
 			self.file=self.main().realHomeDir+'/avatars/'+str(self.main().avatarDef[unicode(jidT.JID(self.jid).full())]) #: path to users avatar
 		if not os.path.isfile(self.file):
 			# use default avatar if users avatar doesn't exist
-			self.file=os.getcwd()+"/images/32x32/apps/jabbim.png"
+			self.file = RESOURCEPATH+"/images/32x32/apps/jabbim.png"
 
 		# our avatar
 		f=""
@@ -592,7 +592,7 @@ class chatWidget(abstractChatWidget):
 				#text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">&nbsp; %s</font>' % (t) #ikonka se este muze menit ;)
 				if self.main().config['showTuneChanges']=='True' and "tune" in change:
 					user=unicode(self.main().ui.roster.getNameByJID(self.jid))
-					message='<img src="file:///'+os.getcwd()+'/images/22x22/icons/headphones.png" />&nbsp;'+user+" "+unicode(self.tr("is now listening:"))+" "+ t
+					message='<img src="file:///'+os.path.abspath(RESOURCEPATH)+'/images/22x22/icons/headphones.png" />&nbsp;'+user+" "+unicode(self.tr("is now listening:"))+" "+ t
 					self.textEditWrite(self.main().webkitThemeFactory.genChatStatus(unicode(message),self.main().now()))
 				self.addInfoText("tune",'%s' % (t),QtGui.QPixmap(RESOURCEPATH+'images/22x22/icons/headphones.png'))
 
@@ -808,7 +808,6 @@ class chatWidget(abstractChatWidget):
 			if self.xhtml:
 				xhtml=self.ui.line.toHtml()
 				xhtml,same=self.qtHtmlToXhtml(xhtml,text)
-			cwd = unicode(os.getcwd(), sys.getfilesystemencoding())
 			if self.xhtml and not same:
 				# get message in Qt html format
 				#xhtml=self.ui.line.toHtml()
@@ -830,7 +829,7 @@ class chatWidget(abstractChatWidget):
 				# prepare message for showing in GUI
 				message=xhtml.replace("&quot;",'"')
 				if m.receiptId != None and self.main().config['showReceipts']=='True':
-					message = '<img id="' + m.receiptId + '" src="%s/images/16x16/actions/message.png?receipt%s" />' % (cwd, m.receiptId) + message
+					message = '<img id="' + m.receiptId + '" src="%s/images/16x16/actions/message.png?receipt%s" />' % (RESOURCEPATH, m.receiptId) + message
 				#file=self.main().homeDir+'/avatars/'+unicode(self.main().client.jid.userhost())
 				#if not os.path.isfile(file):
 					#file="images/32x32/apps/jabbim.png"
@@ -862,7 +861,7 @@ class chatWidget(abstractChatWidget):
 				text=utils.replace_url(text,self.main(),self)
 				text=text.replace("  ","&nbsp;&nbsp;").replace("\t","&nbsp;&nbsp;&nbsp;")
 				if m.receiptId != None and self.main().config['showReceipts']=='True':
-					text = '<img id="' + m.receiptId + '" src="%s/images/16x16/actions/message.png?receipt%s" />' % (cwd, m.receiptId) + text
+					text = '<img id="' + m.receiptId + '" src="%s/images/16x16/actions/message.png?receipt%s" />' % (RESOURCEPATH, m.receiptId) + text
 
 				#file=self.main().homeDir+'/avatars/'+unicode(self.main().client.jid.userhost())
 				#if not os.path.isfile(file):

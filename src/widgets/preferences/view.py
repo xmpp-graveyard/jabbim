@@ -22,6 +22,7 @@ from widgets.extra import extraDialog
 from PyQt4 import QtCore, QtGui
 import weakref
 from configobj import ConfigObj
+from include.constants import RESOURCEPATH
 
 class webkitObject(QtCore.QObject):
 	def __init__(self,preferences):
@@ -214,15 +215,15 @@ def populateRosterStylesVariantList(mainWindow,config):
 def populateEmoticonsList(mainWindow,em):
 	ret = '<form name="emoticonsForm"><label>' + unicode(mainWindow.tr("Name: ")) + '<select name="emoticons" size="1" onchange="webkitObject.selectChanged(\'emoticons\',this.options[this.selectedIndex].value);">'
 	# emoticons from Jabbim root directory
-	packs=os.listdir("emoticons/")
+	packs=os.listdir(RESOURCEPATH+"/emoticons/")
 	for pack in packs:
-		if os.path.isdir('emoticons/'+pack):
-			emoticons=os.listdir('emoticons/'+pack+"/")
+		if os.path.isdir(RESOURCEPATH+'/emoticons/'+pack):
+			emoticons=os.listdir(RESOURCEPATH+'/emoticons/'+pack+"/")
 			for emoticon in emoticons:
 				if emoticon.endswith('.cfg'):
 					emo=pack+"/"+emoticon
 					#config=ConfigObj("emoticons/"+emo,encoding='UTF8')
-					loaded,config=mainWindow.loadJabbimExtraConfig("emoticons/"+emo,'emoticons/default/smileys.cfg')
+					loaded,config = mainWindow.resourceManager.loadJabbimExtraConfig(RESOURCEPATH+"/emoticons/"+emo,'emoticons/default/smileys.cfg')
 					if loaded:
 						if emo == em:
 							ret += '<option selected value="' + emo + '" >' + unicode(config['header']['name']) + "</option>"
@@ -242,7 +243,7 @@ def populateEmoticonsList(mainWindow,em):
 				if emoticon.endswith('.cfg'):
 					emo=pack+"/"+emoticon
 					#config=ConfigObj(mainWindow.realHomeDir+"/emoticons/"+emo,encoding='UTF8')
-					loaded,config=mainWindow.loadJabbimExtraConfig(mainWindow.realHomeDir+"/emoticons/"+emo,'emoticons/default/smileys.cfg')
+					loaded,config = mainWindow.resourceManager.loadJabbimExtraConfig(mainWindow.realHomeDir+"/emoticons/"+emo,'emoticons/default/smileys.cfg')
 					if loaded:
 						if emo == em:
 							ret += '<option selected value="' + emo + '" >' + unicode(config['header']['name']) + "</option>"
@@ -255,9 +256,9 @@ def populateEmoticonsList(mainWindow,em):
 def populateChatThemeList(mainWindow,default):
 	ret = '<form name="chatThemeForm"><label>' + unicode(mainWindow.tr("Name: ")) + '<select name="chatTheme" size="1" onchange="webkitObject.selectChanged(\'chatTheme\',this.options[this.selectedIndex].value);">'
 	# chat skins from Jabbim root directory
-	packs=os.listdir("chatskins/")
+	packs=os.listdir(RESOURCEPATH+"/chatskins/")
 	for pack in packs:
-		if os.path.isdir('chatskins/'+pack) and os.path.isdir('chatskins/'+pack+"/Incoming"):
+		if os.path.isdir(RESOURCEPATH+'/chatskins/'+pack) and os.path.isdir(RESOURCEPATH+'/chatskins/'+pack+"/Incoming"):
 			if pack == default.split("/")[0]:
 				ret += '<option selected value="' + pack + '" >' + pack + "</option>"
 			else:
@@ -278,8 +279,8 @@ def populateChatThemeList(mainWindow,default):
 def populateChatThemeStyleList(mainWindow,chatTheme):
 	ret = '<form name="chatThemeVariantForm"><label>' + unicode(mainWindow.tr("Variant: ")) + '<select name="chatThemeVariant" size="1" onchange="webkitObject.selectChanged(\'chatThemeVariant\',this.options[this.selectedIndex].value);">'
 	path = chatTheme.split("/")[0]
-	if os.path.exists("chatskins/"+path+"/Variants"):
-		variants=os.listdir("chatskins/"+path+"/Variants")
+	if os.path.exists(RESOURCEPATH+"/chatskins/"+path+"/Variants"):
+		variants=os.listdir(RESOURCEPATH+"/chatskins/"+path+"/Variants")
 	else:
 		variants=os.listdir(mainWindow.realHomeDir+"/chatskins/"+path+"/Variants")
 	v=None
@@ -299,21 +300,21 @@ def populateChatThemeStyleList(mainWindow,chatTheme):
 	return ret,v
 
 def generateJabbimStylePreview(mainWindow,skin):
-	if os.path.isdir("themes/"+skin) and os.path.exists("themes/"+skin+"/style.css"):
-		preview = unicode(os.getcwd(), sys.getfilesystemencoding())+'/themes/'+skin+"/preview.png"
+	if os.path.isdir(RESOURCEPATH+"/themes/"+skin) and os.path.exists(RESOURCEPATH+"/themes/"+skin+"/style.css"):
+		preview = RESOURCEPATH+'/themes/'+skin+"/preview.png"
 		if os.path.isfile(preview):
 			return '<img width="128" height="128" src="file://%s" />' % preview
 	return ''
 
 
 def generateEmoticonsPreview(mainWindow,pack):
-	src=unicode(os.getcwd(), sys.getfilesystemencoding())+'/emoticons/'
+	src = RESOURCEPATH+'/emoticons/'
 	#config=ConfigObj("emoticons/"+path,encoding='UTF8')
-	loaded,config=mainWindow.loadJabbimExtraConfig("emoticons/"+pack,'emoticons/default/smileys.cfg')
-	if len(config)==0 or not loaded:
+	loaded,config = mainWindow.resourceManager.loadJabbimExtraConfig(RESOURCEPATH+"/emoticons/"+pack,'emoticons/default/smileys.cfg')
+	if not loaded or len(config)==0:
 		#config=ConfigObj(mainWindow.mainWindow.realHomeDir+"/emoticons/"+path,encoding='UTF8')
 		src=mainWindow.realHomeDir+'/emoticons/'
-		loaded,config=mainWindow.loadJabbimExtraConfig(mainWindow.realHomeDir+"/emoticons/"+pack,'emoticons/default/smileys.cfg')
+		loaded,config = mainWindow.resourceManager.loadJabbimExtraConfig(mainWindow.realHomeDir+"/emoticons/"+pack,'emoticons/default/smileys.cfg')
 		if not loaded:
 			return None
 	html="<html><head></head><body>"
@@ -346,7 +347,7 @@ def generateChatThemePreview(mainWindow,pack):
 </html>
 	"""
 
-	jabbim_icon = unicode(os.getcwd(), sys.getfilesystemencoding()) + "/images/32x32/apps/jabbim.png"
+	jabbim_icon = RESOURCEPATH + "/images/32x32/apps/jabbim.png"
 	html+=factory.genIncomingContent(unicode(mainWindow.tr("User")),unicode(mainWindow.tr("Message for me")),mainWindow.now(),jabbim_icon)
 	html+=factory.genIncomingNextContent(unicode(mainWindow.tr("User")),unicode(mainWindow.tr("Second message for me")),mainWindow.now(),jabbim_icon)
 	html+=factory.genChatStatus(unicode(mainWindow.tr("User is now away")),mainWindow.now())

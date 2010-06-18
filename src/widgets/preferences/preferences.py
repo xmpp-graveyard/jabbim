@@ -126,10 +126,10 @@ class preferencesWindow(QtGui.QDialog):
 	
 	def loadThemePackages(self):
 		self.ui.themePackages.clear()
-		packs=os.listdir("themepackages/") + os.listdir(self.main.realHomeDir + "/themepackages/")
+		packs=os.listdir(RESOURCEPATH+"/themepackages/") + os.listdir(self.main.realHomeDir + "/themepackages/")
 		for pack in packs:
-			if os.path.isdir('themepackages/'+pack):
-				theme = "themepackages/" + pack + "/package.cfg"
+			if os.path.isdir(RESOURCEPATH+'/themepackages/'+pack):
+				theme = RESOURCEPATH+"/themepackages/" + pack + "/package.cfg"
 				if not os.path.isfile(theme):
 					theme = self.main.realHomeDir + "/themepackages/" + pack + "/package.cfg"
 					if not os.path.isfile(theme):
