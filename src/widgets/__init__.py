@@ -1,5 +1,5 @@
 import mainWindow
-import status
+import status_ui
 import subscription
 
 import preferences

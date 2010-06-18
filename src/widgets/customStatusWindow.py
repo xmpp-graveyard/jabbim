@@ -9,7 +9,7 @@ class customStatusWindow(QtGui.QDialog):
 	def __init__(self,jid,show=None,parent=None, main=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
 		self.setModal(False)
-		self.ui=widgets.status.Ui_status()
+		self.ui = widgets.status_ui.Ui_status()
 		self.ui.setupUi(self)
 		self.timer=QtCore.QTimer()
 		self.main = main
