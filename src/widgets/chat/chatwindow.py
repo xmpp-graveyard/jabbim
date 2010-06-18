@@ -19,7 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 from PyQt4 import QtCore, QtGui
 import gc
-from chat import *
+from chat_ui import *
 from chatwidget import *
 from groupchat import *
 from include import utils
