@@ -3,7 +3,8 @@ import sys
 import os
 sys.path.append('.')
 from include import plugins, utils
-from widgets import dataforms,groupchat
+from widgets import dataforms
+from widgets.chat import groupchat
 import time
 from twisted.words.protocols.jabber.xmlstream import IQ
 from pyxl.xmlrpclib import loads, dumps
