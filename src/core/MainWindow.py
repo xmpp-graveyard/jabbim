@@ -1665,6 +1665,9 @@ class mainWindow(QtGui.QMainWindow):
 				d=self.cache.get_status_by_id(str(messageIndex))
 				d.addCallback(self._gotStatus,jid)
 				return
+			elif data[0] == "offline" and self.config['askForOffline'] == "False":
+				self.sendPresence(jid, "offline", self.tr("Happy Jabbim user just left the stage! (www.jabbim.cz)"))
+				return
 			elif len(data)==1:
 				show=data[0]
 				message=""

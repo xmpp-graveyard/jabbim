@@ -229,7 +229,8 @@ def loadConfig(main,status):
 			'usePsyco': 'False',
 			'lastUploadDir': getDesktopPath(),
 			'lastDownloadDir': getDesktopPath(),
-			'remoteMucList': "True"
+			'remoteMucList': "True",
+			"askForOffline" : "False"
 			}
 
 	# Start with optimism and hope a valid config is there.
