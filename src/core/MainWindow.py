@@ -21,7 +21,6 @@ from pyxl import storage
 
 from twisted.web.microdom import parseString, Element
 import random
-import traceback
 from twisted.internet.defer import DeferredList
 from locale import strcoll
 
@@ -32,9 +31,7 @@ import re
 import time
 from pyxl import jid as jidT
 from core.clientClass import clientClass
-from imp import load_source
-from urllib import quote, unquote
-from os.path import basename,dirname, isfile
+from os.path import isfile
 from hashlib import sha1
 from core import PluginManager, ResourceManager
 from include.enumerators import Enums

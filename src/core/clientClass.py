@@ -16,7 +16,7 @@ import os
 import widgets
 from pyxl import jid as jidT
 import weakref
-from os.path import basename,dirname, isfile
+from os.path import basename,dirname
 import base64
 
 

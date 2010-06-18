@@ -17,9 +17,10 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
-import gc
-import sys,os, getopt, xmlrpclib, time
+
+import  getopt, xmlrpclib
 from include.constants import RESOURCEPATH
+import sys
 
 
 sys.path.append('.')
@@ -81,7 +82,7 @@ if singleRun():
 	sys.exit(0);
 	
 
-from PyQt4 import QtCore, QtGui, QtWebKit
+from PyQt4 import QtCore, QtGui
 
 #if sys.argv[1]=="remote":
 #	app=QtCore.QCoreApplication([])
@@ -140,17 +141,11 @@ class jabbimApplication(QtGui.QApplication):
 app = jabbimApplication(sys.argv)
 app.setQuitOnLastWindowClosed(False)
 qt4reactor.install()
-from twisted.internet import reactor, threads
-from twisted.internet.defer import DeferredList
-from twisted.python import log
-import time,base64, re
-from core.MainWindow import mainWindow
-try:
-	from hashlib import sha1
-except:
-	log.msg('Please upgrade to python2.5')
-	from sha import new as sha1
+from twisted.internet import reactor
 
+from twisted.python import log
+
+from core.MainWindow import mainWindow
 
 MainWindow=None
 
