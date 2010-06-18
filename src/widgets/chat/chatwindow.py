@@ -86,7 +86,7 @@ class tabWidget(QtGui.QTabBar):
 		else:
 			self.main.previous()
 		event.accept()
-		#return QtGui.QTabBar.wheelEvent(self,event)
+		
 
 class chatWindow(QtGui.QMainWindow):
 	"""
@@ -147,10 +147,6 @@ class chatWindow(QtGui.QMainWindow):
 				if w.typ=="chat":
 					w.active=False
 					self.main.client.sendMessage(unicode(w.jid),"",composing="inactive")
-				#if w.chat.lastMessageFrom!="lineSeparator":
-					#w.chat.ui.webkit.removeElementById("separateLine")
-					#w.chat.textEditWrite("<hr id=\"separateLine\"/>")
-					#w.chat.lastMessageFrom="lineSeparator"
 			self.active=None
 
 	def event(self,ev):
@@ -508,20 +504,6 @@ class chatWindow(QtGui.QMainWindow):
 					else:
 						insert=False
 						message=self.main.webkitThemeFactory.genGroupchatIncomingContent(user,body,self.main.now(),file,cIndex)
-					#colors=None
-					#if len(w.chat.getUserItems(user))!=0:
-						#item=w.chat.getUserItems(user)[0]
-						#if item in w.chat.colors:
-							#cIndex=w.chat.colors.index(item)
-							#colors=self.main.getSkinColors(cIndex)
-					#else:
-						#colors=self.main.getSkinColors(0)
-					#if colors!=None:
-						#message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
-						#if len(colors)==3:
-							#message=message.replace("[additive]",colors[2])
-
-			# write message
 			if countMessage:
 				w.chat.unread+=1
 			w.chat.textEditWrite(message,insert)
@@ -551,45 +533,10 @@ class chatWindow(QtGui.QMainWindow):
 				else:
 					insert=False
 					message=self.main.webkitThemeFactory.genGroupchatIncomingContent(user,body,delay,file,cIndex,highlight)
-				# delayed message for us
-				#if utils.need_highlight(unicode(w.chat.nick), unicode(body)):
-					#message=self.main.skin["message_for_me_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
-				#else:
-					#message=self.main.skin["message_history"].replace("[time]",delay).replace("[user]",user).replace("[message]",unicode(body))
-			#message=message.replace("[avatar]","<img src=\""+file+"\" height=\""+unicode(int(w.chat.sizes[file][1])/2)+"\" width=\""+unicode(int(w.chat.sizes[file][0])/2)+"\" />")
-			#colors=None
-			#if len(w.chat.getUserItems(user))!=0:
-				#item=w.chat.getUserItems(user)[0]
-				#if item in w.chat.colors:
-					#cIndex=w.chat.colors.index(item)
-					#colors=self.main.getSkinColors(cIndex)
-			#else:
-				#colors=self.main.getSkinColors(0)
-			#if colors!=None:
-				#message=message.replace("[foreground]",colors[0]).replace("[background]",colors[1])
 			w.chat.lastMessageFrom=unicode(user)
 
 			w.chat.textEditWrite(message,insert)
 
-	def openNewChatTab(self,jid,name,icon=None,new=None):
-		if not icon:
-			icon=self.main.ui.roster.getIconByJID(jid)
-		created=False
-		if self.isHidden():
-			created=True
-			self.showMinimized()
-		self.addChatTab(jid,unicode(user),icon,new)
-		if created:
-			self.setWindowState(self.windowState() & ~QtCore.Qt.WindowActive | QtCore.Qt.WindowMinimized )
-			self.setWindowState(self.windowState() & QtCore.Qt.WindowActive)
-
-		tab,tabIndex=self.findTab(jid)
-		if tab:
-			self.ui.chatTab.setTabIcon(tabIndex,QtGui.QIcon(RESOURCEPATH+"images/16x16/actions/message.png"))
-			self.ui.chatTab.tabBar().setTabTextColor(tabIndex,QtGui.QColor(255,0,0))
-			self.ui.chatTab.setTabText(tabIndex,"("+str(tab.chat.unread+1)+") "+tab.tabName)
-			if message:
-				tab.chat.unread+=1
 
 	def addChatTab(self,jid,name,icon,new=None,full=False):
 		#for i in range(self.ui.chatTab.count()):
@@ -627,57 +574,6 @@ class chatWindow(QtGui.QMainWindow):
 		layout.setSpacing(1)
 		tab.chat=chatWidget(self.main,jid,tab,name)
 		it=[]
-		#if len(item)!=0:
-			#it=item
-		#elif len(metaitem)!=0:
-			#it=metaitem[0]
-
-		#if len(it)!=0:
-			#it=it[0]
-			#avatar=it.avatar
-			#if avatar:
-				#avatar=avatar.pixmap(100,112)
-				#print "avatar:",unicode(avatar.width())+"x"+unicode(avatar.height())
-				#if avatar.width()<=58 and avatar.height()<=58:
-					#size=64
-				#else:
-					#size=128
-				#result=QtGui.QPixmap(size,size)
-				#result.fill(QtCore.Qt.transparent)
-				#frame=QtGui.QPixmap("images/"+unicode(size)+"x"+unicode(size)+"/frame.png")
-				#painter=QtGui.QPainter(result)
-				##painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
-				#painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
-				#painter.drawPixmap(0,0,frame)
-				#painter.end()
-				#result=self.main.getAvatar(self.main.getJid(unicode(jid)).userhost(),size="128x128",frame=True)
-				#if result:
-					#tab.chat.ui.avatar.setPixmap(result)
-		#else:
-			#result=self.main.getAvatar(self.main.getJid(unicode(jid)).userhost(),size="128x128",frame=True)
-			#if result:
-			##if os.path.isfile(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%")):
-				##f=open(self.main.homeDir+'/avatars/'+unicode(jid).replace("/","%"),"rb")
-				##image = f.read()
-				##f.close()
-				##pixmap=QtGui.QPixmap()
-				##pixmap.loadFromData(image)
-				##avatar=QtGui.QIcon(pixmap)
-				##avatar=avatar.pixmap(100,112)
-				##if avatar.width()<=58 and avatar.height()<=58:
-					##size=64
-				##else:
-					##size=128
-				##result=QtGui.QPixmap(size,size)
-				##result.fill(QtCore.Qt.transparent)
-				##frame=QtGui.QPixmap("images/"+unicode(size)+"x"+unicode(size)+"/frame.png")
-				##painter=QtGui.QPainter(result)
-				###painter.fillRect(0,0,size,size,QtGui.QBrush(self.palette().color(QtGui.QPalette.Window)))
-
-				##painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
-				##painter.drawPixmap(0,0,frame)
-				##painter.end()
-				#tab.chat.ui.avatar.setPixmap(result)
 		result=self.main.getAvatar(self.main.getJid(unicode(jid)).userhost(),size="64x64",frame=True)
 		if not result:
 			result=self.main.getAvatar(self.main.getJid(unicode(jid)).full(),size="64x64",frame=True)
@@ -701,19 +597,7 @@ class chatWindow(QtGui.QMainWindow):
 		tab.chat.name=name
 		tab.chat.refreshLabel()
 
-		#tab.chat.ui.label.setText("<font size=\"3\"><b>"+name+"</b></font>")
-		#if message!=None:
-			#message=self.main.webkitThemeFactory.genIncomingContent(name,message,self.main.now(),tab.chat.file)
-			#message=message.replace("[avatar]","<img src=\""+tab.chat.file+"\" width=\"32\" height=\""+unicode(tab.chat.avatarHeight)+"\" />")
-			#self.main.client.reactor.callLater(1,tab.chat.textEditWrite,message)
-			#tab.chat.textEditWrite(message)
-			#tab.chat.textEditWrite(message)
 		return tab
-		#self.show()
-		#self.raise_()
-		#self.activateWindow()
-		#self.setWindowState(self.windowState() & ~QtCore.Qt.WindowMinimized | QtCore.Qt.WindowActive)
-		#self.activate()
 
 	def addGroupChatTab(self,room,nickname,affiliation="",name=None):
 		for i in range(self.ui.chatTab.count()):

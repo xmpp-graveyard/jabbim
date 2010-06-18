@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/mainWindow.ui'
+# Form implementation generated from reading ui file 'mainWindow.ui'
 #
-# Created: Sat Jun  6 14:37:55 2009
-#      by: PyQt4 UI code generator 4.4.4
+# Created: Mon Apr 19 10:09:55 2010
+#      by: PyQt4 UI code generator 4.6
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -249,7 +249,7 @@ class Ui_MainWindow(object):
         self.userStyleWidget.setObjectName("userStyleWidget")
         self.gridlayout5.addWidget(self.userStyleWidget, 3, 0, 1, 1)
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("images/16x16/categories/system-users.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/images/16x16/categories/system-users.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mainTabWidget.addTab(self.rosterTab, icon3, "")
         self.favTab = QtGui.QWidget()
         self.favTab.setObjectName("favTab")
@@ -282,7 +282,7 @@ class Ui_MainWindow(object):
         self.bookmarks_headerLabel.setObjectName("bookmarks_headerLabel")
         self.gridlayout6.addWidget(self.bookmarks_headerLabel, 0, 0, 1, 2)
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap("images/16x16/categories/bookmarks.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(":/images/16x16/categories/bookmarks.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mainTabWidget.addTab(self.bookmarksTab, icon6, "")
         self.eventsTab = QtGui.QWidget()
         self.eventsTab.setObjectName("eventsTab")
@@ -296,7 +296,7 @@ class Ui_MainWindow(object):
         self.Form.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.Form.setObjectName("Form")
         self.scrollAreaWidgetContents = QtGui.QWidget(self.Form)
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 118, 148))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 243, 539))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.gridLayout = QtGui.QGridLayout(self.scrollAreaWidgetContents)
         self.gridLayout.setMargin(2)
@@ -326,7 +326,7 @@ class Ui_MainWindow(object):
         self.eventsLabel.setObjectName("eventsLabel")
         self.gridlayout7.addWidget(self.eventsLabel, 0, 0, 1, 1)
         icon7 = QtGui.QIcon()
-        icon7.addPixmap(QtGui.QPixmap("images/16x16/categories/event.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon7.addPixmap(QtGui.QPixmap(":/images/16x16/categories/event.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.mainTabWidget.addTab(self.eventsTab, icon7, "")
         self.gridlayout3.addWidget(self.mainTabWidget, 1, 0, 1, 1)
         self.rosterStackedWidget.addWidget(self.roster)
@@ -339,7 +339,6 @@ class Ui_MainWindow(object):
         spacerItem10 = QtGui.QSpacerItem(20, 40, QtGui.QSizePolicy.Minimum, QtGui.QSizePolicy.Expanding)
         self.vboxlayout2.addItem(spacerItem10)
         self.splashImage = QtGui.QLabel(self.splash)
-        self.splashImage.setPixmap(QtGui.QPixmap("images/logo.png"))
         self.splashImage.setAlignment(QtCore.Qt.AlignBottom|QtCore.Qt.AlignHCenter)
         self.splashImage.setObjectName("splashImage")
         self.vboxlayout2.addWidget(self.splashImage)
@@ -352,7 +351,7 @@ class Ui_MainWindow(object):
         self.hboxlayout5.setMargin(0)
         self.hboxlayout5.setObjectName("hboxlayout5")
         self.splashProgress = QtGui.QProgressBar(self.splash)
-        self.splashProgress.setProperty("value", QtCore.QVariant(0))
+        self.splashProgress.setProperty("value", 0)
         self.splashProgress.setTextVisible(False)
         self.splashProgress.setOrientation(QtCore.Qt.Horizontal)
         self.splashProgress.setInvertedAppearance(False)
@@ -368,7 +367,7 @@ class Ui_MainWindow(object):
         self.gridlayout.addWidget(self.splitter, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 335, 27))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 335, 25))
         self.menubar.setObjectName("menubar")
         self.menuView = QtGui.QMenu(self.menubar)
         self.menuView.setObjectName("menuView")
@@ -455,7 +454,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.rosterStackedWidget.setCurrentIndex(1)
-        self.mainTabWidget.setCurrentIndex(0)
+        self.mainTabWidget.setCurrentIndex(4)
         QtCore.QObject.connect(self.login_password, QtCore.SIGNAL("returnPressed()"), self.login_connect.click)
         QtCore.QObject.connect(self.login_jid, QtCore.SIGNAL("returnPressed()"), self.login_connect.click)
         QtCore.QObject.connect(self.login_savePassword, QtCore.SIGNAL("clicked(bool)"), self.login_autoconnect.setEnabled)
@@ -539,3 +538,4 @@ class Ui_MainWindow(object):
         self.actionShow_transports.setText(QtGui.QApplication.translate("MainWindow", "Show transports", None, QtGui.QApplication.UnicodeUTF8))
 
 from fakeTabWidget import FakeTabWidget
+import jabbim_rc

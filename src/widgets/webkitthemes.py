@@ -84,13 +84,15 @@ class webkitThemeFactory:
 		print "loading chatTheme",self.chatTheme,self.chatStyle
 		print "loading groupchatTheme",self.groupchatTheme,self.groupchatStyle
 
-		self.cPath = cwd +RESOURCEPATH+ "/chatskins/%s/" % self.chatTheme
+		#print self.realHomeDir, self.gPath, self.cPath
+		self.cPath = cwd +"/"+RESOURCEPATH+ "/chatskins/%s/" % self.chatTheme
 		if not os.path.exists(self.cPath + "Incoming/Content.html"):
 			self.cPath = self.realHomeDir + "/chatskins/%s/" % self.chatTheme
-		self.gPath = cwd +RESOURCEPATH+ "/chatskins/%s/" % self.groupchatTheme
+		self.gPath = cwd+"/" +RESOURCEPATH+ "/chatskins/%s/" % self.groupchatTheme
 		if not os.path.exists(self.gPath + "Incoming/Content.html"):
 			self.gPath = self.realHomeDir + "/chatskins/%s/" % self.groupchatTheme
-
+		#print self.realHomeDir, self.gPath, self.cPath
+		print cwd +RESOURCEPATH+ "/chatskins/%s/" % self.chatTheme, cwd
 		try:
 			f=open(self.cPath+"Incoming/Content.html","r")
 			self.incomingContent = unicode(f.read(), 'utf-8')
@@ -257,6 +259,7 @@ class webkitThemeFactory:
 	# Groupchat format
 
 	def genGroupchatIncomingContent(self,user,message,time,avatar="",color=None,highlight=""):
+		print self.incomingGroupchatContent
 		return self.incomingGroupchatContent.replace("%sender%",user).replace("%time%",time).replace("%userIconPath%",avatar).replace("%senderColor%",self.getGroupchatSenderColor(color)).replace("%highlight%",highlight).replace("%message%",message)
 
 	def genGroupchatIncomingNextContent(self,user,message,time,avatar="",color=None,highlight=""):
