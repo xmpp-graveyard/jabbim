@@ -6,13 +6,14 @@ Created on 16.4.2010
 from PyQt4 import QtGui, QtCore
 import widgets
 from widgets.avatarLoader import AvatarLabel
+from widgets.extra import extraDialog
 from include import utils, safelog, userrating, rot13
 #from utils import *
 import wizards
 from twisted.internet import reactor, threads
 import os
 from include.constants import RESOURCEPATH
-from widgets import bookmarks, aboutDialog, avatarLoader
+from widgets import bookmarks, aboutDialog, avatarLoader, customStatusWindow
 from twisted.python import log
 from configobj import ConfigObj, ConfigObjError
 import sys
@@ -34,6 +35,7 @@ from core.clientClass import clientClass
 from imp import load_source
 from urllib import quote, unquote
 from os.path import basename,dirname, isfile
+from hashlib import sha1
 
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None, app = None):
@@ -988,7 +990,7 @@ class mainWindow(QtGui.QMainWindow):
 
 				# keep status in config file only if status is no from autoaway
 				if  show != 'away':
-					MainWindow.config['keepedStatus'] = unicode(message)
+					self.config['keepedStatus'] = unicode(message)
 
 				# send presence to the server
 				self.client.sendPresence(show = unicode(show), status = unicode(message),priority=pri)
@@ -2209,7 +2211,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.client.sendMessage("paste@jabbim.cz",self.config['jid'].replace("@",".")+" Jabbim.log\n"+text)
 
 	def sendCustomStatus(self, jid, show = None):
-		cs = customStatusWindow(jid, show)
+		cs = customStatusWindow(jid, show, main = self)
 		cs.exec_()
 
 	def showInvitation(self, jid, room, reason, cont = False):
@@ -2380,8 +2382,8 @@ class mainWindow(QtGui.QMainWindow):
 		if privacy:
 
 			self.client.privacy.active.unsetInvisible(available=False) # hack
-		for i in MainWindow.plugins.keys():
-			MainWindow.unloadPlugin(i)
+		for i in self.plugins.keys():
+			self.unloadPlugin(i)
 		self.saveConfigBeforeQuit()
 
 		# close windows, hide tray :)
@@ -3281,21 +3283,21 @@ class mainWindow(QtGui.QMainWindow):
 		else:
 			return
 		self.config.write()
-		MainWindow.ui.rosterStackedWidget.setCurrentIndex(0)
-		MainWindow.ui.login_headerLabel.show()
-		MainWindow.ui.splashProgress.setValue(0)
-		#MainWindow.ui.showOffline.hide()
-		MainWindow.ui.actionAdd_Contact.setEnabled(False)
-		MainWindow.ui.actionJoin_groupchat.setEnabled(False)
-		MainWindow.ui.actionService_Discovery.setEnabled(False)
-		MainWindow.ui.actionStart_Chat.setEnabled(False)
-#		MainWindow.ui.actionPrivacy_list_editor.setEnabled(False)
-		MainWindow.ui.actionIdentity.setEnabled(False)
+		self.ui.rosterStackedWidget.setCurrentIndex(0)
+		self.ui.login_headerLabel.show()
+		self.ui.splashProgress.setValue(0)
+		#self.ui.showOffline.hide()
+		self.ui.actionAdd_Contact.setEnabled(False)
+		self.ui.actionJoin_groupchat.setEnabled(False)
+		self.ui.actionService_Discovery.setEnabled(False)
+		self.ui.actionStart_Chat.setEnabled(False)
+#		self.ui.actionPrivacy_list_editor.setEnabled(False)
+		self.ui.actionIdentity.setEnabled(False)
 #		self.client=None
 		self.selfResources=[]
 		if self.client.oldstatus:
-			self.ui.loginStatus.setItemData(MainWindow.ui.loginStatus.findText(MainWindow.status[self.client.oldstatus[0]]),  QtCore.QVariant(QtCore.QStringList([self.client.oldstatus[0], self.client.oldstatus[1]])))
-			self.ui.loginStatus.setCurrentIndex(MainWindow.ui.loginStatus.findText(MainWindow.status[self.client.oldstatus[0]]))
+			self.ui.loginStatus.setItemData(self.ui.loginStatus.findText(self.status[self.client.oldstatus[0]]),  QtCore.QVariant(QtCore.QStringList([self.client.oldstatus[0], self.client.oldstatus[1]])))
+			self.ui.loginStatus.setCurrentIndex(self.ui.loginStatus.findText(self.status[self.client.oldstatus[0]]))
 
 		try:
 			self.statusWidgetMenu.setEnabled(False)
@@ -3304,11 +3306,11 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.login_cancel.show()
 		self.ui.profilesList.setEnabled(True)
 
-		MainWindow.ui.roster.sortedGroups=[]
-		MainWindow.ui.roster.sorted={}
-		MainWindow.ui.roster.users=[]
-		MainWindow.ui.roster.disconnect()
-		MainWindow.ui.login_connect.setEnabled(True)
+		self.ui.roster.sortedGroups=[]
+		self.ui.roster.sorted={}
+		self.ui.roster.users=[]
+		self.ui.roster.disconnect()
+		self.ui.login_connect.setEnabled(True)
 		#self.ui.eventsListWidget.clear()
 		self.events.removeAll()
 		self.ui.transportsToolbar.clear()
@@ -3330,28 +3332,28 @@ class mainWindow(QtGui.QMainWindow):
 						message=self.webkitThemeFactory.genChatStatus(unicode(self.tr("You are now offline.")),self.now())
 						w.chat.textEditWrite(message)
 						w.chat.lastMessageFrom=""
-		if error == 'lost' and MainWindow.reconnect:
+		if error == 'lost' and self.reconnect:
 #			self.client.oldstatus = self.client.getContactByJid(self.client.jid.full()).status
 			self.reconnect = False
 			msg = None
 			try:
-				MainWindow.client.xping.stop()
+				self.client.xping.stop()
 
 			except:
 				log.err('can\'t stop xping')
  			# connection lost, let's wait for a while and then reconnect
-			MainWindow.tray.showMessage(self.tr("Connection lost! "),self.tr("Trying to reconnect ..  ") , QtGui.QSystemTrayIcon.Warning, 5000)
- 			#MainWindow.plugins={}
-# 			MainWindow.client = None
+			self.tray.showMessage(self.tr("Connection lost! "),self.tr("Trying to reconnect ..  ") , QtGui.QSystemTrayIcon.Warning, 5000)
+ 			#self.plugins={}
+# 			self.client = None
 			log.err('Connection Lost')
 			if msg != None and len(msg)>0:
-				MainWindow.delayedMessages = msg
- 			reactor.callLater(5, MainWindow.connect)
+				self.delayedMessages = msg
+ 			reactor.callLater(5, self.connect)
 		else:
 			self.client=None
 			 #= None
-			for i in MainWindow.plugins.keys():
-				MainWindow.unloadPlugin(i)
+			for i in self.plugins.keys():
+				self.unloadPlugin(i)
 			self._reloadPlugins()
 		self.buildTrayMenu()
 

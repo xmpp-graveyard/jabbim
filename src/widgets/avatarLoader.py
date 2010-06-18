@@ -6,6 +6,8 @@ Created on 16.4.2010
 from PyQt4 import QtCore, QtGui
 from widgets import tooltip
 import traceback
+import sys
+from twisted.python import log
 
 class AvatarLabel(QtGui.QLabel):
 	def __init__(self,main,parent):

@@ -181,44 +181,6 @@ from widgets.scrollbar import scrollBar
 
 
 
-class customStatusWindow(QtGui.QDialog):
-	def __init__(self,jid,show=None,parent=None):
-		apply(QtGui.QDialog.__init__,(self,parent))
-		self.setModal(False)
-		self.ui=widgets.status.Ui_status()
-		self.ui.setupUi(self)
-		self.timer=QtCore.QTimer()
-		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.timeout)
-		app.connect(self.ui.status, QtCore.SIGNAL("cursorPositionChanged ()"),self.timerStop)
-		app.connect(self.ui.status, QtCore.SIGNAL("textChanged ()"),self.timerStop)
-		self.ui.statusBox.hide()
-		self.ui.save.hide()
-		self.timer.start(1000)
-		self.i=4
-		self.jid=jid
-		self.show=show
-		self.timeout()
-
-	def timerStop(self):
-		self.timer.stop()
-		self.ui.time.setText("")
-
-	def timeout(self):
-		if self.i!=0:
-			self.ui.time.setText(self.tr("Window will be closed in ")+unicode(self.i)+self.tr(" seconds."))
-			self.i-=1
-		else:
-			self.accept()
-			self.timer.stop()
-	def accept(self):
-		if type(self.jid) != list:
-			MainWindow.client.sendPresence(to=self.jid,show = unicode(self.show), status = unicode(self.ui.status.toPlainText ()))
-		else:
-			show = unicode(self.show)
-			status = unicode(self.ui.status.toPlainText())
-			for jid in self.jid:
-				MainWindow.client.sendPresence(to=jid, show = show, status = status)
-		self.done(1)
 
 
 

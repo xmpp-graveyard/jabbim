@@ -16,7 +16,9 @@ import os
 import widgets
 from pyxl import jid as jidT
 import weakref
+from os.path import basename,dirname, isfile
 import base64
+
 
 class clientClass(pyxl.client.Client):
 	"""
@@ -140,7 +142,7 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.mainTabWidget.setTabEnabled(3,False)
 		self.bookmarksEnabled=False
 		mainWindow=self.main
-		self.main.tray.showMessage(MainWindow.tr("Error"),mainWindow.tr("Your server doesn't support Private XML Storage. Some functions will be disabled."))
+		self.main.tray.showMessage(mainWindow.tr("Error"),mainWindow.tr("Your server doesn't support Private XML Storage. Some functions will be disabled."))
 
 #	def on_privacyFail(self):
 #		"""
@@ -719,8 +721,8 @@ class clientClass(pyxl.client.Client):
 		self.main.selfStatus=show
 		#self.main.tray.setToolTip(mainWindow.tr('Your status:')+" "+self.main.status[show])
 		self.main.ui.selfAvatar.refreshToolTip()
-		if MainWindow.config['keepStatus'] == "True" and MainWindow.config['keepedStatus'] != '':
-			self.main.sendPresence(None,show,MainWindow.config['keepedStatus'])
+		if self.main.config['keepStatus'] == "True" and self.main.config['keepedStatus'] != '':
+			self.main.sendPresence(None,show,self.main.config['keepedStatus'])
 		else:
 			self.main.sendPresence(None,show,status)
 		print "Sending firse presence to server..."
