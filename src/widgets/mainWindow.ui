@@ -14,8 +14,8 @@
    <string>Jabbim</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>images/16x16/apps/jabbim.png</normaloff>images/16x16/apps/jabbim.png</iconset>
+   <iconset resource="../../resources/jabbim.qrc">
+    <normaloff>:/images/16x16/apps/jabbim.png</normaloff>:/images/16x16/apps/jabbim.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout">
@@ -349,7 +349,7 @@
             </size>
            </property>
            <property name="pixmap">
-            <pixmap>images/logo.png</pixmap>
+            <pixmap>:/images/logo.png</pixmap>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -445,7 +445,7 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <property name="icon">
                   <iconset>
-                   <normaloff>images/16x16/status/jabber-not_in_roster.png</normaloff>images/16x16/status/jabber-not_in_roster.png</iconset>
+                   <normaloff>:/images/16x16/status/jabber-not_in_roster.png</normaloff>:/images/16x16/status/jabber-not_in_roster.png</iconset>
                  </property>
                  <property name="popupMode">
                   <enum>QToolButton::MenuButtonPopup</enum>
@@ -521,7 +521,7 @@ p, li { white-space: pre-wrap; }
             <bool>true</bool>
            </property>
            <property name="currentIndex">
-            <number>4</number>
+            <number>0</number>
            </property>
            <widget class="QWidget" name="rosterTab">
             <attribute name="icon">
@@ -566,7 +566,7 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <property name="icon">
                   <iconset>
-                   <normaloff>images/16x16/actions/process-stop.png</normaloff>images/16x16/actions/process-stop.png</iconset>
+                   <normaloff>:/images/16x16/actions/process-stop.png</normaloff>:/images/16x16/actions/process-stop.png</iconset>
                  </property>
                  <property name="toolButtonStyle">
                   <enum>Qt::ToolButtonTextBesideIcon</enum>
@@ -602,7 +602,7 @@ p, li { white-space: pre-wrap; }
            <widget class="QWidget" name="favTab">
             <attribute name="icon">
              <iconset>
-              <normaloff>images/16x16/categories/srdce-cele.png</normaloff>images/16x16/categories/srdce-cele.png</iconset>
+              <normaloff>:/images/16x16/categories/srdce-cele.png</normaloff>:/images/16x16/categories/srdce-cele.png</iconset>
             </attribute>
             <attribute name="title">
              <string> r</string>
@@ -614,7 +614,7 @@ p, li { white-space: pre-wrap; }
            <widget class="QWidget" name="contentTab">
             <attribute name="icon">
              <iconset>
-              <normaloff>images/16x16/actions/anchor.png</normaloff>images/16x16/actions/anchor.png</iconset>
+              <normaloff>:/images/16x16/actions/anchor.png</normaloff>:/images/16x16/actions/anchor.png</iconset>
             </attribute>
             <attribute name="title">
              <string> r</string>
@@ -962,7 +962,7 @@ p, li { white-space: pre-wrap; }
   <action name="actionPreferences">
    <property name="icon">
     <iconset>
-     <normaloff>images/16x16/categories/gtk-preferences.png</normaloff>images/16x16/categories/gtk-preferences.png</iconset>
+     <normaloff>:/images/16x16/categories/gtk-preferences.png</normaloff>:/images/16x16/categories/gtk-preferences.png</iconset>
    </property>
    <property name="text">
     <string>Preferences</string>
@@ -971,7 +971,7 @@ p, li { white-space: pre-wrap; }
   <action name="actionQuit">
    <property name="icon">
     <iconset>
-     <normaloff>images/16x16/actions/gtk-quit.png</normaloff>images/16x16/actions/gtk-quit.png</iconset>
+     <normaloff>:/images/16x16/actions/gtk-quit.png</normaloff>:/images/16x16/actions/gtk-quit.png</iconset>
    </property>
    <property name="text">
     <string>Quit</string>
@@ -980,7 +980,7 @@ p, li { white-space: pre-wrap; }
   <action name="actionAdd_Contact">
    <property name="icon">
     <iconset>
-     <normaloff>images/16x16/actions/gtk-add.png</normaloff>images/16x16/actions/gtk-add.png</iconset>
+     <normaloff>:/images/16x16/actions/gtk-add.png</normaloff>:/images/16x16/actions/gtk-add.png</iconset>
    </property>
    <property name="text">
     <string>Add Contact</string>
@@ -989,7 +989,7 @@ p, li { white-space: pre-wrap; }
   <action name="actionAbout">
    <property name="icon">
     <iconset>
-     <normaloff>images/16x16/actions/about.png</normaloff>images/16x16/actions/about.png</iconset>
+     <normaloff>:/images/16x16/actions/about.png</normaloff>:/images/16x16/actions/about.png</iconset>
    </property>
    <property name="text">
     <string>About</string>
@@ -998,7 +998,7 @@ p, li { white-space: pre-wrap; }
   <action name="actionService_Discovery">
    <property name="icon">
     <iconset>
-     <normaloff>images/16x16/actions/service-discovery.png</normaloff>images/16x16/actions/service-discovery.png</iconset>
+     <normaloff>:/images/16x16/actions/service-discovery.png</normaloff>:/images/16x16/actions/service-discovery.png</iconset>
    </property>
    <property name="text">
     <string>Service Discovery</string>
@@ -1017,7 +1017,7 @@ p, li { white-space: pre-wrap; }
   <action name="actionIdentity">
    <property name="icon">
     <iconset>
-     <normaloff>images/16x16/categories/v-card.png</normaloff>images/16x16/categories/v-card.png</iconset>
+     <normaloff>:/images/16x16/categories/v-card.png</normaloff>:/images/16x16/categories/v-card.png</iconset>
    </property>
    <property name="text">
     <string>Identity</string>

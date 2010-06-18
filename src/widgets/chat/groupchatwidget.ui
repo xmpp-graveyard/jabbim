@@ -104,7 +104,7 @@
               <string>Anchor</string>
              </property>
              <property name="icon" >
-              <iconset>images/16x16/actions/anchor.png</iconset>
+              <iconset>:/images/16x16/actions/anchor.png</iconset>
              </property>
              <property name="popupMode" >
               <enum>QToolButton::InstantPopup</enum>
@@ -126,7 +126,7 @@
               <string>Bold</string>
              </property>
              <property name="icon" >
-              <iconset>images/16x16/actions/format-text-bold.png</iconset>
+              <iconset>:/images/16x16/actions/format-text-bold.png</iconset>
              </property>
              <property name="checkable" >
               <bool>true</bool>
@@ -148,7 +148,7 @@
               <string>Italic</string>
              </property>
              <property name="icon" >
-              <iconset>images/16x16/actions/format-text-italic.png</iconset>
+              <iconset>:/images/16x16/actions/format-text-italic.png</iconset>
              </property>
              <property name="checkable" >
               <bool>true</bool>
@@ -170,7 +170,7 @@
               <string>Underline</string>
              </property>
              <property name="icon" >
-              <iconset>images/16x16/actions/format-text-underline.png</iconset>
+              <iconset>:/images/16x16/actions/format-text-underline.png</iconset>
              </property>
              <property name="checkable" >
               <bool>true</bool>
@@ -226,7 +226,7 @@
               <string>You can add emoticons by clicking here</string>
              </property>
              <property name="icon" >
-              <iconset>images/16x16/emotes/biggrin.png</iconset>
+              <iconset>:/images/16x16/emotes/biggrin.png</iconset>
              </property>
              <property name="checkable" >
               <bool>true</bool>
@@ -245,7 +245,7 @@
               <string>&amp;Send</string>
              </property>
              <property name="icon" >
-              <iconset>images/16x16/actions/send.png</iconset>
+              <iconset>:/images/16x16/actions/send.png</iconset>
              </property>
              <property name="toolButtonStyle" >
               <enum>Qt::ToolButtonTextBesideIcon</enum>
