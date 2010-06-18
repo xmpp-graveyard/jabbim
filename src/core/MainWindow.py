@@ -802,7 +802,7 @@ class mainWindow(QtGui.QMainWindow):
 							pri="0"
 				self.selfStatus=show
 				# update tray icon
-				icon=QtGui.QIcon("images/16x16/apps/jabbim.png")
+				icon=QtGui.QIcon(RESOURCEPATH+"images/16x16/apps/jabbim.png")
 				if self.selfStatus!='online':
 					result=icon.pixmap(16,16)
 					painter=QtGui.QPainter(result)
@@ -857,10 +857,10 @@ class mainWindow(QtGui.QMainWindow):
 				#else:
 					#priority = ""
 				usertype=unicode(self.client.getHostType(jid,jid))
-				if os.path.isfile('images/16x16/status/'+usertype+"-"+show+".png"):
-					text+='<img src="images/16x16/status/'+usertype+"-"+show+'.png" />'
+				if os.path.isfile(RESOURCEPATH+'images/16x16/status/'+usertype+"-"+show+".png"):
+					text+='<img src="'+RESOURCEPATH+'images/16x16/status/'+usertype+"-"+show+'.png" />'
 				else:
-					text+='<img src="images/16x16/status/jabber-%s.png">' % show
+					text+='<img src="'+RESOURCEPATH+'images/16x16/status/jabber-%s.png">' % show
 				#if len(priority)!=0:
 					#text+='%s<br/>' % priority
 				if message:
@@ -877,7 +877,7 @@ class mainWindow(QtGui.QMainWindow):
 		if self.avatarDef.has_key(jid):
 			hash=self.avatarDef[jid]
 		if hash=="":
-			file=os.getcwd()+"/images/32x32/apps/jabbim.png"
+			file=RESOURCEPATH+"/images/32x32/apps/jabbim.png"
 		else:
 			file=self.realHomeDir+'/avatars/'+unicode(hash)
 		return file
@@ -940,10 +940,10 @@ class mainWindow(QtGui.QMainWindow):
 
 			result=QtGui.QPixmap(x,y)
 			result.fill(QtCore.Qt.transparent)
-			if os.path.exists("themes/"+self.config['theme']+"/frame-"+str(size)+".png"):
-				frame1=QtGui.QPixmap("themes/"+self.config['theme']+"/frame-"+str(size)+".png")
+			if os.path.exists(RESOURCEPATH+"themes/"+self.config['theme']+"/frame-"+str(size)+".png"):
+				frame1=QtGui.QPixmap(RESOURCEPATH+"themes/"+self.config['theme']+"/frame-"+str(size)+".png")
 			else:
-				frame1=QtGui.QPixmap("images/"+str(size)+"/frame.png")
+				frame1=QtGui.QPixmap(RESOURCEPATH+"images/"+str(size)+"/frame.png")
 			painter=QtGui.QPainter(result)
 			painter.drawPixmap((x-avatar.width())/2,(y-avatar.height())/2,avatar)
 			painter.drawPixmap(0,0,frame1)
@@ -1498,10 +1498,10 @@ class mainWindow(QtGui.QMainWindow):
 				text+='<td><b>'+self.tr("JID:")+'</b> '+unicode(transport)+'<br/>'
 
 				usertype=unicode(self.client.getHostType(transport,transport))
-				if os.path.isfile('images/16x16/status/'+usertype+"-offline.png"):
-					text+='<img src="images/16x16/status/'+usertype+'-offline.png" />'
+				if os.path.isfile(RESOURCEPATH+'images/16x16/status/'+usertype+"-offline.png"):
+					text+='<img src="'+RESOURCEPATH+'images/16x16/status/'+usertype+'-offline.png" />'
 				else:
-					text+='<img src="images/16x16/status/jabber-offline.png">'
+					text+='<img src="'+RESOURCEPATH+'images/16x16/status/jabber-offline.png">'
 				#text+='<font size="-1">%s</font>' % (status)
 				text+="</td></tr></table>"
 
@@ -1756,7 +1756,7 @@ class mainWindow(QtGui.QMainWindow):
 				if os.path.isfile(file):
 					avatar=QtGui.QPixmap(file)
 					if avatar.isNull():
-						result=QtGui.QIcon("images/22x22/apps/jabbim.png")
+						result=QtGui.QIcon(RESOURCEPATH+"images/22x22/apps/jabbim.png")
 					else:
 						avatar=avatar.scaled(22,22,QtCore.Qt.KeepAspectRatio)
 						result=QtGui.QPixmap(22,22)
@@ -1768,7 +1768,7 @@ class mainWindow(QtGui.QMainWindow):
 				else:
 					#result=QtGui.QIcon(self.getAvatar(unicode(jid),size="32x32",frame=False))
 					#if not result:
-					result=QtGui.QIcon("images/22x22/apps/jabbim.png")
+					result=QtGui.QIcon(RESOURCEPATH+"images/22x22/apps/jabbim.png")
 
 				if self.config['jid']==jid:
 					self.ui.profilesList.insertItem(0,result,jid)
@@ -1806,7 +1806,7 @@ class mainWindow(QtGui.QMainWindow):
 				size=128
 			result=QtGui.QPixmap(size,size)
 			result.fill(QtCore.Qt.transparent)
-			frame=QtGui.QPixmap("images/"+str(size)+"x"+str(size)+"/frame.png")
+			frame=QtGui.QPixmap(RESOURCEPATH+"images/"+str(size)+"x"+str(size)+"/frame.png")
 			painter=QtGui.QPainter(result)
 			#painter.fillRect(0,0,size,size,QtGui.QBrush(self.ui.login.palette().color(QtGui.QPalette.Window)))
 			painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
@@ -1814,7 +1814,7 @@ class mainWindow(QtGui.QMainWindow):
 			painter.end()
 			self.ui.loginAvatar.setPixmap(result)
 		else:
-			pixmap=QtGui.QIcon("images/48x48/apps/jabbim.png")
+			pixmap=QtGui.QIcon(RESOURCEPATH+"images/48x48/apps/jabbim.png")
 			avatar=pixmap.pixmap(128,112)
 			if avatar.width()<=58 and avatar.height()<=58:
 				size=64
@@ -1822,7 +1822,7 @@ class mainWindow(QtGui.QMainWindow):
 				size=128
 			result=QtGui.QPixmap(size,size)
 			result.fill(QtCore.Qt.transparent)
-			frame=QtGui.QPixmap("images/"+str(size)+"x"+str(size)+"/frame.png")
+			frame=QtGui.QPixmap(RESOURCEPATH+"images/"+str(size)+"x"+str(size)+"/frame.png")
 			painter=QtGui.QPainter(result)
 			#painter.fillRect(0,0,size,size,QtGui.QBrush(self.ui.login.palette().color(QtGui.QPalette.Window)))
 			painter.drawPixmap((size-avatar.width())/2,(size-avatar.height())/2,avatar)
@@ -1984,7 +1984,7 @@ class mainWindow(QtGui.QMainWindow):
 		widget.setLabel(self.tr("Nickname:"))
 		widget.setAcceptText(self.tr("Join"))
 		widget.setRejectText(self.tr("Decline"))
-		widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/ok.png'))
+		widget.ui.accept.setIcon(QtGui.QIcon(RESOURCEPATH+'images/16x16/actions/ok.png'))
 
 	def startExtraDonwload(self,file):
 		d=extraDialog("",self,self,file)
@@ -2392,7 +2392,7 @@ class mainWindow(QtGui.QMainWindow):
 		if not self.getJid(jid):
 			reactor.callLater(0,self.jidError)
 			return
-		self.ui.selfAvatar.setPixmap(QtGui.QPixmap('images/32x32/apps/jabbim.png'))
+		self.ui.selfAvatar.setPixmap(QtGui.QPixmap(RESOURCEPATH+'images/32x32/apps/jabbim.png'))
 		self.ui.rosterStackedWidget.setCurrentIndex(2)
 		self.ui.login_headerLabel.hide()
 		self.ui.splashImage.show()
