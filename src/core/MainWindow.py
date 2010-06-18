@@ -1708,13 +1708,13 @@ class mainWindow(QtGui.QMainWindow):
 			if start:
 				log.startLoggingWithObserver(self.log.emit, setStdout=0)
 		# change GUI according to new config
-		self.loadTheme()
-		self.loadSkin()
+		self.resourceManager.loadTheme()
+		self.resourceManager.loadSkin()
 		self.ui.roster.reskin()
 
 		self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
 		QtCore.QObject.disconnect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
-		self.loadRosterStyle() # load roster style
+		self.resourceManager.loadRosterStyle() # load roster style
 		# change cache
 		if self.cache:
 			self.cache.close()
