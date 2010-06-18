@@ -817,9 +817,9 @@ class chatWidget(abstractChatWidget):
 				m.setBody(text)
 				m.setXHTML(xhtml)
 				m.setComposing("active")
-				for key,value in self.main().plugins.iteritems():
+				for key,value in self.main().pluginManager.plugins.iteritems():
 					if value['module']:
-						ret=self.main().runPluginCommand(value['module'].on_messageSend,[m])
+						ret=self.main().pluginManager.runPluginCommand(value['module'].on_messageSend,[m])
 						if ret:
 							m=ret
 						else:
@@ -847,9 +847,9 @@ class chatWidget(abstractChatWidget):
 				m=Message(unicode(self.jid))
 				m.setBody(text)
 				m.setComposing("active")
-				for key,value in self.main().plugins.iteritems():
+				for key,value in self.main().pluginManager.plugins.iteritems():
 					if value['module']:
-						ret=self.main().runPluginCommand(value['module'].on_messageSend,[m])
+						ret=self.main().pluginManager.runPluginCommand(value['module'].on_messageSend,[m])
 						if ret:
 							m=ret
 						else:
