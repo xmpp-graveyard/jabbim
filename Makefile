@@ -70,5 +70,5 @@ install: build
 # Removes generated files
 .PHONY: clean
 clean:
-	find . \( -name '*.py[co]' -o -name '*.qm' \) -print0 | xargs -0 --no-run-if-empty rm
+	find . \( -name '*.py[co]' -o -name '*.qm' -o -name '*_ui.py' \) -print0 | xargs -0 --no-run-if-empty rm
 	rm -f jabbim .configured-prefix
