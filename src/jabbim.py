@@ -1,0 +1,246 @@
+# -*- coding: utf-8 -*-
+"""
+Copyright (C) 2007 	Jan 'Hanzz' Kaluza (hanzz at njs.netlab.cz)
+Copyright (C) 2007	Jiri 'Sef' Gabrys	(sef at njs.netlab.cz)
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+"""
+import gc
+import sys,os, getopt, xmlrpclib, time
+from include.constants import RESOURCEPATH
+
+
+sys.path.append('.')
+from include import utils
+try:
+	OPTIONS,params = getopt.getopt(sys.argv[1:],'h:u:p:', ['home=', 'uri=', 'plugin=','usage','help'])
+except getopt.GetoptError, err:
+	print str(err)
+	sys.exit(2)
+
+for opt, arg in OPTIONS:
+	if opt == '-u' or opt == '--uri':
+		try:
+			porty = utils.scanports()
+		except:
+			print 'no ports'
+			sys.exit(2)
+		server = xmlrpclib.Server('http://localhost:%s/'%porty[0])
+		utils.handleuri(arg, porty, server)
+		sys.exit()
+	elif opt == '-p' or opt == '--plugin':
+		#format: --plugin="pluginName_func args"
+		try:
+			porty = utils.scanports()
+		except:
+			print 'no ports'
+			sys.exit(2)
+		args=''
+		try:
+			name, args = arg.split(' ',1)
+		except ValueError:
+			name=arg;
+		server = xmlrpclib.Server('http://localhost:%s/'%porty[0])
+		server.runPluginFunc(name, params, porty[1])
+
+		sys.exit()
+	elif opt == '--usage' or opt == '--help':
+		print "Jabbim XMPP client commandline options\n\n\
+	-h --home\n		- set directory to save profiles and settings(default ~/.jabbim)\n\n\
+	-p --plugin=<remotefunction> <arguments>\n		-invoke xmlrpc remote function\n\n\
+	-u --uri\n		- handle xmpp uri\n\
+	--help --usage\n		- show this help message and exit\n\n\
+more info on http://dev.jabbim.cz/jabbim"
+		sys.exit(0);
+#this function prevents(not 100%) jabbim not to run twice in same profile :-)
+def singleRun():
+	try:
+		porty = utils.scanports()
+	except:
+		return False
+	try:
+		server = xmlrpclib.Server('http://localhost:%s/'%porty[0])
+		rv=server.runPluginFunc('showRoster', '', porty[1])
+	except:
+		rv=False;
+	return rv
+if singleRun():
+	#roster shown, so I can exit now !
+	sys.exit(0);
+	
+
+from PyQt4 import QtCore, QtGui, QtWebKit
+
+#if sys.argv[1]=="remote":
+#	app=QtCore.QCoreApplication([])
+
+import qt4reactor
+#if sys.platform=="win32":
+	#import win32gui
+
+
+
+class jabbimApplication(QtGui.QApplication):
+	"""
+	Main Jabbim application class.
+	"""
+	def __init__(self,args=[]):
+		QtGui.QApplication.__init__(self,args)
+		self.shutdown=False
+		self.sleep=False
+		self.setApplicationName("Jabbim")
+
+	def winEventFilter(self,msg):
+		message = msg.message
+		# WM_POWERBROADCAST
+		if message==536:
+			# PBT_APMSUSPEND
+			if msg.wParam==4 and not self.sleep:
+				log.msg( "emit sleep()")
+				self.emit(QtCore.SIGNAL("sleep()"))
+				self.sleep=True
+			elif msg.wParam==7 and self.sleep:
+				log.msg( "emit wakeup()")
+				self.emit(QtCore.SIGNAL("wakeUp()"))
+				self.sleep=False
+			return (True,1)
+		# Snarl clicked (notification.py hook)
+		elif message==1025:
+			if msg.wParam==34:
+				if self.main.snarlMessages.has_key(int(msg.lParam)):
+					self.main.snarlMessages[int(msg.lParam)][0](*self.main.snarlMessages[int(msg.lParam)][1])
+					del self.main.snarlMessages[int(msg.lParam)]
+				return (True,1)
+		return (False,1)
+
+#	def x11EventFilter(self,e):
+#		#print e,type(e),dir(e)
+#		return False
+
+	def commitData(self,manager):
+		"""
+		Called when application is closed by Window manager
+		"""
+		log.msg( "data commited")
+		self.shutdown=True
+		manager.release()
+
+app = jabbimApplication(sys.argv)
+app.setQuitOnLastWindowClosed(False)
+qt4reactor.install()
+from twisted.internet import reactor, threads
+from twisted.internet.defer import DeferredList
+from twisted.python import log
+import time,base64, re
+from core.MainWindow import mainWindow
+try:
+	from hashlib import sha1
+except:
+	log.msg('Please upgrade to python2.5')
+	from sha import new as sha1
+
+import widgets
+import wizards
+import pyxl
+from pyxl import storage
+import traceback
+from configobj import ConfigObj, ConfigObjError
+from include import userrating, rot13, plugins, safelog
+import urllib, random, xmlrpclib
+from imp import load_source
+from urllib import quote, unquote
+from os.path import basename,dirname, isfile
+from twisted.words.protocols.jabber.xmlstream import IQ
+from pyxl import jid as jidT
+import ctypes
+from twisted.web.microdom import parseString,Element, escape
+from twisted.web.client import downloadPage
+import shutil #xmlrpc
+from twisted.python.filepath import FilePath
+from widgets.extra import extraDialog
+from widgets import bookmarks, dataforms, tooltip
+from locale import strcoll
+import weakref
+from widgets.avatarLoader import *
+from widgets.aboutDialog import aboutDialog
+from widgets.scrollbar import scrollBar
+
+
+
+
+
+class customStatusWindow(QtGui.QDialog):
+	def __init__(self,jid,show=None,parent=None):
+		apply(QtGui.QDialog.__init__,(self,parent))
+		self.setModal(False)
+		self.ui=widgets.status.Ui_status()
+		self.ui.setupUi(self)
+		self.timer=QtCore.QTimer()
+		app.connect(self.timer, QtCore.SIGNAL("timeout ()"),self.timeout)
+		app.connect(self.ui.status, QtCore.SIGNAL("cursorPositionChanged ()"),self.timerStop)
+		app.connect(self.ui.status, QtCore.SIGNAL("textChanged ()"),self.timerStop)
+		self.ui.statusBox.hide()
+		self.ui.save.hide()
+		self.timer.start(1000)
+		self.i=4
+		self.jid=jid
+		self.show=show
+		self.timeout()
+
+	def timerStop(self):
+		self.timer.stop()
+		self.ui.time.setText("")
+
+	def timeout(self):
+		if self.i!=0:
+			self.ui.time.setText(self.tr("Window will be closed in ")+unicode(self.i)+self.tr(" seconds."))
+			self.i-=1
+		else:
+			self.accept()
+			self.timer.stop()
+	def accept(self):
+		if type(self.jid) != list:
+			MainWindow.client.sendPresence(to=self.jid,show = unicode(self.show), status = unicode(self.ui.status.toPlainText ()))
+		else:
+			show = unicode(self.show)
+			status = unicode(self.ui.status.toPlainText())
+			for jid in self.jid:
+				MainWindow.client.sendPresence(to=jid, show = show, status = status)
+		self.done(1)
+
+
+
+
+MainWindow=None
+
+def main():
+	translator = utils.loadTranslator('locales/jabbim_')
+	app.installTranslator(translator)
+
+	global MainWindow
+	MainWindow = mainWindow(app=app)
+
+	if MainWindow.config['startInTray']=="True":
+		MainWindow.close()
+	else:
+		MainWindow.show()
+	reactor.run()
+
+if __name__ == "__main__":
+	#import hotshot
+	#prof = hotshot.Profile("hotshot_edi_stats")
+	#prof.runcall(main)
+	#prof.close()
+	main()
