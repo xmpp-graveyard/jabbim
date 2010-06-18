@@ -1052,7 +1052,8 @@ class groupChatWidget(abstractChatWidget):
 		#text=unicode(cur.selectedText()).lower()
 		#text=text[0]
 		repeat=False
-		users.remove(self.nick)
+		if self.nick in users:
+			users.remove(self.nick)
 		#print text
 		for i in range(len(users)):
 			if unicode(users[i]).lower()[:len(self.tabWord)]==unicode(self.tabWord).lower():
