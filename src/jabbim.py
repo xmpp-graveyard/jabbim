@@ -188,7 +188,7 @@ from widgets.scrollbar import scrollBar
 MainWindow=None
 
 def main():
-	translator = utils.loadTranslator('locales/jabbim_')
+	translator = utils.loadTranslator(RESOURCEPATH+'locales/jabbim_')
 	app.installTranslator(translator)
 
 	global MainWindow
