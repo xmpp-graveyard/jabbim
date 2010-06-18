@@ -321,7 +321,7 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('groupchatMessageEvent',self.on_groupchatMessageEvent)
 			self.registerHandler('on_message_send', self.on_message_send)
 			self.loadConfig()
-			self.window = self.loadWindow("%s/historyBrowser.ui.py" % self.pluginDir, self.main)
+			self.window = self.loadWindow("%s/historyBrowser_ui.py" % self.pluginDir, self.main)
 			self.window.setWindowIcon(self.main.windowIcon())
 			self.window.ui.text.page().setLinkDelegationPolicy(QtWebKit.QWebPage.DelegateAllLinks)
 			#layout=QtGui.QHBoxLayout(self.window.ui.calendarWidget)
