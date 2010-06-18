@@ -9,7 +9,7 @@ import albumfiletransfer
 import addcontact
 import events
 import rosterLiveWidget
-import about
+import about_ui
 import servicediscovery
 import chat
 import show

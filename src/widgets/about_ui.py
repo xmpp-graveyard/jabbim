@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/about.ui'
+# Form implementation generated from reading ui file 'src/widgets/about.ui'
 #
-# Created: Tue Aug 18 20:07:46 2009
-#      by: PyQt4 UI code generator 4.5.4
+# Created: Mon Apr 19 11:54:57 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 
