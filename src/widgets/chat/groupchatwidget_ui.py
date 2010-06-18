@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'src/widgets/chat/groupchatwidget.ui'
 #
-# Created: Mon Apr 19 12:37:53 2010
+# Created: Mon Apr 19 15:20:31 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!

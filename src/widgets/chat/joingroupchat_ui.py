@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'src/widgets/chat/joingroupchat.ui'
 #
-# Created: Mon Apr 19 12:37:53 2010
+# Created: Mon Apr 19 15:20:31 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -22,7 +22,7 @@ class Ui_joingroupchat(object):
         self.label = QtGui.QLabel(joingroupchat)
         self.label.setMaximumSize(QtCore.QSize(48, 48))
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap("images/48x48/categories/conferences.png"))
+        self.label.setPixmap(QtGui.QPixmap(":/images/48x48/categories/conferences.png"))
         self.label.setObjectName("label")
         self.gridlayout.addWidget(self.label, 0, 0, 1, 1)
         self.label_2 = QtGui.QLabel(joingroupchat)

@@ -297,7 +297,7 @@
            </property>
            <property name="icon" >
             <iconset>
-             <normaloff>images/16x16/actions/anchor.png</normaloff>images/16x16/actions/anchor.png</iconset>
+             <normaloff>:/images/16x16/actions/anchor.png</normaloff>:/images/16x16/actions/anchor.png</iconset>
            </property>
            <property name="popupMode" >
             <enum>QToolButton::InstantPopup</enum>
@@ -320,7 +320,7 @@
            </property>
            <property name="icon" >
             <iconset>
-             <normaloff>images/16x16/actions/format-text-bold.png</normaloff>images/16x16/actions/format-text-bold.png</iconset>
+             <normaloff>:/images/16x16/actions/format-text-bold.png</normaloff>:/images/16x16/actions/format-text-bold.png</iconset>
            </property>
            <property name="checkable" >
             <bool>true</bool>
@@ -343,7 +343,7 @@
            </property>
            <property name="icon" >
             <iconset>
-             <normaloff>images/16x16/actions/format-text-italic.png</normaloff>images/16x16/actions/format-text-italic.png</iconset>
+             <normaloff>:/images/16x16/actions/format-text-italic.png</normaloff>:/images/16x16/actions/format-text-italic.png</iconset>
            </property>
            <property name="checkable" >
             <bool>true</bool>
@@ -366,7 +366,7 @@
            </property>
            <property name="icon" >
             <iconset>
-             <normaloff>images/16x16/actions/format-text-underline.png</normaloff>images/16x16/actions/format-text-underline.png</iconset>
+             <normaloff>:/images/16x16/actions/format-text-underline.png</normaloff>:/images/16x16/actions/format-text-underline.png</iconset>
            </property>
            <property name="checkable" >
             <bool>true</bool>
@@ -426,7 +426,7 @@
            </property>
            <property name="icon" >
             <iconset>
-             <normaloff>images/16x16/emotes/biggrin.png</normaloff>images/16x16/emotes/biggrin.png</iconset>
+             <normaloff>:/images/16x16/emotes/biggrin.png</normaloff>:/images/16x16/emotes/biggrin.png</iconset>
            </property>
            <property name="checkable" >
             <bool>true</bool>
@@ -446,7 +446,7 @@
            </property>
            <property name="icon" >
             <iconset>
-             <normaloff>images/16x16/actions/send.png</normaloff>images/16x16/actions/send.png</iconset>
+             <normaloff>:/images/16x16/actions/send.png</normaloff>:/images/16x16/actions/send.png</iconset>
            </property>
           </widget>
          </item>

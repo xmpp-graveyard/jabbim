@@ -13,7 +13,7 @@
    <string>Extra action</string>
   </property>
   <property name="windowIcon" >
-   <iconset>images/16x16/apps/jabbim.png</iconset>
+   <iconset>:/images/16x16/apps/jabbim.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget" >
    <layout class="QGridLayout" >
@@ -85,7 +85,7 @@
          <string>Menu</string>
         </property>
         <property name="icon" >
-         <iconset>images/16x16/actions/exec.png</iconset>
+         <iconset>:/images/16x16/actions/exec.png</iconset>
         </property>
        </widget>
       </item>

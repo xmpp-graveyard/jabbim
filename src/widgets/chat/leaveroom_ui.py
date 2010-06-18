@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'src/widgets/chat/leaveroom.ui'
 #
-# Created: Mon Apr 19 12:37:53 2010
+# Created: Mon Apr 19 15:20:31 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,7 @@ class Ui_leaveroom(object):
         leaveroom.setObjectName("leaveroom")
         leaveroom.resize(308, 121)
         icon = QtGui.QIcon()
-        icon.addFile("images/16x16/apps/jabbim.png")
+        icon.addFile(":/images/16x16/apps/jabbim.png")
         leaveroom.setWindowIcon(icon)
         self.gridlayout = QtGui.QGridLayout(leaveroom)
         self.gridlayout.setMargin(9)
@@ -31,7 +31,7 @@ class Ui_leaveroom(object):
         self.label_2 = QtGui.QLabel(leaveroom)
         self.label_2.setMaximumSize(QtCore.QSize(48, 16200))
         self.label_2.setText("")
-        self.label_2.setPixmap(QtGui.QPixmap("images/48x48/categories/conferences.png"))
+        self.label_2.setPixmap(QtGui.QPixmap(":/images/48x48/categories/conferences.png"))
         self.label_2.setObjectName("label_2")
         self.gridlayout.addWidget(self.label_2, 0, 0, 1, 1)
         self.leaveroom = QtGui.QLabel(leaveroom)

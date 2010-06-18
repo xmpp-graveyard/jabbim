@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'src/widgets/preferences_bookmarks.ui'
 #
-# Created: Mon Apr 19 12:37:57 2010
+# Created: Mon Apr 19 15:20:34 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,7 @@ class Ui_editbookmark(object):
         editbookmark.setObjectName("editbookmark")
         editbookmark.resize(262, 243)
         icon = QtGui.QIcon()
-        icon.addFile("images/16x16/apps/jabbim.png")
+        icon.addFile(":/images/16x16/apps/jabbim.png")
         editbookmark.setWindowIcon(icon)
         self.gridlayout = QtGui.QGridLayout(editbookmark)
         self.gridlayout.setMargin(9)

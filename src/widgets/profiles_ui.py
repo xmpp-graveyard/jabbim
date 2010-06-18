@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'src/widgets/profiles.ui'
 #
-# Created: Mon Apr 19 12:37:55 2010
+# Created: Mon Apr 19 15:20:33 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,7 @@ class Ui_profilesWindow(object):
         profilesWindow.setObjectName("profilesWindow")
         profilesWindow.resize(322, 301)
         icon = QtGui.QIcon()
-        icon.addFile("images/16x16/apps/jabbim.png")
+        icon.addFile(":/images/16x16/apps/jabbim.png")
         profilesWindow.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(profilesWindow)
         self.centralwidget.setObjectName("centralwidget")

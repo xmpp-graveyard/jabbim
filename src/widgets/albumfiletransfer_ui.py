@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'src/widgets/albumfiletransfer.ui'
 #
-# Created: Mon Apr 19 12:37:51 2010
+# Created: Mon Apr 19 15:20:29 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,7 @@ class Ui_albumFiletransferDialog(object):
         albumFiletransferDialog.setObjectName("albumFiletransferDialog")
         albumFiletransferDialog.resize(476, 451)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("images/16x16/apps/jabbim.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/16x16/apps/jabbim.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         albumFiletransferDialog.setWindowIcon(icon)
         self.gridlayout = QtGui.QGridLayout(albumFiletransferDialog)
         self.gridlayout.setMargin(9)

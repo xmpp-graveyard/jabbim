@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'src/widgets/commands.ui'
 #
-# Created: Mon Apr 19 12:37:59 2010
+# Created: Mon Apr 19 15:20:37 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,7 @@ class Ui_Dialog(object):
         Dialog.setObjectName("Dialog")
         Dialog.resize(436, 358)
         icon = QtGui.QIcon()
-        icon.addFile("images/16x16/apps/jabbim.png")
+        icon.addFile(":/images/16x16/apps/jabbim.png")
         Dialog.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(Dialog)
         self.centralwidget.setObjectName("centralwidget")
@@ -45,7 +45,7 @@ class Ui_Dialog(object):
         self.gridlayout1.addWidget(self.previous, 0, 2, 1, 1)
         self.menuButton = QtGui.QPushButton(self.centralwidget)
         icon1 = QtGui.QIcon()
-        icon1.addFile("images/16x16/actions/exec.png")
+        icon1.addFile(":/images/16x16/actions/exec.png")
         self.menuButton.setIcon(icon1)
         self.menuButton.setObjectName("menuButton")
         self.gridlayout1.addWidget(self.menuButton, 0, 0, 1, 1)

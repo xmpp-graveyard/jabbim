@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'src/widgets/preferences.ui'
 #
-# Created: Mon Apr 19 12:37:56 2010
+# Created: Mon Apr 19 15:20:33 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -42,27 +42,27 @@ class Ui_preferences(object):
         self.listWidget.setViewMode(QtGui.QListView.ListMode)
         self.listWidget.setObjectName("listWidget")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("images/32x32/apps/jabbim.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/images/32x32/apps/jabbim.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item = QtGui.QListWidgetItem(self.listWidget)
         item.setIcon(icon1)
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("images/32x32/categories/applications-internet.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/images/32x32/categories/applications-internet.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item = QtGui.QListWidgetItem(self.listWidget)
         item.setIcon(icon2)
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("images/32x32/categories/conferences.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/images/32x32/categories/conferences.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item = QtGui.QListWidgetItem(self.listWidget)
         item.setIcon(icon3)
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("images/32x32/categories/v-card-32.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(":/images/32x32/categories/v-card-32.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item = QtGui.QListWidgetItem(self.listWidget)
         item.setIcon(icon4)
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap("images/32x32/categories/applications-graphics.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(":/images/32x32/categories/applications-graphics.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item = QtGui.QListWidgetItem(self.listWidget)
         item.setIcon(icon5)
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap("images/32x32/categories/applications-accessories.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap(":/images/32x32/categories/applications-accessories.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item = QtGui.QListWidgetItem(self.listWidget)
         item.setIcon(icon6)
         self.gridlayout.addWidget(self.listWidget, 0, 0, 3, 1)

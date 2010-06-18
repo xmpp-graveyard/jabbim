@@ -90,7 +90,7 @@
       </property>
       <property name="icon" >
        <iconset>
-        <normaloff>images/32x32/apps/jabbim.png</normaloff>images/32x32/apps/jabbim.png</iconset>
+        <normaloff>:/images/32x32/apps/jabbim.png</normaloff>:/images/32x32/apps/jabbim.png</iconset>
       </property>
      </item>
      <item>
@@ -99,7 +99,7 @@
       </property>
       <property name="icon" >
        <iconset>
-        <normaloff>images/32x32/categories/applications-internet.png</normaloff>images/32x32/categories/applications-internet.png</iconset>
+        <normaloff>:/images/32x32/categories/applications-internet.png</normaloff>:/images/32x32/categories/applications-internet.png</iconset>
       </property>
      </item>
      <item>
@@ -108,7 +108,7 @@
       </property>
       <property name="icon" >
        <iconset>
-        <normaloff>images/32x32/categories/conferences.png</normaloff>images/32x32/categories/conferences.png</iconset>
+        <normaloff>:/images/32x32/categories/conferences.png</normaloff>:/images/32x32/categories/conferences.png</iconset>
       </property>
      </item>
      <item>
@@ -117,7 +117,7 @@
       </property>
       <property name="icon" >
        <iconset>
-        <normaloff>images/32x32/categories/v-card-32.png</normaloff>images/32x32/categories/v-card-32.png</iconset>
+        <normaloff>:/images/32x32/categories/v-card-32.png</normaloff>:/images/32x32/categories/v-card-32.png</iconset>
       </property>
      </item>
      <item>
@@ -126,7 +126,7 @@
       </property>
       <property name="icon" >
        <iconset>
-        <normaloff>images/32x32/categories/applications-graphics.png</normaloff>images/32x32/categories/applications-graphics.png</iconset>
+        <normaloff>:/images/32x32/categories/applications-graphics.png</normaloff>:/images/32x32/categories/applications-graphics.png</iconset>
       </property>
      </item>
      <item>
@@ -135,7 +135,7 @@
       </property>
       <property name="icon" >
        <iconset>
-        <normaloff>images/32x32/categories/applications-accessories.png</normaloff>images/32x32/categories/applications-accessories.png</iconset>
+        <normaloff>:/images/32x32/categories/applications-accessories.png</normaloff>:/images/32x32/categories/applications-accessories.png</iconset>
       </property>
      </item>
     </widget>

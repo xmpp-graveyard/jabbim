@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'src/wizards/jsm.ui'
 #
-# Created: Mon Apr 19 12:38:02 2010
+# Created: Mon Apr 19 15:20:39 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!

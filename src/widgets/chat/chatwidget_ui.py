@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'src/widgets/chat/chatwidget.ui'
 #
-# Created: Mon Apr 19 12:37:53 2010
+# Created: Mon Apr 19 15:20:31 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -155,7 +155,7 @@ class Ui_chatwidget(object):
         self.hboxlayout1.addItem(spacerItem2)
         self.linkButton = QtGui.QToolButton(self.layoutWidget)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("images/16x16/actions/anchor.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/16x16/actions/anchor.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.linkButton.setIcon(icon)
         self.linkButton.setPopupMode(QtGui.QToolButton.InstantPopup)
         self.linkButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
@@ -164,7 +164,7 @@ class Ui_chatwidget(object):
         self.boldButton = QtGui.QToolButton(self.layoutWidget)
         self.boldButton.setFocusPolicy(QtCore.Qt.NoFocus)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("images/16x16/actions/format-text-bold.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/images/16x16/actions/format-text-bold.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.boldButton.setIcon(icon1)
         self.boldButton.setCheckable(True)
         self.boldButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
@@ -173,7 +173,7 @@ class Ui_chatwidget(object):
         self.italicButton = QtGui.QToolButton(self.layoutWidget)
         self.italicButton.setFocusPolicy(QtCore.Qt.NoFocus)
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("images/16x16/actions/format-text-italic.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/images/16x16/actions/format-text-italic.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.italicButton.setIcon(icon2)
         self.italicButton.setCheckable(True)
         self.italicButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
@@ -182,7 +182,7 @@ class Ui_chatwidget(object):
         self.underlineButton = QtGui.QToolButton(self.layoutWidget)
         self.underlineButton.setFocusPolicy(QtCore.Qt.NoFocus)
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("images/16x16/actions/format-text-underline.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/images/16x16/actions/format-text-underline.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.underlineButton.setIcon(icon3)
         self.underlineButton.setCheckable(True)
         self.underlineButton.setToolButtonStyle(QtCore.Qt.ToolButtonIconOnly)
@@ -208,7 +208,7 @@ class Ui_chatwidget(object):
         self.hboxlayout1.addWidget(self.line)
         self.smileys = QtGui.QToolButton(self.layoutWidget)
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("images/16x16/emotes/biggrin.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(":/images/16x16/emotes/biggrin.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.smileys.setIcon(icon4)
         self.smileys.setCheckable(True)
         self.smileys.setPopupMode(QtGui.QToolButton.InstantPopup)
@@ -216,7 +216,7 @@ class Ui_chatwidget(object):
         self.hboxlayout1.addWidget(self.smileys)
         self.sendButton = QtGui.QPushButton(self.layoutWidget)
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap("images/16x16/actions/send.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(":/images/16x16/actions/send.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.sendButton.setIcon(icon5)
         self.sendButton.setObjectName("sendButton")
         self.hboxlayout1.addWidget(self.sendButton)

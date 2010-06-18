@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'src/widgets/linkeditor.ui'
 #
-# Created: Mon Apr 19 12:37:54 2010
+# Created: Mon Apr 19 15:20:32 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,7 @@ class Ui_linkEditor(object):
         linkEditor.setObjectName("linkEditor")
         linkEditor.resize(429, 115)
         icon = QtGui.QIcon()
-        icon.addFile("images/16x16/apps/jabbim.png")
+        icon.addFile(":/images/16x16/apps/jabbim.png")
         linkEditor.setWindowIcon(icon)
         self.gridlayout = QtGui.QGridLayout(linkEditor)
         self.gridlayout.setMargin(9)

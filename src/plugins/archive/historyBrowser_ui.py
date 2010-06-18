@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'src/plugins/archive/historyBrowser.ui'
 #
-# Created: Mon Apr 19 12:37:51 2010
+# Created: Mon Apr 19 15:20:29 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!

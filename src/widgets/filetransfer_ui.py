@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'src/widgets/filetransfer.ui'
 #
-# Created: Mon Apr 19 12:37:58 2010
+# Created: Mon Apr 19 15:20:36 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,7 @@ class Ui_fileTransfer(object):
         fileTransfer.setObjectName("fileTransfer")
         fileTransfer.resize(470, 310)
         icon = QtGui.QIcon()
-        icon.addFile("images/16x16/apps/jabbim.png")
+        icon.addFile(":/images/16x16/apps/jabbim.png")
         fileTransfer.setWindowIcon(icon)
         self.gridlayout = QtGui.QGridLayout(fileTransfer)
         self.gridlayout.setMargin(9)

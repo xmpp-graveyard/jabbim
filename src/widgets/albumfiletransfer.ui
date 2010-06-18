@@ -14,7 +14,7 @@
   </property>
   <property name="windowIcon" >
    <iconset>
-    <normaloff>images/16x16/apps/jabbim.png</normaloff>images/16x16/apps/jabbim.png</iconset>
+    <normaloff>:/images/16x16/apps/jabbim.png</normaloff>:/images/16x16/apps/jabbim.png</iconset>
   </property>
   <layout class="QGridLayout" >
    <property name="margin" >

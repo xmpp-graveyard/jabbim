@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'src/widgets/statuseditor.ui'
 #
-# Created: Mon Apr 19 12:37:57 2010
+# Created: Mon Apr 19 15:20:35 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,7 @@ class Ui_statusEditor(object):
         statusEditor.setObjectName("statusEditor")
         statusEditor.resize(291, 300)
         icon = QtGui.QIcon()
-        icon.addFile("images/16x16/apps/jabbim.png")
+        icon.addFile(":/images/16x16/apps/jabbim.png")
         statusEditor.setWindowIcon(icon)
         self.gridlayout = QtGui.QGridLayout(statusEditor)
         self.gridlayout.setMargin(9)

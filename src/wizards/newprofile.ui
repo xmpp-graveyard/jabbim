@@ -103,7 +103,7 @@ p, li { white-space: pre-wrap; }
             </size>
            </property>
            <property name="pixmap" >
-            <pixmap>images/48x48/apps/jabbim.png</pixmap>
+            <pixmap>:/images/48x48/apps/jabbim.png</pixmap>
            </property>
            <property name="alignment" >
             <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -491,7 +491,7 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <property name="icon" >
                   <iconset>
-                   <normaloff>images/avatars/sunset.png</normaloff>images/avatars/sunset.png</iconset>
+                   <normaloff>:/images/avatars/sunset.png</normaloff>:/images/avatars/sunset.png</iconset>
                  </property>
                 </item>
                 <item>
@@ -500,7 +500,7 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <property name="icon" >
                   <iconset>
-                   <normaloff>images/avatars/ship.png</normaloff>images/avatars/ship.png</iconset>
+                   <normaloff>:/images/avatars/ship.png</normaloff>:/images/avatars/ship.png</iconset>
                  </property>
                 </item>
                 <item>
@@ -509,7 +509,7 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <property name="icon" >
                   <iconset>
-                   <normaloff>images/avatars/kitten.png</normaloff>images/avatars/kitten.png</iconset>
+                   <normaloff>:/images/avatars/kitten.png</normaloff>:/images/avatars/kitten.png</iconset>
                  </property>
                 </item>
                 <item>
@@ -518,7 +518,7 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <property name="icon" >
                   <iconset>
-                   <normaloff>images/avatars/dog.png</normaloff>images/avatars/dog.png</iconset>
+                   <normaloff>:/images/avatars/dog.png</normaloff>:/images/avatars/dog.png</iconset>
                  </property>
                 </item>
                 <item>
@@ -527,7 +527,7 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <property name="icon" >
                   <iconset>
-                   <normaloff>images/avatars/car.png</normaloff>images/avatars/car.png</iconset>
+                   <normaloff>:/images/avatars/car.png</normaloff>:/images/avatars/car.png</iconset>
                  </property>
                 </item>
                 <item>
@@ -536,7 +536,7 @@ p, li { white-space: pre-wrap; }
                  </property>
                  <property name="icon" >
                   <iconset>
-                   <normaloff>images/avatars/ball.png</normaloff>images/avatars/ball.png</iconset>
+                   <normaloff>:/images/avatars/ball.png</normaloff>:/images/avatars/ball.png</iconset>
                  </property>
                 </item>
                </widget>

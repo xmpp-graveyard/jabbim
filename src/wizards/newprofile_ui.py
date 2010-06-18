@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'src/wizards/newprofile.ui'
 #
-# Created: Mon Apr 19 12:38:02 2010
+# Created: Mon Apr 19 15:20:39 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -49,7 +49,7 @@ class Ui_newProfile(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.label_3 = QtGui.QLabel(self.page)
         self.label_3.setMaximumSize(QtCore.QSize(48, 1677))
-        self.label_3.setPixmap(QtGui.QPixmap("images/48x48/apps/jabbim.png"))
+        self.label_3.setPixmap(QtGui.QPixmap(":/images/48x48/apps/jabbim.png"))
         self.label_3.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.label_3.setObjectName("label_3")
         self.horizontalLayout.addWidget(self.label_3)
@@ -238,27 +238,27 @@ class Ui_newProfile(object):
         self.avatars.setWordWrap(True)
         self.avatars.setObjectName("avatars")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("images/avatars/sunset.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(":/images/avatars/sunset.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item = QtGui.QListWidgetItem(self.avatars)
         item.setIcon(icon)
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("images/avatars/ship.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap(":/images/avatars/ship.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item = QtGui.QListWidgetItem(self.avatars)
         item.setIcon(icon1)
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("images/avatars/kitten.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap(":/images/avatars/kitten.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item = QtGui.QListWidgetItem(self.avatars)
         item.setIcon(icon2)
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("images/avatars/dog.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap(":/images/avatars/dog.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item = QtGui.QListWidgetItem(self.avatars)
         item.setIcon(icon3)
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("images/avatars/car.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap(":/images/avatars/car.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item = QtGui.QListWidgetItem(self.avatars)
         item.setIcon(icon4)
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap("images/avatars/ball.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap(":/images/avatars/ball.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         item = QtGui.QListWidgetItem(self.avatars)
         item.setIcon(icon5)
         self.gridLayout_9.addWidget(self.avatars, 0, 1, 1, 3)

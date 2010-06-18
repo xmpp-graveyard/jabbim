@@ -13,7 +13,7 @@
    <string>Set status message</string>
   </property>
   <property name="windowIcon" >
-   <iconset>images/16x16/jgames.png</iconset>
+   <iconset>:/images/16x16/jgames.png</iconset>
   </property>
   <layout class="QGridLayout" >
    <property name="margin" >
@@ -44,7 +44,7 @@
       <string>Cancel</string>
      </property>
      <property name="icon" >
-      <iconset>images/16x16/actions/process-stop.png</iconset>
+      <iconset>:/images/16x16/actions/process-stop.png</iconset>
      </property>
     </widget>
    </item>
@@ -78,7 +78,7 @@
       <string>Save</string>
      </property>
      <property name="icon" >
-      <iconset>images/16x16/actions/ok.png</iconset>
+      <iconset>:/images/16x16/actions/ok.png</iconset>
      </property>
     </widget>
    </item>

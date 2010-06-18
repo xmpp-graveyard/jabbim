@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'src/widgets/chat/chat.ui'
 #
-# Created: Mon Apr 19 12:37:52 2010
+# Created: Mon Apr 19 15:20:30 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,7 @@ class Ui_chatWindow(object):
         chatWindow.setObjectName("chatWindow")
         chatWindow.resize(581, 562)
         icon = QtGui.QIcon()
-        icon.addFile("images/16x16/apps/jabbim.png")
+        icon.addFile(":/images/16x16/apps/jabbim.png")
         chatWindow.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(chatWindow)
         self.centralwidget.setObjectName("centralwidget")

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'src/widgets/statuswidget.ui'
 #
-# Created: Mon Apr 19 12:37:58 2010
+# Created: Mon Apr 19 15:20:36 2010
 #      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
@@ -14,7 +14,7 @@ class Ui_statusWidgetWindow(object):
         statusWidgetWindow.setObjectName("statusWidgetWindow")
         statusWidgetWindow.resize(299, 187)
         icon = QtGui.QIcon()
-        icon.addFile("images/16x16/jgames.png")
+        icon.addFile(":/images/16x16/jgames.png")
         statusWidgetWindow.setWindowIcon(icon)
         self.gridlayout = QtGui.QGridLayout(statusWidgetWindow)
         self.gridlayout.setMargin(9)
@@ -30,7 +30,7 @@ class Ui_statusWidgetWindow(object):
         self.gridlayout.addWidget(self.status, 1, 0, 1, 3)
         self.pushButton = QtGui.QPushButton(statusWidgetWindow)
         icon1 = QtGui.QIcon()
-        icon1.addFile("images/16x16/actions/process-stop.png")
+        icon1.addFile(":/images/16x16/actions/process-stop.png")
         self.pushButton.setIcon(icon1)
         self.pushButton.setObjectName("pushButton")
         self.gridlayout.addWidget(self.pushButton, 2, 0, 1, 1)
@@ -43,7 +43,7 @@ class Ui_statusWidgetWindow(object):
         sizePolicy.setHeightForWidth(self.set.sizePolicy().hasHeightForWidth())
         self.set.setSizePolicy(sizePolicy)
         icon2 = QtGui.QIcon()
-        icon2.addFile("images/16x16/actions/ok.png")
+        icon2.addFile(":/images/16x16/actions/ok.png")
         self.set.setIcon(icon2)
         self.set.setObjectName("set")
         self.gridlayout.addWidget(self.set, 2, 2, 1, 1)
