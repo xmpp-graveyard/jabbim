@@ -21,7 +21,7 @@ from os.path import basename
 from twisted.python import log
 from os.path import basename
 from widgets import vcardeditor
-from widgets import chatwidget
+from widgets.chat import chatwidget
 from twisted.internet import threads
 import base64
 import ftwidget

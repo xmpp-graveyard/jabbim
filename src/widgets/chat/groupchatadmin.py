@@ -21,7 +21,7 @@ from groupchatadmin_ui import *
 #import pyxl
 
 from twisted.python import log
-import dataforms
+from widgets import dataforms
 class groupchatAdminDialog(QtGui.QDialog):
 	def __init__(self,main,jid,form,parent=None,subject="", admin = False):
 		apply(QtGui.QDialog.__init__,(self,parent))

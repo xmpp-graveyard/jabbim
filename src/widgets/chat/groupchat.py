@@ -24,17 +24,17 @@ from configobj import ConfigObj
 import urllib,re,os
 from twisted.web.microdom import *
 from twisted.web.domhelpers import gatherTextNodes
-import dataforms
+from widgets import dataforms
 from twisted.words.protocols.jabber import jid as jidT
-import vcardeditor
+from widgets import vcardeditor
 from include import utils
 #import filetransfer
 from abstractchatwidget import abstractChatWidget
 from webkitchatwidget import webkitGroupChatWidget
-import addcontact
+from widgets import addcontact
 import pyxl
 import weakref
-from tooltip import ToolTip
+from widgets.tooltip import ToolTip
 from include.constants import RESOURCEPATH
 
 class groupChatWidget(abstractChatWidget):

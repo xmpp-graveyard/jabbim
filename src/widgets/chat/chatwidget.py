@@ -24,7 +24,7 @@ from configobj import ConfigObj
 import urllib,re,os
 from twisted.web.microdom import *
 from twisted.web.domhelpers import gatherTextNodes
-import filetransfer
+from widgets import filetransfer
 from pyxl import jid as jidT
 from pyxl.message import Message
 import time

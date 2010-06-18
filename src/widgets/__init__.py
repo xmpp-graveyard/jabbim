@@ -1,9 +1,9 @@
 import mainWindow
 import status
 import subscription
-import chatwindow
+
 import preferences
-import joingroupchat
+
 import filetransfer
 import albumfiletransfer
 import addcontact
@@ -11,7 +11,7 @@ import events
 import rosterLiveWidget
 import about
 import servicediscovery
-import mucbrowser
+import chat
 import show
 import privacy
 import commands

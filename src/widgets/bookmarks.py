@@ -1,7 +1,7 @@
 from PyQt4 import QtCore, QtGui
 import weakref
-import mucbrowser
-import joingroupchat
+from widgets.chat import mucbrowser
+from widgets.chat import joingroupchat
 import preferences
 from include.constants import RESOURCEPATH
 

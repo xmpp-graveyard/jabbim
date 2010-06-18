@@ -4,76 +4,23 @@ from configobj import ConfigObj
 import urllib,re,os
 from twisted.web.microdom import *
 from twisted.web.domhelpers import gatherTextNodes
-import filetransfer
+
+from widgets import filetransfer
 from pyxl import jid as jidT
 import time
 from include import utils
-from emoticonswidget import *
-from linkeditor import linkEditorDialog
+from widgets.emoticonswidget import *
+from widgets.linkeditor import linkEditorDialog
 import weakref
 from webkitchatwidget import searchWidget
-import paint
+from widgets import paint
 from pyxl.message import Message
+from include.constants import RESOURCEPATH
 try:
 	from hashlib import sha1
 except:
 	log.msg('Please upgrade to python2.5')
 	from sha import new as sha1
-	
-#class message(QtCore.QObject):
-	#def __init__(self,message):
-		#QtCore.QObject.__init__(self)
-		#self.message=[]
-		#self.messages=[]
-		#self.messageCache=[]
-		#self.ft={}
-		#self.scr=1
-		#self.setObjectName("messageObject")
-
-	#@QtCore.pyqtSignature("QString")
-	#def acceptFT(self,sid):
-		#self.ft[unicode(sid)].submitClicked()
-
-	#@QtCore.pyqtSignature("QString")
-	#def rejectFT(self,sid):
-		#self.ft[unicode(sid)].closeClicked()
-
-	#@QtCore.pyqtSignature("",result="int")
-	#def messageDirection(self):
-		#if len(self.messageCache)!=0:
-			#ret=self.messageCache[-1][0]
-			#return ret
-		#return -1
-
-	#@QtCore.pyqtSignature("",result="QString")
-	#def msg(self):
-		#if len(self.messageCache)!=0:
-			#ret=self.messageCache.pop()[1]
-			##print "RET",[ret]
-			#return ret
-		#return ""
-	
-	#@QtCore.pyqtSignature("int",result="QString")
-	#def msg_(self,i):
-		#return self.messages[i]
-	
-	#@QtCore.pyqtSignature("",result="int")
-	#def scroll(self):
-		#return self.scr
-
-	#@QtCore.pyqtSignature("")
-	#def ready(self):
-		##self.emit(QtCore.SIGNAL("ready()"))
-		##print "READY!"
-		##self.main.client.reactor.callLater(1,self.main.messageObjectReady)
-		##self.main.messageObjectReady()
-		#pass
-
-	#@QtCore.pyqtSignature("QString")
-	#def log(self,test):
-		##self.emit(QtCore.SIGNAL("ready()"))
-		#print test
-		##pass
 
 
 class normalLineEditWidget(QtGui.QTextEdit):
@@ -102,14 +49,6 @@ class normalLineEditWidget(QtGui.QTextEdit):
 			QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
 			#QtCore.QObject.connect(self,QtCore.SIGNAL("cursorPositionChanged ()"),self.setFormat)
 
-	#def event(self,ev):
-		#if ev.type()==QtCore.QEvent.Shortcut or ev.type()==QtCore.QEvent.ShortcutOverride:
-			#sequence=unicode(ev.key().toString()).lower()
-			#for shortcut in self.main().config['activeShortcuts']:
-				#print self.main().config[shortcut].lower(),sequence
-				#if self.main().config[shortcut].lower()==sequence:
-					#return False
-		#return QtGui.QTextEdit.event(self,ev)
 
 	def setFormat(self,fmt=None):
 		# detect format of current character
@@ -149,19 +88,7 @@ class normalLineEditWidget(QtGui.QTextEdit):
 				painter.end()
 				self.parent.ui.backgroundButton.setIcon(QtGui.QIcon(colorIcon))
 
-			#b=float(f.pointSize())
-			#if self.fontSize!=b:
-				#self.fontSize=b
-				#self.parent.ui.fontSize.setCurrentIndex(self.parent.ui.fontSize.findText(str(int(self.fontSize))))
 
-	#def focusInEvent(self,event):
-		#r=QtGui.QTextEdit.focusInEvent(self,event)
-		#self.blockSignals(True)
-		#if self.parent.xhtml:
-			#self.reformat(self.currentCharFormat())
-			##QtCore.QObject.connect(self,QtCore.SIGNAL("currentCharFormatChanged ( const QTextCharFormat & )"),self.formatChanged)
-		#self.blockSignals(False)
-		#return r
 
 	def formatChanged(self,format):
 		if format.isAnchor() or self.signalsBlocked():
@@ -1095,34 +1022,7 @@ class abstractChatWidget(QtGui.QWidget):
 		"""
 		self.webkitWrite(text,insert)
 		return 
-#		# update information about first message of this chat
-#		#if not history:
-#			#if self.first==True:
-#				#self.first=False
-#			#elif self.first==None:
-#				#self.first=True
-#		self.ui.textEdit.setUpdatesEnabled(False) # disable updates because of performance
-#		# move text cursor to the end of document
-#		cursor=QtGui.QTextCursor(self.ui.textEdit.document())
-#		cursor.beginEditBlock()
-#		cursor.movePosition(QtGui.QTextCursor.End)
-#
-#		# if scrollbar is in the end, we have to scroll it to the end as well when we finish
-#		toEnd=False
-#		if self.ui.textEdit.verticalScrollBar().value()==self.ui.textEdit.verticalScrollBar().maximum():
-#			toEnd=True
-#		# replace emoticons by images
-#		for k,v in self.main().emoticonsWidget.smileys.iteritems():
-#			text=text.replace(" "+k,'&nbsp;<img alt="'+k+'" src="'+v+'"/>')
-#			text=text.replace("&nbsp;"+k,'&nbsp;<img alt="'+k+'" src="'+v+'"/>')
-#			text=text.replace(">"+k,'><img alt="'+k+'" src="'+v+'"/>')
-#		# insert text to the self.ui.textEdit
-#		cursor.insertFragment(QtGui.QTextDocumentFragment.fromHtml(text))
-#		cursor.endEditBlock()
-#		if toEnd:
-#			# scroll to the end
-#			self.ui.textEdit.verticalScrollBar().setValue(self.ui.textEdit.verticalScrollBar().maximum())
-#		self.ui.textEdit.setUpdatesEnabled(True)
+
 
 	def addEmoticon(self,action):
 		"""

@@ -18,7 +18,7 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 from PyQt4 import QtCore, QtGui
-from groupchatadmin_ui import *
+from chat.groupchatadmin_ui import *
 #import pyxl
 
 from twisted.python import log

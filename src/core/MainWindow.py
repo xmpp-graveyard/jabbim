@@ -185,7 +185,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.ui.mdiWidget.hide()
 			self.ui.mdiWidget.setParent(None)
 			#self.setMaximumWidth(250)
-			self.chat=widgets.chatwindow.chatWindow(self,self) #: chat window
+			self.chat=widgets.chat.chatwindow.chatWindow(self,self) #: chat window
 
 		# variables
 		self.moodIcons={}
@@ -632,7 +632,7 @@ class mainWindow(QtGui.QMainWindow):
 				status = contact.status
 				if not status:
 					status = ""
-				text+='<img src="images/16x16/status/jabber-%s.png">' % contact.show
+				text+='<img src="'+RESOURCEPATH+'images/16x16/status/jabber-%s.png">' % contact.show
 				text+='<b>%s</b> '%unicode(self.status.get(contact.show, ''))
 				if len(status) != 0:
 					text+='<br /><font size="-1">%s</font>' % (status.replace('\n', '<br />'))
@@ -660,7 +660,7 @@ class mainWindow(QtGui.QMainWindow):
 				priority = ""
 			if n>0:
 				text+='<br />'
-			text+='<img src="images/16x16/status/jabber-%s.png">' % contact.resources[res].show # hodilo by se rozlisit k jakymu poatri transportu
+			text+='<img src="'+RESOURCEPATH+'images/16x16/status/jabber-%s.png">' % contact.resources[res].show # hodilo by se rozlisit k jakymu poatri transportu
 			text+='<b>%s</b> ' % unicode(self.status.get(contact.resources[res].show, ''))
 			if res != None:
 #							text+='<b>%s</b> %s<br>' % ( res, priority)
@@ -683,7 +683,7 @@ class mainWindow(QtGui.QMainWindow):
 					title = unicode(el)
 			t = '%s: %s'%(artist, title)
 			if len(t.strip())>1:
-				text+='<br /><img src="images/22x22/icons/headphones.png" /><font size="-1">%s</font>' % (t) #ikonka se este muze menit ;)
+				text+='<br /><img src="'+RESOURCEPATH+'images/22x22/icons/headphones.png" /><font size="-1">%s</font>' % (t) #ikonka se este muze menit ;)
 
 		mood = contact.getPEP('http://jabber.org/protocol/mood')
 		if mood != None:
