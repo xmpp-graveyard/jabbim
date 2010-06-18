@@ -4,7 +4,7 @@ Created on 16.4.2010
 @author: sef
 '''
 from PyQt4 import QtGui, QtCore
-import widgets.status
+import widgets.status_ui
 class customStatusWindow(QtGui.QDialog):
 	def __init__(self,jid,show=None,parent=None, main=None):
 		apply(QtGui.QDialog.__init__,(self,parent))
