@@ -294,7 +294,7 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('FTFinishedEvent',self.on_FTFinished)
 			self.loadConfig()
 			if self.config['sound_login']=="True":
-				self.main.playsound('start')
+				self.main.resourceManager.playsound('start')
 			self.osd=osd(self)
 			self.registerWidget(self.osd)
 			self.osd.osdx=int(self.config['osd_x'])
@@ -312,11 +312,11 @@ class Plugin(plugins.PluginBase):
 			
 	def on_FTStarted(self,sid,el):
 		if self.config['sound_ft']=='True':
-			self.main.playsound('ft_start')
+			self.main.resourceManager.playsound('ft_start')
 	
 	def on_FTFinished(self,sid,error):
 		if self.config['sound_ft']=='True':
-			self.main.playsound('ft_finish')
+			self.main.resourceManager.playsound('ft_finish')
 
 	def on_showPreferences(self,dialog):
 		if not self.snarl:
@@ -391,9 +391,9 @@ class Plugin(plugins.PluginBase):
 				self.osd.view(pixmap,user+unicode(self.tr(" is now "))+self.main.status[unicode(show)],unicode(status),self.addChatTab,[jid])
 		if self.config['sound_presence']=="True" and int(time.time())>self.main.connectStarted+30:
 			if show=="offline":
-				self.main.playsound("contact_offline")
+				self.main.resourceManager.playsound("contact_offline")
 			else:
-				self.main.playsound("contact_online")
+				self.main.resourceManager.playsound("contact_online")
 
 	def addChatTab(self,jid):
 		item=self.main.ui.roster.getUserItems(jid.userhost())
@@ -434,7 +434,7 @@ class Plugin(plugins.PluginBase):
 				# inform user about newly opened tab
 				self.osd.view(pixmap,unicode(self.tr("New message from "))+user,unicode(traytext),event)
 		if self.config['sound_first_message']=="True":
-			self.main.playsound('new_message')
+			self.main.resourceManager.playsound('new_message')
 		if self.config['tray_first_message']=='True':
 			self.main.tray.showMessage(unicode(self.tr("New message from "))+unicode(user), traytext, QtGui.QSystemTrayIcon.Information, 4000)
 
@@ -463,7 +463,7 @@ class Plugin(plugins.PluginBase):
 				# inform user about newly opened tab
 				self.osd.view(pixmap,unicode(self.tr("New message from "))+user,unicode(traytext),event)
 		if self.config['sound_message']=="True":
-			self.main.playsound('message')
+			self.main.resourceManager.playsound('message')
 	
 	def on_groupchatMessageEvent(self,frm,user,body,subject, xhtml):
 		if body == None or not self.isNotificationEnabled():
@@ -490,7 +490,7 @@ class Plugin(plugins.PluginBase):
 				# inform user about newly opened tab
 				self.osd.view(pixmap,unicode(self.tr("New message from "))+user,unicode(traytext), None)
 		#if self.config['sound_gc_message']=="True":
-			#self.main.playsound('message')
+			#self.main.resourceManager.playsound('message')
 	
 	def on_groupchatMessageForMeEvent(self,frm,user,body,subject, xhtml):
 		if not self.isNotificationEnabled():
@@ -515,4 +515,4 @@ class Plugin(plugins.PluginBase):
 				self.osd.view(pixmap,unicode(self.tr("New message from "))+user,unicode(traytext), None)
 
 		if self.config['sound_gc_message']=="True":
-			self.main.playsound('message')
+			self.main.resourceManager.playsound('message')
