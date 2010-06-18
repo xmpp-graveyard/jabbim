@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/joingroupchat.ui'
+# Form implementation generated from reading ui file 'src/widgets/chat/joingroupchat.ui'
 #
-# Created: Fri Jun  5 00:35:14 2009
-#      by: PyQt4 UI code generator 4.4.4
+# Created: Mon Apr 19 12:37:53 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -21,6 +21,7 @@ class Ui_joingroupchat(object):
         self.gridlayout.addItem(spacerItem, 3, 0, 1, 1)
         self.label = QtGui.QLabel(joingroupchat)
         self.label.setMaximumSize(QtCore.QSize(48, 48))
+        self.label.setText("")
         self.label.setPixmap(QtGui.QPixmap("images/48x48/categories/conferences.png"))
         self.label.setObjectName("label")
         self.gridlayout.addWidget(self.label, 0, 0, 1, 1)

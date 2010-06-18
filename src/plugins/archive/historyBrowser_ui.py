@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'plugins/archive/historyBrowser.ui'
+# Form implementation generated from reading ui file 'src/plugins/archive/historyBrowser.ui'
 #
-# Created: Sat Dec  6 08:24:04 2008
-#      by: PyQt4 UI code generator 4.4.3
+# Created: Mon Apr 19 12:37:51 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -71,9 +71,9 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(MainWindow.translate("MainWindow", "Archive browser", None, QtGui.QApplication.UnicodeUTF8))
-        self.today.setText(MainWindow.translate("MainWindow", "Today", None, QtGui.QApplication.UnicodeUTF8))
-        self.search.setText(MainWindow.translate("MainWindow", "Search", None, QtGui.QApplication.UnicodeUTF8))
-        self.pushButton.setText(MainWindow.translate("MainWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
+        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "Archive browser", None, QtGui.QApplication.UnicodeUTF8))
+        self.today.setText(QtGui.QApplication.translate("MainWindow", "Today", None, QtGui.QApplication.UnicodeUTF8))
+        self.search.setText(QtGui.QApplication.translate("MainWindow", "Search", None, QtGui.QApplication.UnicodeUTF8))
+        self.pushButton.setText(QtGui.QApplication.translate("MainWindow", "Close", None, QtGui.QApplication.UnicodeUTF8))
 
 from PyQt4 import QtWebKit

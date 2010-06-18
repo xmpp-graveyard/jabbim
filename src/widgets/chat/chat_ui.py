@@ -1,36 +1,33 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/chat.ui'
+# Form implementation generated from reading ui file 'src/widgets/chat/chat.ui'
 #
-# Created: Mon Nov 26 19:22:04 2007
-#      by: PyQt4 UI code generator 4.3
+# Created: Mon Apr 19 12:37:52 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
-from include.constants import RESOURCEPATH
 
 class Ui_chatWindow(object):
     def setupUi(self, chatWindow):
         chatWindow.setObjectName("chatWindow")
-        chatWindow.resize(QtCore.QSize(QtCore.QRect(0,0,581,562).size()).expandedTo(chatWindow.minimumSizeHint()))
-        chatWindow.setWindowIcon(QtGui.QIcon(RESOURCEPATH+"images/16x16/apps/jabbim.png"))
-
+        chatWindow.resize(581, 562)
+        icon = QtGui.QIcon()
+        icon.addFile("images/16x16/apps/jabbim.png")
+        chatWindow.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(chatWindow)
         self.centralwidget.setObjectName("centralwidget")
-
         self.gridlayout = QtGui.QGridLayout(self.centralwidget)
         self.gridlayout.setMargin(0)
         self.gridlayout.setSpacing(0)
         self.gridlayout.setObjectName("gridlayout")
-
         self.chatTab = QtGui.QTabWidget(self.centralwidget)
         self.chatTab.setObjectName("chatTab")
-
         self.tab = QtGui.QWidget()
         self.tab.setObjectName("tab")
-        self.chatTab.addTab(self.tab,"")
-        self.gridlayout.addWidget(self.chatTab,0,0,1,1)
+        self.chatTab.addTab(self.tab, "")
+        self.gridlayout.addWidget(self.chatTab, 0, 0, 1, 1)
         chatWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(chatWindow)

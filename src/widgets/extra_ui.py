@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/extra.ui'
+# Form implementation generated from reading ui file 'src/widgets/extra.ui'
 #
-# Created: Thu Oct  2 16:45:44 2008
-#      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
+# Created: Mon Apr 19 12:37:55 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -33,6 +33,7 @@ class Ui_Extra(object):
         self.listWidget.setObjectName("listWidget")
         self.gridlayout1.addWidget(self.listWidget, 0, 0, 2, 1)
         self.preview = QtGui.QLabel(self.page)
+        self.preview.setText("")
         self.preview.setObjectName("preview")
         self.gridlayout1.addWidget(self.preview, 1, 1, 1, 1)
         self.textBrowser = QtGui.QTextBrowser(self.page)

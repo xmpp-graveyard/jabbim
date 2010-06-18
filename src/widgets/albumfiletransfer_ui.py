@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'albumfiletransfer.ui'
+# Form implementation generated from reading ui file 'src/widgets/albumfiletransfer.ui'
 #
-# Created: Mon Jul 07 14:54:25 2008
-#      by: PyQt4 UI code generator 4.4.2
+# Created: Mon Apr 19 12:37:51 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -12,9 +12,9 @@ from PyQt4 import QtCore, QtGui
 class Ui_albumFiletransferDialog(object):
     def setupUi(self, albumFiletransferDialog):
         albumFiletransferDialog.setObjectName("albumFiletransferDialog")
-        albumFiletransferDialog.resize(476,451)
+        albumFiletransferDialog.resize(476, 451)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(RESOURCEPATH+"images/16x16/apps/jabbim.png"),QtGui.QIcon.Normal,QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("images/16x16/apps/jabbim.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         albumFiletransferDialog.setWindowIcon(icon)
         self.gridlayout = QtGui.QGridLayout(albumFiletransferDialog)
         self.gridlayout.setMargin(9)
@@ -32,7 +32,7 @@ class Ui_albumFiletransferDialog(object):
         self.label.setObjectName("label")
         self.vboxlayout.addWidget(self.label)
         self.files = QtGui.QListWidget(albumFiletransferDialog)
-        self.files.setMaximumSize(QtCore.QSize(160,16777215))
+        self.files.setMaximumSize(QtCore.QSize(160, 16777215))
         self.files.setObjectName("files")
         self.vboxlayout.addWidget(self.files)
         self.addFiles = QtGui.QPushButton(albumFiletransferDialog)
@@ -54,7 +54,7 @@ class Ui_albumFiletransferDialog(object):
         self.description.setObjectName("description")
         self.vboxlayout1.addWidget(self.description)
         self.hboxlayout.addLayout(self.vboxlayout1)
-        self.gridlayout.addLayout(self.hboxlayout,0,0,1,2)
+        self.gridlayout.addLayout(self.hboxlayout, 0, 0, 1, 2)
         self.hboxlayout1 = QtGui.QHBoxLayout()
         self.hboxlayout1.setSpacing(6)
         self.hboxlayout1.setMargin(0)
@@ -65,13 +65,13 @@ class Ui_albumFiletransferDialog(object):
         self.pushButton = QtGui.QPushButton(albumFiletransferDialog)
         self.pushButton.setObjectName("pushButton")
         self.hboxlayout1.addWidget(self.pushButton)
-        self.gridlayout.addLayout(self.hboxlayout1,1,1,1,1)
-        spacerItem = QtGui.QSpacerItem(211,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem,1,0,1,1)
+        self.gridlayout.addLayout(self.hboxlayout1, 1, 1, 1, 1)
+        spacerItem = QtGui.QSpacerItem(211, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem, 1, 0, 1, 1)
 
         self.retranslateUi(albumFiletransferDialog)
-        QtCore.QObject.connect(self.pushButton_2,QtCore.SIGNAL("clicked()"),albumFiletransferDialog.reject)
-        QtCore.QObject.connect(self.pushButton,QtCore.SIGNAL("clicked()"),albumFiletransferDialog.accept)
+        QtCore.QObject.connect(self.pushButton_2, QtCore.SIGNAL("clicked()"), albumFiletransferDialog.reject)
+        QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("clicked()"), albumFiletransferDialog.accept)
         QtCore.QMetaObject.connectSlotsByName(albumFiletransferDialog)
 
     def retranslateUi(self, albumFiletransferDialog):

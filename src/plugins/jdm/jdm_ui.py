@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'plugins/jdm/jdm.ui'
+# Form implementation generated from reading ui file 'src/plugins/jdm/jdm.ui'
 #
-# Created: Wed Aug 27 10:56:46 2008
-#      by: PyQt4 UI code generator 4.4.3
+# Created: Mon Apr 19 12:37:50 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -30,14 +30,15 @@ class Ui_MainWindow(object):
         self.showMiniRoster = QtGui.QPushButton(self.centralwidget)
         self.showMiniRoster.setMaximumSize(QtCore.QSize(30, 16777215))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("icons/view-refresh.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap("view-refresh.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.showMiniRoster.setIcon(icon)
         self.showMiniRoster.setObjectName("showMiniRoster")
         self.horizontalLayout_2.addWidget(self.showMiniRoster)
         self.buttonHome = QtGui.QPushButton(self.centralwidget)
         self.buttonHome.setMaximumSize(QtCore.QSize(30, 16777215))
+        self.buttonHome.setText("")
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("icons/home.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("home.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.buttonHome.setIcon(icon1)
         self.buttonHome.setObjectName("buttonHome")
         self.horizontalLayout_2.addWidget(self.buttonHome)
@@ -100,7 +101,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addItem(spacerItem3)
         self.buttonUpload = QtGui.QToolButton(self.centralwidget)
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("icons/upload.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("upload.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.buttonUpload.setIcon(icon2)
         self.buttonUpload.setIconSize(QtCore.QSize(32, 32))
         self.buttonUpload.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
@@ -109,7 +110,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.buttonUpload)
         self.buttonDownload = QtGui.QToolButton(self.centralwidget)
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("icons/document-save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap("document-save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.buttonDownload.setIcon(icon3)
         self.buttonDownload.setIconSize(QtCore.QSize(32, 32))
         self.buttonDownload.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
@@ -118,7 +119,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout.addWidget(self.buttonDownload)
         self.buttonDelete = QtGui.QToolButton(self.centralwidget)
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("icons/edit-delete.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap("edit-delete.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.buttonDelete.setIcon(icon4)
         self.buttonDelete.setIconSize(QtCore.QSize(32, 32))
         self.buttonDelete.setToolButtonStyle(QtCore.Qt.ToolButtonTextBesideIcon)
@@ -139,16 +140,16 @@ class Ui_MainWindow(object):
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(MainWindow.translate("MainWindow", "MainWindow", None, QtGui.QApplication.UnicodeUTF8))
-        self.label_description.setText(MainWindow.translate("MainWindow", "Enter JID of disk owner:", None, QtGui.QApplication.UnicodeUTF8))
-        self.desktop.setText(MainWindow.translate("MainWindow", "Desktop", None, QtGui.QApplication.UnicodeUTF8))
-        self.computer.setText(MainWindow.translate("MainWindow", "Computer", None, QtGui.QApplication.UnicodeUTF8))
-        self.publicButton.setText(MainWindow.translate("MainWindow", "Public", None, QtGui.QApplication.UnicodeUTF8))
-        self.privateButton.setText(MainWindow.translate("MainWindow", "Private", None, QtGui.QApplication.UnicodeUTF8))
-        self.album.setText(MainWindow.translate("MainWindow", "Album", None, QtGui.QApplication.UnicodeUTF8))
-        self.easyshare.setText(MainWindow.translate("MainWindow", "Easyshare", None, QtGui.QApplication.UnicodeUTF8))
-        self.right.headerItem().setText(0, MainWindow.translate("MainWindow", "Files", None, QtGui.QApplication.UnicodeUTF8))
-        self.buttonUpload.setText(MainWindow.translate("MainWindow", "Upload", None, QtGui.QApplication.UnicodeUTF8))
-        self.buttonDownload.setText(MainWindow.translate("MainWindow", "Download", None, QtGui.QApplication.UnicodeUTF8))
-        self.buttonDelete.setText(MainWindow.translate("MainWindow", "Delete", None, QtGui.QApplication.UnicodeUTF8))
+        MainWindow.setWindowTitle(QtGui.QApplication.translate("MainWindow", "MainWindow", None, QtGui.QApplication.UnicodeUTF8))
+        self.label_description.setText(QtGui.QApplication.translate("MainWindow", "Enter JID of disk owner:", None, QtGui.QApplication.UnicodeUTF8))
+        self.desktop.setText(QtGui.QApplication.translate("MainWindow", "Desktop", None, QtGui.QApplication.UnicodeUTF8))
+        self.computer.setText(QtGui.QApplication.translate("MainWindow", "Computer", None, QtGui.QApplication.UnicodeUTF8))
+        self.publicButton.setText(QtGui.QApplication.translate("MainWindow", "Public", None, QtGui.QApplication.UnicodeUTF8))
+        self.privateButton.setText(QtGui.QApplication.translate("MainWindow", "Private", None, QtGui.QApplication.UnicodeUTF8))
+        self.album.setText(QtGui.QApplication.translate("MainWindow", "Album", None, QtGui.QApplication.UnicodeUTF8))
+        self.easyshare.setText(QtGui.QApplication.translate("MainWindow", "Easyshare", None, QtGui.QApplication.UnicodeUTF8))
+        self.right.headerItem().setText(0, QtGui.QApplication.translate("MainWindow", "Files", None, QtGui.QApplication.UnicodeUTF8))
+        self.buttonUpload.setText(QtGui.QApplication.translate("MainWindow", "Upload", None, QtGui.QApplication.UnicodeUTF8))
+        self.buttonDownload.setText(QtGui.QApplication.translate("MainWindow", "Download", None, QtGui.QApplication.UnicodeUTF8))
+        self.buttonDelete.setText(QtGui.QApplication.translate("MainWindow", "Delete", None, QtGui.QApplication.UnicodeUTF8))
 

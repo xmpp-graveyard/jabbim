@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'groupchatwidget.ui'
+# Form implementation generated from reading ui file 'src/widgets/chat/groupchatwidget.ui'
 #
-# Created: Mon Apr 19 11:14:38 2010
-#      by: PyQt4 UI code generator 4.6
+# Created: Mon Apr 19 12:37:53 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -28,6 +28,7 @@ class Ui_groupchatwidget(object):
         self.vboxlayout.setSpacing(6)
         self.vboxlayout.setObjectName("vboxlayout")
         self.disco_info = QtGui.QLabel(self.layoutWidget)
+        self.disco_info.setText("")
         self.disco_info.setObjectName("disco_info")
         self.vboxlayout.addWidget(self.disco_info)
         self.info = QtGui.QTextBrowser(self.layoutWidget)
@@ -130,6 +131,7 @@ class Ui_groupchatwidget(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.selfAvatar.sizePolicy().hasHeightForWidth())
         self.selfAvatar.setSizePolicy(sizePolicy)
+        self.selfAvatar.setText("")
         self.selfAvatar.setObjectName("selfAvatar")
         self.gridlayout1.addWidget(self.selfAvatar, 0, 0, 1, 1)
         self.lineWidget = QtGui.QWidget(self.layoutWidget1)

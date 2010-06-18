@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/addcontact.ui'
+# Form implementation generated from reading ui file 'src/widgets/addcontact.ui'
 #
-# Created: Sun Jun  7 23:47:33 2009
-#      by: PyQt4 UI code generator 4.4.4
+# Created: Mon Apr 19 12:37:57 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -101,10 +101,11 @@ class Ui_addContact(object):
         self.add_group.setToolTip(QtGui.QApplication.translate("addContact", "Choose existing group or enter name for the new group", None, QtGui.QApplication.UnicodeUTF8))
         self.add_messageLabel.setText(QtGui.QApplication.translate("addContact", "Message:", None, QtGui.QApplication.UnicodeUTF8))
         self.add_message.setToolTip(QtGui.QApplication.translate("addContact", "Enter a short message that you want to send to the added contact.", None, QtGui.QApplication.UnicodeUTF8))
-        self.add_message.setHtml(QtGui.QApplication.translate("addContact", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+        self.add_message.setHtml(QtGui.QApplication.translate("addContact", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'DejaVu Sans\'; font-size:10pt; font-weight:400; font-style:normal; text-decoration:none;\">\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Sans Serif\'; font-size:9pt;\">Hi! I am adding you to my roster using the jabber client Jabbim! Please authorize me to see you when you are available. Thanks!</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
+"</style></head><body style=\" font-family:\'Sans Serif\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Hi! I am adding you to my roster using the jabber client Jabbim! Please authorize me to see you when you are available. Thanks!</p></body></html>", None, QtGui.QApplication.UnicodeUTF8))
         self.search.setText(QtGui.QApplication.translate("addContact", "Search", None, QtGui.QApplication.UnicodeUTF8))
         self.addContact_headerLabel.setText(QtGui.QApplication.translate("addContact", "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"

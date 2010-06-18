@@ -1,69 +1,65 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/status.ui'
+# Form implementation generated from reading ui file 'src/widgets/status.ui'
 #
-# Created: Thu Nov  1 09:13:45 2007
-#      by: PyQt4 UI code generator 4.3
+# Created: Mon Apr 19 12:37:56 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 
 from PyQt4 import QtCore, QtGui
-from include.constants import RESOURCEPATH
 
 class Ui_status(object):
     def setupUi(self, status):
         status.setObjectName("status")
-        status.resize(QtCore.QSize(QtCore.QRect(0,0,289,223).size()).expandedTo(status.minimumSizeHint()))
-        status.setWindowIcon(QtGui.QIcon(RESOURCEPATH+"images/16x16/jgames.png"))
-
+        status.resize(289, 223)
+        icon = QtGui.QIcon()
+        icon.addFile("images/16x16/jgames.png")
+        status.setWindowIcon(icon)
         self.gridlayout = QtGui.QGridLayout(status)
         self.gridlayout.setMargin(9)
         self.gridlayout.setSpacing(6)
         self.gridlayout.setObjectName("gridlayout")
-
-        spacerItem = QtGui.QSpacerItem(101,20,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem,2,0,1,2)
-
+        spacerItem = QtGui.QSpacerItem(101, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem, 2, 0, 1, 2)
         self.save = QtGui.QCheckBox(status)
         self.save.setObjectName("save")
-        self.gridlayout.addWidget(self.save,2,2,1,2)
-
+        self.gridlayout.addWidget(self.save, 2, 2, 1, 2)
         self.statusBox = QtGui.QComboBox(status)
         self.statusBox.setObjectName("statusBox")
-        self.gridlayout.addWidget(self.statusBox,0,0,1,4)
-
+        self.gridlayout.addWidget(self.statusBox, 0, 0, 1, 4)
         self.status = QtGui.QTextBrowser(status)
         self.status.setTabChangesFocus(True)
         self.status.setReadOnly(False)
         self.status.setObjectName("status")
-        self.gridlayout.addWidget(self.status,1,0,1,4)
-
+        self.gridlayout.addWidget(self.status, 1, 0, 1, 4)
         self.time = QtGui.QLabel(status)
+        self.time.setText("")
         self.time.setObjectName("time")
-        self.gridlayout.addWidget(self.time,3,0,1,4)
-
+        self.gridlayout.addWidget(self.time, 3, 0, 1, 4)
         self.set = QtGui.QPushButton(status)
-
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(1),QtGui.QSizePolicy.Policy(0))
+        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Policy(1), QtGui.QSizePolicy.Policy(0))
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.set.sizePolicy().hasHeightForWidth())
         self.set.setSizePolicy(sizePolicy)
-        self.set.setIcon(QtGui.QIcon(RESOURCEPATH+"images/16x16/actions/ok.png"))
+        icon1 = QtGui.QIcon()
+        icon1.addFile("images/16x16/actions/ok.png")
+        self.set.setIcon(icon1)
         self.set.setObjectName("set")
-        self.gridlayout.addWidget(self.set,4,3,1,1)
-
+        self.gridlayout.addWidget(self.set, 4, 3, 1, 1)
         self.pushButton = QtGui.QPushButton(status)
-        self.pushButton.setIcon(QtGui.QIcon(RESOURCEPATH+"images/16x16/actions/process-stop.png"))
+        icon2 = QtGui.QIcon()
+        icon2.addFile("images/16x16/actions/process-stop.png")
+        self.pushButton.setIcon(icon2)
         self.pushButton.setObjectName("pushButton")
-        self.gridlayout.addWidget(self.pushButton,4,0,1,1)
-
-        spacerItem1 = QtGui.QSpacerItem(91,27,QtGui.QSizePolicy.Expanding,QtGui.QSizePolicy.Minimum)
-        self.gridlayout.addItem(spacerItem1,4,1,1,2)
+        self.gridlayout.addWidget(self.pushButton, 4, 0, 1, 1)
+        spacerItem1 = QtGui.QSpacerItem(91, 27, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
+        self.gridlayout.addItem(spacerItem1, 4, 1, 1, 2)
 
         self.retranslateUi(status)
-        QtCore.QObject.connect(self.set,QtCore.SIGNAL("clicked()"),status.accept)
-        QtCore.QObject.connect(self.pushButton,QtCore.SIGNAL("clicked()"),status.reject)
+        QtCore.QObject.connect(self.set, QtCore.SIGNAL("clicked()"), status.accept)
+        QtCore.QObject.connect(self.pushButton, QtCore.SIGNAL("clicked()"), status.reject)
         QtCore.QMetaObject.connectSlotsByName(status)
 
     def retranslateUi(self, status):

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/addcontactng.ui'
+# Form implementation generated from reading ui file 'src/widgets/addcontactng.ui'
 #
-# Created: Sat Nov  1 19:40:51 2008
-#      by: PyQt4 UI code generator 4.4.3-snapshot-20080611
+# Created: Mon Apr 19 12:37:54 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 

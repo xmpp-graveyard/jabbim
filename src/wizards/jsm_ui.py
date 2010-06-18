@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'wizards/jsm.ui'
+# Form implementation generated from reading ui file 'src/wizards/jsm.ui'
 #
-# Created: Sun Dec 14 12:41:31 2008
-#      by: PyQt4 UI code generator 4.4.3
+# Created: Mon Apr 19 12:38:02 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 

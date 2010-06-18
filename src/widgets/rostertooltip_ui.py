@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'rostertooltip.ui'
+# Form implementation generated from reading ui file 'src/widgets/rostertooltip.ui'
 #
-# Created: Thu Jun  4 14:31:53 2009
-#      by: PyQt4 UI code generator 4.4.4
+# Created: Mon Apr 19 12:37:57 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -38,14 +38,17 @@ class Ui_RosterToolTip(object):
         self.hboxlayout.addWidget(self.vcard)
         self.activity = QtGui.QLabel(RosterToolTip)
         self.activity.setMaximumSize(QtCore.QSize(18, 18))
+        self.activity.setText("")
         self.activity.setObjectName("activity")
         self.hboxlayout.addWidget(self.activity)
         self.mood = QtGui.QLabel(RosterToolTip)
         self.mood.setMaximumSize(QtCore.QSize(18, 18))
+        self.mood.setText("")
         self.mood.setObjectName("mood")
         self.hboxlayout.addWidget(self.mood)
         self.tune = QtGui.QLabel(RosterToolTip)
         self.tune.setMaximumSize(QtCore.QSize(18, 18))
+        self.tune.setText("")
         self.tune.setObjectName("tune")
         self.hboxlayout.addWidget(self.tune)
         self.vboxlayout.addLayout(self.hboxlayout)

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'plugins/gpg/gpg_dialog.ui'
+# Form implementation generated from reading ui file 'src/plugins/gpg/gpg_dialog.ui'
 #
-# Created: Fri Mar  6 14:29:00 2009
-#      by: PyQt4 UI code generator 4.4.4
+# Created: Mon Apr 19 12:37:51 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -20,6 +20,7 @@ class Ui_Dialog(object):
         self.buttonBox.setObjectName("buttonBox")
         self.key_id = QtGui.QLineEdit(Dialog)
         self.key_id.setGeometry(QtCore.QRect(150, 10, 161, 29))
+        self.key_id.setText("")
         self.key_id.setObjectName("key_id")
         self.label = QtGui.QLabel(Dialog)
         self.label.setGeometry(QtCore.QRect(20, 10, 126, 29))
@@ -31,6 +32,6 @@ class Ui_Dialog(object):
         QtCore.QMetaObject.connectSlotsByName(Dialog)
 
     def retranslateUi(self, Dialog):
-        Dialog.setWindowTitle(Dialog.translate("Dialog", "Dialog", None, QtGui.QApplication.UnicodeUTF8))
-        self.label.setText(Dialog.translate("Dialog", "GPG key ID (long):", None, QtGui.QApplication.UnicodeUTF8))
+        Dialog.setWindowTitle(QtGui.QApplication.translate("Dialog", "Dialog", None, QtGui.QApplication.UnicodeUTF8))
+        self.label.setText(QtGui.QApplication.translate("Dialog", "GPG key ID (long):", None, QtGui.QApplication.UnicodeUTF8))
 

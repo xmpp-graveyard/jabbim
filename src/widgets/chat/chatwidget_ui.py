@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/chatwidget.ui'
+# Form implementation generated from reading ui file 'src/widgets/chat/chatwidget.ui'
 #
-# Created: Fri Jan 16 22:49:29 2009
-#      by: PyQt4 UI code generator 4.4.3
+# Created: Mon Apr 19 12:37:53 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -24,6 +24,7 @@ class Ui_chatwidget(object):
         self.horizontalLayout_3.setMargin(0)
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
         self.avatar = QtGui.QLabel(self.widget)
+        self.avatar.setText("")
         self.avatar.setAlignment(QtCore.Qt.AlignCenter)
         self.avatar.setObjectName("avatar")
         self.horizontalLayout_3.addWidget(self.avatar)
@@ -38,6 +39,7 @@ class Ui_chatwidget(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.chatstate.sizePolicy().hasHeightForWidth())
         self.chatstate.setSizePolicy(sizePolicy)
+        self.chatstate.setText("")
         self.chatstate.setAlignment(QtCore.Qt.AlignCenter)
         self.chatstate.setObjectName("chatstate")
         self.horizontalLayout.addWidget(self.chatstate)
@@ -137,6 +139,7 @@ class Ui_chatwidget(object):
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.selfAvatar.sizePolicy().hasHeightForWidth())
         self.selfAvatar.setSizePolicy(sizePolicy)
+        self.selfAvatar.setText("")
         self.selfAvatar.setObjectName("selfAvatar")
         self.hboxlayout.addWidget(self.selfAvatar)
         self.lineWidget = QtGui.QWidget(self.layoutWidget)

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'paint.ui'
+# Form implementation generated from reading ui file 'src/widgets/paint.ui'
 #
-# Created: Sun Dec 21 19:51:57 2008
-#      by: PyQt4 UI code generator 4.4.3
+# Created: Mon Apr 19 12:37:56 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 

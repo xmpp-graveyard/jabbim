@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'plugins/jdm/jdw.ui'
+# Form implementation generated from reading ui file 'src/plugins/jdm/jdw.ui'
 #
-# Created: Thu Aug 27 01:08:34 2009
-#      by: PyQt4 UI code generator 4.4.4
+# Created: Mon Apr 19 12:37:50 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -132,6 +132,7 @@ class Ui_JDW(object):
         self.rightLayout.setObjectName("rightLayout")
         self.image = QtGui.QLabel(self.page)
         self.image.setMinimumSize(QtCore.QSize(128, 0))
+        self.image.setText("")
         self.image.setAlignment(QtCore.Qt.AlignCenter)
         self.image.setWordWrap(True)
         self.image.setObjectName("image")
@@ -159,6 +160,7 @@ class Ui_JDW(object):
         sizePolicy.setHeightForWidth(self.download.sizePolicy().hasHeightForWidth())
         self.download.setSizePolicy(sizePolicy)
         self.download.setSizeIncrement(QtCore.QSize(2, 0))
+        self.download.setText("")
         icon4 = QtGui.QIcon()
         icon4.addPixmap(QtGui.QPixmap("document-save.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.download.setIcon(icon4)
@@ -173,6 +175,7 @@ class Ui_JDW(object):
         sizePolicy.setHeightForWidth(self.upload.sizePolicy().hasHeightForWidth())
         self.upload.setSizePolicy(sizePolicy)
         self.upload.setSizeIncrement(QtCore.QSize(2, 0))
+        self.upload.setText("")
         icon5 = QtGui.QIcon()
         icon5.addPixmap(QtGui.QPixmap("upload.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.upload.setIcon(icon5)
@@ -187,6 +190,7 @@ class Ui_JDW(object):
         sizePolicy.setHeightForWidth(self.remove.sizePolicy().hasHeightForWidth())
         self.remove.setSizePolicy(sizePolicy)
         self.remove.setSizeIncrement(QtCore.QSize(2, 0))
+        self.remove.setText("")
         icon6 = QtGui.QIcon()
         icon6.addPixmap(QtGui.QPixmap("edit-delete.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.remove.setIcon(icon6)
@@ -197,6 +201,7 @@ class Ui_JDW(object):
         self.rightLayout.addLayout(self.horizontalLayout)
         self.description = QtGui.QLabel(self.page)
         self.description.setMaximumSize(QtCore.QSize(155, 180))
+        self.description.setText("")
         self.description.setTextFormat(QtCore.Qt.PlainText)
         self.description.setWordWrap(True)
         self.description.setTextInteractionFlags(QtCore.Qt.LinksAccessibleByMouse|QtCore.Qt.TextSelectableByMouse)

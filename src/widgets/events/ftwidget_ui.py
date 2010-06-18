@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'widgets/events/ftwidget.ui'
+# Form implementation generated from reading ui file 'src/widgets/events/ftwidget.ui'
 #
-# Created: Fri Dec 12 16:11:58 2008
-#      by: PyQt4 UI code generator 4.4.3
+# Created: Mon Apr 19 12:38:00 2010
+#      by: PyQt4 UI code generator 4.7.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -23,6 +23,7 @@ class Ui_FTWidget(object):
         self.gridLayout.addWidget(self.jid, 1, 0, 1, 4)
         self.closeButton = QtGui.QPushButton(FTWidget)
         self.closeButton.setMaximumSize(QtCore.QSize(20, 16777215))
+        self.closeButton.setText("")
         self.closeButton.setObjectName("closeButton")
         self.gridLayout.addWidget(self.closeButton, 0, 3, 1, 1)
         self.transferInfo = QtGui.QLabel(FTWidget)
@@ -30,7 +31,7 @@ class Ui_FTWidget(object):
         self.transferInfo.setObjectName("transferInfo")
         self.gridLayout.addWidget(self.transferInfo, 2, 0, 1, 4)
         self.progressBar = QtGui.QProgressBar(FTWidget)
-        self.progressBar.setProperty("value", QtCore.QVariant(0))
+        self.progressBar.setProperty("value", 0)
         self.progressBar.setObjectName("progressBar")
         self.gridLayout.addWidget(self.progressBar, 3, 0, 1, 4)
         spacerItem = QtGui.QSpacerItem(40, 20, QtGui.QSizePolicy.Expanding, QtGui.QSizePolicy.Minimum)
