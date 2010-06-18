@@ -218,7 +218,7 @@ class Plugin(plugins.PluginBase):
 		if main:
 			self.loadConfig()
 			self.loadHistory()
-			self.window = self.loadWindow("%s/devconsole.ui.py" % self.pluginDir)
+			self.window = self.loadWindow("%s/devconsole_ui.py" % self.pluginDir)
 			self.window.setWindowIcon(self.main.windowIcon())
 			self.window.ui.tabWidget.setTabIcon(0,QtGui.QIcon("%s/xml.png" % self.pluginDir))
 			self.window.ui.tabWidget.setTabIcon(1,QtGui.QIcon("%s/python.png" % self.pluginDir))
