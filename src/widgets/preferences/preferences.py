@@ -243,15 +243,15 @@ class preferencesWindow(QtGui.QDialog):
 		self.plugins={}
 		self.showedPlugins={}
 		self.ui.plugins.clear()
-		self.main.findPlugins()
-		plugins=self.main.plugins.keys()
+		self.main.pluginManager.findPlugins()
+		plugins=self.main.pluginManager.plugins.keys()
 		
 		categories={}
 		for category,translation in self.globalCategories.iteritems():
 			categories[category]=QtGui.QTreeWidgetItem(self.ui.plugins)
 			categories[category].setText(0,translation)
 		for plugin in plugins:
-			dir = self.main.plugins[plugin]['dir']
+			dir = self.main.pluginManager.plugins[plugin]['dir']
 			path = '%s/%s.py' % (dir, plugin)
 			try: 
 				f=open(path)
@@ -343,10 +343,10 @@ class preferencesWindow(QtGui.QDialog):
 			plugin.config[key]=value
 			print key,"=",unicode(value)
 		plugin.writeConfig()
-		if self.main.plugins.has_key(name):
-			if self.main.plugins[name]['module']:
-				self.main.plugins[name]['module'].config=self.plugins[name].config
-				self.main.plugins[name]['module'].on_configChanged()
+		if self.main.pluginManager.plugins.has_key(name):
+			if self.main.pluginManager.plugins[name]['module']:
+				self.main.pluginManager.plugins[name]['module'].config=self.plugins[name].config
+				self.main.pluginManager.plugins[name]['module'].on_configChanged()
 
 	def pluginConfigurationClicked(self):
 		item=self.ui.plugins.currentItem()
@@ -355,10 +355,10 @@ class preferencesWindow(QtGui.QDialog):
 		plugin=self.plugins[name]
 		dialog=pluginConfiguration(self.plugins[name],self.ui.plugins)
 		dialog.exec_()
-		if self.main.plugins.has_key(name):
-			if self.main.plugins[name]['module']:
-				self.main.plugins[name]['module'].config=self.plugins[name].config
-				self.main.plugins[name]['module'].on_configChanged()
+		if self.main.pluginManager.plugins.has_key(name):
+			if self.main.pluginManager.plugins[name]['module']:
+				self.main.pluginManager.plugins[name]['module'].config=self.plugins[name].config
+				self.main.pluginManager.plugins[name]['module'].on_configChanged()
 
 	def pluginsContextMenuTriggered(self,action):
 		cmd=action.objectName()
@@ -368,10 +368,10 @@ class preferencesWindow(QtGui.QDialog):
 			plugin=self.plugins[name]
 			dialog=pluginConfiguration(self.plugins[name],self.ui.plugins)
 			dialog.exec_()
-		if self.main.plugins.has_key(name):
-			if self.main.plugins[name]['module']:
-				self.main.plugins[name]['module'].config=self.plugins[name].config
-				self.main.plugins[name]['module'].on_configChanged()
+		if self.main.pluginManager.plugins.has_key(name):
+			if self.main.pluginManager.plugins[name]['module']:
+				self.main.pluginManager.plugins[name]['module'].config=self.plugins[name].config
+				self.main.pluginManager.plugins[name]['module'].on_configChanged()
 
 	def themePackageCleared(self):
 		self.ui.themePackage.page().mainFrame().addToJavaScriptWindowObject("webkitObject",self.webkitObject)
@@ -459,13 +459,13 @@ class preferencesWindow(QtGui.QDialog):
 				#widget=self.ui.plugins.itemWidget(item,0)
 				if item.checkState(0)==QtCore.Qt.Checked and not plugin in self.loadedPlugins:
 					if self.main.client:
-						self.main.loadPlugin(plugin)
+						self.main.pluginManager.loadPlugin(plugin)
 					self.main.config['plugins'].append(plugin)
 					self.loadedPlugins=self.main.config['plugins']
 					load=True
 				elif item.checkState(0)==QtCore.Qt.Unchecked and plugin in self.loadedPlugins:
 					if self.main.client:
-						self.main.unloadPlugin(plugin)
+						self.main.pluginManager.unloadPlugin(plugin)
 					self.main.config['plugins'].remove(plugin)
 					load=True
 		self.main.config.write()
