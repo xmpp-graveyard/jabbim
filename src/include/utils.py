@@ -30,6 +30,7 @@ from cStringIO import StringIO
 #from urllib import urlopen
 
 from PyQt4 import QtCore, QtGui
+from include.constants import RESOURCEPATH
 	
 def extractZip( filename, dir ):
 	zf = zipfile.ZipFile( filename )
@@ -263,13 +264,13 @@ def loadConfig(main,status):
 			main.config[k] = v
 			rewrite = True
 	# emoticon test
-	loaded,cf=main.loadJabbimExtraConfig("emoticons/"+main.config['emoticons'],main.realHomeDir+"/emoticons/"+main.config['emoticons'])
+	loaded,cf=main.resourceManager.loadJabbimExtraConfig(RESOURCEPATH+"emoticons/"+main.config['emoticons'],main.realHomeDir+"/emoticons/"+main.config['emoticons'])
 	if loaded==None and not cf:
 		main.config['emoticons']="default/smileys.cfg"
 		rewrite=True
 
 	# chatskin test
-	loaded,cf=main.loadJabbimExtraConfig("chatskins/"+main.config['chatSkin'],main.realHomeDir+"/chatskins/"+main.config['chatSkin'])
+	loaded,cf=main.resourceManager.loadJabbimExtraConfig(RESOURCEPATH+"chatskins/"+main.config['chatSkin'],main.realHomeDir+"/chatskins/"+main.config['chatSkin'])
 	if loaded==None and not cf:
 		main.config['chatSkin']="cool/cool.cfg"
 		rewrite=True
@@ -879,7 +880,6 @@ def loadTranslator(path_prefix):
 	for lang in preferred_langs:
 		filename = path_prefix + lang + ".qm"
 		if translator.load(filename):
-			print "loaded locales from", filename
 			break
 		print "failed to load locales from ", filename
 	return translator

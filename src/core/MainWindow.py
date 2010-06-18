@@ -36,7 +36,7 @@ from imp import load_source
 from urllib import quote, unquote
 from os.path import basename,dirname, isfile
 from hashlib import sha1
-from core import PluginManager
+from core import PluginManager, ResourceManager
 from include.enumerators import Enums
 
 class mainWindow(QtGui.QMainWindow):
@@ -70,6 +70,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.autoAdd={}
 		self.version = '0.6 SVN' + utils.getSvnVersion() #: version string
 		self.pluginManager = PluginManager.PluginManager(self)
+		self.resourceManager = ResourceManager.ResourceManager(self)
 		#self.setWindowOpacity (0.5)
 		self.imageId=0
 		self.isJabbimUser=False
@@ -102,9 +103,9 @@ class mainWindow(QtGui.QMainWindow):
 			self.homeDir=self.realHomeDir+"/"+self.config['jid']+"-profile"
 			utils.loadConfig(self,[])
 
-		self.loadThemePackage()
+		self.resourceManager.loadThemePackage()
 		self.loadRoster() # load roster widget
-		self.loadRosterStyle()
+		self.resourceManager.loadRosterStyle()
 		QtCore.QObject.connect(self.ui.rosterSearch, QtCore.SIGNAL(" textEdited ( const QString & )"),self.ui.roster.search)
 		QtCore.QObject.connect(self.ui.rosterSearchClose, QtCore.SIGNAL("clicked()"),self.ui.roster.search)
 
@@ -209,6 +210,7 @@ class mainWindow(QtGui.QMainWindow):
 		#: {show:translated_text}
 		self.status=self.enums.GetStatus()
 		#mood:translation
+		#TODO: presunout do resourceManageru
 		self.moods = self.enums.GetMoods()
 		self.moodActions = {}
 		self.activities = self.enums.GetActivities()
@@ -253,11 +255,11 @@ class mainWindow(QtGui.QMainWindow):
 		# set up stacked widget (0==login,1==roster, 2==events and etc..)
 		self.ui.rosterStackedWidget.setCurrentIndex(0)
 
-		self.loadSkin() # load chat skin
-		self.loadSounds() # load chat skin
-		self.loadTheme() # load theme
-		self.loadMoods() # load user moods icon
-		self.loadActivities() # load user moods icon
+		self.resourceManager.loadSkin() # load chat skin
+		self.resourceManager.loadSounds() # load chat skin
+		self.resourceManager.loadTheme() # load theme
+		self.resourceManager.loadMoods() # load user moods icon
+		self.resourceManager.loadActivities() # load user moods icon
 		self.ui.roster.reskin() # reskin roster
 		self.selfResources=[] #: Resources which are connected from the same JID as user
 		self.buildOfflineMenu() # build menu with 'show offline', 'show away'
@@ -2122,64 +2124,7 @@ class mainWindow(QtGui.QMainWindow):
 				else:
 					self.hide()
 
-	def loadTheme(self,text=None,file=None):
-		"""
-		Loads theme. If text==None, self.config['theme'] is used. Otherwise is stylesheet sets to `text`.
-		@type text: unicode
-		@param text: stylesheet css
-		"""
-		self.setStyleSheet("") # windows hack
 
-		if self.config['theme']=="None" and not text:
-			# theme isn't used
-			text=""
-			self.ui.roster.theme=False
-			self.app.setStyle(self.qtStylesDefault)
-		else:
-			self.ui.roster.theme=True
-		if text==None:
-			# open theme according to self.config
-			try:
-				conf=ConfigObj(RESOURCEPATH+"themes/"+self.config['theme']+"/theme.ini",encoding='UTF8')
-				style=False
-				if conf!=None and len(conf)!=0:
-					if conf.has_key('style'):
-						if conf['style'] in self.qtStyles:
-							self.app.setStyle(QtGui.QStyleFactory.create(conf['style']))
-							style=True
-				if not style:
-
-					self.app.setStyle(self.qtStylesDefault)
-				theme=open(RESOURCEPATH+"themes/"+self.config['theme']+"/style.css")
-				text=theme.read()
-				self.setStyleSheet(text)
-				self.chat.setStyleSheet(text)
-				theme.close()
-			except IOError:
-				# theme isn't used
-				text=""
-				self.ui.roster.theme=False
-				self.app.setStyle(self.qtStylesDefault)
-		else:
-			# use text for stylesheet css
-			if file:
-				conf=ConfigObj(RESOURCEPATH+"themes/"+file+"/theme.ini",encoding='UTF8')
-				style=False
-				if conf!=None and len(conf)!=0:
-					if conf.has_key('style'):
-						if conf['style'] in self.qtStyles:
-							self.app.setStyle(QtGui.QStyleFactory.create(conf['style']))
-							style=True
-				if not style:
-
-					self.app.setStyle(self.qtStylesDefault)
-			self.setStyleSheet(text)
-			self.chat.setStyleSheet(text)
-			if text:
-				if len(text)==0:
-					self.ui.roster.theme=False
-		self.styleSheetText=text
-		self.ui.roster.reskin(text) # reskin roster
 
 	def addContactMainWindow(self,jid=""):
 		"""
@@ -2246,197 +2191,7 @@ class mainWindow(QtGui.QMainWindow):
 		if viewTab:
 			self.preferencesWindow.ui.tabWidget.setCurrentIndex(viewTab)
 
-	def isValidExtraPart(self,config):
-		if not config.has_key('header'):
-			#log.err("error, config doesn't have 'header' section")
-			return False
-		if not config['header'].has_key('type'):
-			#log.err("error, config doesn't have 'type' key in 'header' section")
-			##############################################################
-			# We're tolerant for RPC emoticons, so I have to enable them #
-			##############################################################
-			typ='emoticons' # will be commented
-			#return False # will be uncommented
-		else: # will be commented
-			typ=unicode(config['header']['type']) # will be commented
-		keys=['name','license','author','version','description']
-		if typ=="moodIcons":
-			keys.append('frontImage')
-			if not config.has_key('moods'):
-				#log.err("error, config doesn't have 'moods' section")
-				return False
-		elif typ=="emoticons":
-			keys.append('frontImage')
-			##############################################################
-			# We're tolerant for RPC emoticons, so I have to enable them #
-			##############################################################
-			keys=[] # will be commented
-			if not config.has_key('emoticons'):
-				#log.err("error, config doesn't have 'emoticons' section")
-				return False
-		elif typ=='chatskin':
-			if not config.has_key('chatskin'):
-				#log.err("error, config doesn't have 'chatskin' section")
-				return False
-		for key in keys:
-			if not config['header'].has_key(key):
-				#log.err("error, config doesn't have '"+key+"' key in 'header' section")
-				return False
-		return True
-
-	def loadJabbimExtraConfig(self,config,fallback):
-		#log.err('loading JabbimExtra config '+ unicode(config))
-		# try to load config
-		try:
-			config=ConfigObj(config,encoding='UTF8')
-			loaded=True
-		except:
-			loaded=False
-		# check config validity
-		if loaded:
-			loaded=self.isValidExtraPart(config)
-		# config is valid
-		if loaded:
-			return True,config
-		else:
-			# try to load fallback config
-			try:
-				config=ConfigObj(fallback,encoding='UTF8')
-				loaded=True
-			except:
-				loaded=False
-			# check config validity
-			if loaded:
-				loaded=self.isValidExtraPart(config)
-			if loaded:
-				return False,config
-			else:
-				return None,None
-
-	def loadMoods(self):
-		"""
-		Loads user mood icons
-		"""
-		loaded,config=self.loadJabbimExtraConfig(RESOURCEPATH+'moods/'+self.config['moods'],'moods/default/default.cfg')
-		if loaded!=None:
-			if loaded:
-				src=dirname(RESOURCEPATH+"moods/"+self.config["moods"])+"/"
-			else:
-				src=dirname(RESOURCEPATH+"moods/default/")
-			self.ui.moodButton.setIcon(QtGui.QIcon(src+config['header']['frontImage']))
-			self.moodIcons=config['moods']
-			for mood in self.moodIcons.keys():
-				path=unicode(src+self.moodIcons[mood])
-				self.moodIcons[mood]=QtGui.QIcon(path)
-				self.moodIcons[mood].src=unicode(os.getcwd(), sys.getfilesystemencoding())+"/"+path
-			self.moodIcons["none"]=QtGui.QIcon(self.moodIcons[mood].pixmap(16,16,QtGui.QIcon.Disabled))
-
-	def loadActivities(self):
-		"""
-		Loads user mood icons
-		"""
-		loaded,config=self.loadJabbimExtraConfig(RESOURCEPATH+'activities/'+self.config['activities'],'activities/default/default.cfg')
-		#print "ACTIVITIES",loaded,config
-		if loaded!=None:
-			if loaded:
-				src=dirname(RESOURCEPATH+"activities/"+self.config["activities"])+"/"
-			else:
-				src=dirname(RESOURCEPATH+"activities/default/")
-			#self.ui.moodButton.setIcon(QtGui.QIcon(src+config['header']['frontImage']))
-			self.activityIcons=config['activities']
-			for mood in self.activityIcons.keys():
-				path=unicode(src+self.activityIcons[mood])
-				self.activityIcons[mood]=QtGui.QIcon(path)
-				self.activityIcons[mood].src=unicode(os.getcwd(), sys.getfilesystemencoding())+"/"+path
-			self.activityIcons["none"]=QtGui.QIcon(self.activityIcons[mood].pixmap(16,16,QtGui.QIcon.Disabled))
-		#print "ACTIVITIES",self.activityIcons
-
-	def loadSounds(self):
-		src=dirname(RESOURCEPATH +"sounds/"+self.config["soundPack"])
-		self.sounds=ConfigObj(RESOURCEPATH+"sounds/"+self.config["soundPack"],encoding='UTF8')
-		if len(self.sounds)==0:
-			self.sounds=ConfigObj(self.realHomeDir+"/sounds/"+self.config["soundPack"],encoding='UTF8')
-			src=dirname(self.realHomeDir+"/sounds/"+self.config["soundPack"])
-		src+="/"
-		self.sounds=self.sounds['sounds']
-		for sound in self.sounds.keys():
-			self.sounds[sound]=src+self.sounds[sound]
-
-	def playsound(self,sound):
-		if self.sounds.has_key(sound):
-			if sys.platform == 'linux2': # linux sounds are produced using aplay
-				os.system('aplay -q "'+self.sounds[sound].strip('\n')+'" &')
-			else:
-				QtGui.QSound.play(self.sounds[sound].strip('\n'))
-			return True
-		return False
-
-	def loadThemePackage(self):
-		self.themePackage = None
-		if len(self.config['themePackage'])==0:
-			self.config['themePackage']="default/default.cfg"
-			self.config.write()
-		theme = RESOURCEPATH+"themepackages/" + unicode(self.config['themePackage'])
-		if not isfile(theme):
-			theme = self.realHomeDir + "/themepackages/" + unicode(self.config['themePackage'])
-			if not isfile(theme):
-				theme=RESOURCEPATH+"themepackages/default/default.cfg"
-		
-		self.themePackage = ConfigObj(theme,encoding='UTF8')
-		if len(self.themePackage)!=0:
-			for key in ["chatTheme","groupchatTheme","soundPack","mood","emoticons","activities","rosterStyle","theme"]:
-				if self.themePackage.has_key(key):
-					if len(self.themePackage[key]["value"])!=0:
-						if len(self.config[key])==0:
-							self.config[key] = self.themePackage[key]["value"]
-		
-		
-
-	def loadRosterStyle(self):
-		self.rosterStyle=None
-		if self.config['rosterStyle']==None or len(self.config['rosterStyle'])==0:
-			self.config['rosterStyle']="ng/config.cfg"
-			self.config.write()
-		path=RESOURCEPATH+"rosterstyles/"+unicode(self.config['rosterStyle'].split("/")[0])+"/style.py"
-		if not isfile(path):
-			path=self.realHomeDir+"/rosterstyles/"+unicode(self.config['rosterStyle'].split("/")[0])+"/style.py"
-			if not isfile(path):
-				path=RESOURCEPATH+"rosterstyles/ng/style.py"
-
-
-		variant=self.realHomeDir+"/rosterstyles/"+unicode(self.config['rosterStyle'])
-		if not isfile(variant):
-			variant=RESOURCEPATH+"rosterstyles/"+unicode(self.config['rosterStyle'])
-			if not isfile(variant):
-				variant=RESOURCEPATH+"rosterstyles/ng/config.cfg"
-
-		try:
-			f=open(unicode(path))
-		except:
-			return
-		try:
-			#plug =  # load plugin module
-			module = load_source('rosterStyle', path, f)
-			f.close()
-			self.ui.roster.setRosterStyle(module.rosterStyle,variant)
-		except Exception, ex:
-					#log.msg(unicode(plugin)+u': '+unicode(ex))
-					traceback.print_exc()
-					f.close()
-					pass
-
-	def loadSkin(self):
-		"""
-		Loads chat skin. Skin is loaded to self.skin.
-		"""
-		#loaded,self.skin=self.loadJabbimExtraConfig("chatskins/"+self.config['chatSkin'],"chatskins/cool/cool.cfg")
-		self.skin={}
-		#if not self.skin.has_key("spaces_between_lines"):
-		#	self.skin["spaces_between_lines"]='0'
-		self.webkitThemeFactory=widgets.webkitthemes.webkitThemeFactory(self.config['chatTheme'],self.config['groupchatTheme'],self.realHomeDir)
-		for i in range(self.chat.ui.chatTab.count()):
-			w=self.chat.ui.chatTab.widget(i)
-			w.chat.loadWebkit()
+	
 
 	def hideOffline(self,bool):
 		"""

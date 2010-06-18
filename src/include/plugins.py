@@ -155,7 +155,7 @@ class PluginBase(object):
 	
 	def unregisterWidget(self,widget):
 		if widget in self._loadedWidgets:
-			print "unload widget"
+			
 			if widget.parent():
 				if widget.parent().layout():
 					widget.parent().layout().removeWidget(widget)
