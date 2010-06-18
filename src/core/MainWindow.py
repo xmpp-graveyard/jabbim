@@ -1931,7 +1931,7 @@ class mainWindow(QtGui.QMainWindow):
 		Shows About Jabbim dialog.
 		"""
 		if not self.aboutDialog:
-			self.aboutDialog = aboutDialog(self)
+			self.aboutDialog = aboutDialog.aboutDialog(self)
 		self.aboutDialog.show()
 
 	def support(self, bool):
