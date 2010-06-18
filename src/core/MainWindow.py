@@ -175,7 +175,7 @@ class mainWindow(QtGui.QMainWindow):
 			self.workspace=QtGui.QWorkspace(self.ui.mdiWidget)
 			layout=QtGui.QHBoxLayout(self.ui.mdiWidget)
 			layout.addWidget(self.workspace)
-			self.chat=widgets.chatwindow.chatWindow(self.workspace,self)
+			self.chat=widgets.chat.chatwindow.chatWindow(self.workspace,self)
 			self.workspace.addWindow(self.chat)
 			self.chat.showMaximized() #: chat window
 		else:
@@ -2167,7 +2167,7 @@ class mainWindow(QtGui.QMainWindow):
 		Called when user activate Join Groupchat QAction from main menu.
 		"""
 		#self.mucBrowser(bool)
-		self.joingroupchatwizard=widgets.joingroupchat.joinGroupChatWindow(self,parent=self)
+		self.joingroupchatwizard=widgets.chat.joingroupchat.joinGroupChatWindow(self,parent=self)
 		self.joingroupchatwizard.show()
 
 	def profilesClicked(self,bool):

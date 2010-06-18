@@ -1,6 +1,7 @@
-#Sat Apr 17 11:47:01 CEST 2010
+#Sat Apr 17 12:30:29 CEST 2010
 eclipse.preferences.version=1
 encoding//src/jabbim.py=utf-8
+encoding//src/plugins/jdm/jdm.py=utf-8
 encoding//src/pyxl/message.py=utf-8
 encoding//src/widgets/about.py=utf-8
 encoding//src/widgets/addcontactng.py=utf-8

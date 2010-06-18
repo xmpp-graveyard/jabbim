@@ -47,9 +47,6 @@ class Groupchat:
 	def _roleFail(self,el,data=None):
 		print "role fail"
 
-	def _roleResult(self,  el):
-		print 'role change successful'
-
 	def _roleResult(self,  err,  nick):
 		try:
 			el = err.value.getElement()
