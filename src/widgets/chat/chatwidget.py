@@ -326,52 +326,6 @@ class ElidedLabel(QtGui.QLabel):
 			QtGui.QLabel.setText(self,line)
 			self.setToolTip(QtCore.QString())
 
-#void KSqueezedTextLabel::setAlignment( Qt::Alignment alignment )
-#{
-  #// save fullText and restore it
-  #QString tmpFull(d->fullText);
-  #QLabel::setAlignment(alignment);
-  #d->fullText = tmpFull;
-#}
-
-#Qt::TextElideMode KSqueezedTextLabel::textElideMode() const
-#{
-  #return d->elideMode;
-#}
-
-#void KSqueezedTextLabel::setTextElideMode(Qt::TextElideMode mode)
-#{
-  #d->elideMode = mode;
-  #squeezeTextToLabel();
-#}
-
-#void KSqueezedTextLabel::contextMenuEvent(QContextMenuEvent* ev)
-#{
-    #// We want to reimplement "Copy" to include the elided text.
-    #// But this means reimplementing the full popup menu, so no more
-    #// copy-link-address or copy-selection support anymore, since we
-    #// have no access to the QTextDocument.
-    #// Maybe we should have a boolean flag in KSqueezedTextLabel itself for
-    #// whether to show the "Copy Full Text" custom popup?
-    #// For now I chose to show it when the text is squeezed; when it's not, the
-    #// standard popup menu can do the job (select all, copy).
-
-    #const bool squeezed = text() != d->fullText;
-    #const bool showCustomPopup = squeezed;
-    #if (showCustomPopup) {
-        #QMenu menu(this);
-
-        #KAction* act = new KAction(i18n("&Copy Full Text"), this);
-        #connect(act, SIGNAL(triggered()), this, SLOT(_k_copyFullText()));
-        #menu.addAction(act);
-
-        #ev->accept();
-        #menu.exec(ev->globalPos());
-    #} else {
-        #QLabel::contextMenuEvent(ev);
-    #}
-#}
-
 
 class chatWidget(abstractChatWidget):
 	def __init__(self,main,jid,parent=None,name=""):
