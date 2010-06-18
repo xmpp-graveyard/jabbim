@@ -1,10 +1,11 @@
-#Sat Apr 17 10:42:57 CEST 2010
+#Sat Apr 17 11:19:22 CEST 2010
 eclipse.preferences.version=1
 encoding//src/jabbim.py=utf-8
 encoding//src/widgets/about.py=utf-8
 encoding//src/widgets/addcontactng.py=utf-8
 encoding//src/widgets/albumfiletransfer_ui.py=utf-8
 encoding//src/widgets/chat/chatwidget.py=utf-8
+encoding//src/widgets/chat/chatwindow.py=utf-8
 encoding//src/widgets/chat/groupchat.py=utf-8
 encoding//src/widgets/mainWindow.py=utf-8
 encoding//src/widgets/rosterLiveWidget.py=utf-8

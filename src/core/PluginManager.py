@@ -136,7 +136,10 @@ class PluginManager(object):
 		for key,value in self.plugins.iteritems():
 			if value['module']:
 				self.runPluginCommand(value['module'].buildGroupchatWidget,[jid, layout, groupchat])
-	
+	def buildChatWidget(self, jid, layout, chat):
+		for key,value in self.plugins.iteritems():
+			if value['module']:
+				self.runPluginCommand(value['module'].buildChatWidget,[jid, layout,chat])	
 	def on_groupchatMessageSend(self, jid, text, xhtml, state):
 		ret = []
 		for key,value in self.plugins.iteritems():

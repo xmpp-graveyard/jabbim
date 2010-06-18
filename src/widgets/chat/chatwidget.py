@@ -29,10 +29,11 @@ from pyxl import jid as jidT
 from pyxl.message import Message
 import time
 from include import utils
-from abstractchatwidget import abstractChatWidget
+from widgets.chat.abstractchatwidget import abstractChatWidget
 from webkitchatwidget import webkitChatWidget
 import sys
 import weakref
+from include.constants import RESOURCEPATH
 
 class FTAskWidget(QtGui.QWidget):
 	def __init__(self,file,event,chatwidget,parent=None):
@@ -425,9 +426,7 @@ class chatWidget(abstractChatWidget):
 
 		# plugins buttons
 		#self.flowLayout = QtGui.QHBoxLayout()
-		for key,value in self.main().plugins.iteritems():
-			if value['module']:
-				self.main().runPluginCommand(value['module'].buildChatWidget,[unicode(self.jid),self.ui.verticalLayout,self])
+		self.main().pluginManager.buildChatWidget(unicode(self.jid),self.ui.verticalLayout,self)
 		#self.flowLayout.addStretch()
 		hasFeature=False
 		self.ui.metaLabel.hide()
