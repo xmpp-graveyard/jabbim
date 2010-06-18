@@ -846,9 +846,7 @@ class clientClass(pyxl.client.Client):
 		self.main.ui.rosterStackedWidget.setCurrentIndex(1)
 		self.main.ui.splashImage.hide()
 		self.main.ui.menuPlugins.clear() # clear plugins menu
-		for plug in self.main.plugins.itervalues():
-			if plug['module']:
-				self.main.runPluginCommand(plug['module'].buildMainWindowMenu,[])
+		self.main.pluginManager.buildMainWindowMenu()
 		# autoconnect
 		self.reactor.callLater(2,self.autoJoin)
 

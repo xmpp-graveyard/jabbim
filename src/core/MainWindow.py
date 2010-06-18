@@ -18,7 +18,7 @@ from twisted.python import log
 from configobj import ConfigObj, ConfigObjError
 import sys
 from pyxl import storage
-from genericpath import isfile
+
 from twisted.web.microdom import parseString, Element
 import random
 import traceback
@@ -36,6 +36,8 @@ from imp import load_source
 from urllib import quote, unquote
 from os.path import basename,dirname, isfile
 from hashlib import sha1
+from core import PluginManager
+from include.enumerators import Enums
 
 class mainWindow(QtGui.QMainWindow):
 	def __init__(self,parent=None, app = None):
@@ -43,12 +45,8 @@ class mainWindow(QtGui.QMainWindow):
 
 		self.ui=widgets.mainWindow.Ui_MainWindow()
 		self.ui.setupUi(self)
-#		self.ui.Form.setWidget(self.ui.scrollAreaWidgetContents)
-#		self.ui.Form.setWidgetResizable(True)
+
 		self.setObjectName("Jabbim class")
-		#self.setWindowFlags(QtCore.Qt.Tool)#|QtCore.Qt.FramelessWindowHint)
-		#self.ui.toggleInvisible.hide()
-		#self.ui.statusButton.hide()
 		self.qtStyles=map(unicode,list(QtGui.QStyleFactory.keys()))
 		self.qtStylesDefault=app.style()
 		app.main=self
@@ -63,7 +61,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.selfAvatar=None #: current avatar (QPixmap or None)
 		self.selfStatus="" #: current show (string according to self.shows)
 		self.log=None
-		self.plugins = {}
+
 		self.config=None #: config dict (loaded by configObj)
 		self.cache=None
 		self.connectStarted=0
@@ -71,6 +69,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.snarlMessages={}
 		self.autoAdd={}
 		self.version = '0.6 SVN' + utils.getSvnVersion() #: version string
+		self.pluginManager = PluginManager.PluginManager(self)
 		#self.setWindowOpacity (0.5)
 		self.imageId=0
 		self.isJabbimUser=False
@@ -117,8 +116,6 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.tabWidgetButton.setCheckable(True)
 		#self.ui.tabWidgetButton.setMinimumSize(QtCore.QSize(29,29))
 		QtCore.QObject.connect(self.ui.tabWidgetButton, QtCore.SIGNAL("toggled(bool)"), self.showTransportsWidget)
-		#self.ui.tabWidgetButton.setPopupMode(QtGui.QToolButton.InstantPopup)
-		#self.ui.tabWidgetButton.setArrowType(QtCore.Qt.NoArrow)
 		self.ui.mainTabWidget.setCornerWidget(self.ui.tabWidgetButton)
 		self.ui.tabWidgetButton.hide()
 
@@ -204,178 +201,20 @@ class mainWindow(QtGui.QMainWindow):
 		self.transports={}
 		self.setupShortcuts()
 		self.delayedMessages = None
+		self.enums = Enums(self)
 		#: {show:ID}
-		self.shows={u"online":u"1",
-					u"available":u"1",
-					u"chat":u"0",
-					u"away":u"3",
-					u"xa":u"4",
-					u"dnd":u"5",
-					u"None":u"1",
-					u"":u"1",
-					u"offline":u"9",
-					u"unavailable":u"9"
-					}
+		self.shows=self.enums.GetShows()
 		#: {ID:icon_text}
-		self.icons={u"1":u"online",
-					u"0":u"chat",
-					u"3":u"away",
-					u"4":u"xa",
-					u"5":u"dnd",
-					u"9":u"offline"
-					}
+		self.icons=self.enums.GetIcons()
 		#: {show:translated_text}
-		self.status={"online":self.tr("Online"),
-					"available":self.tr("Online"),
-					"chat":self.tr("Chatty"),
-					"away":self.tr("Away"),
-					"xa":self.tr("Extended away"),
-					"dnd":self.tr("DND"),
-					"None":self.tr("Online"),
-					"offline":self.tr("Offline"),
-					"invisible":self.tr("Invisible")
-					}
+		self.status=self.enums.GetStatus()
 		#mood:translation
-		self.moods = {
-					"none":self.tr("None"),
-					"afraid":self.tr("afraid"),
-					"amazed":self.tr("amazed"),
-					"angry":self.tr("angry"),
-					"annoyed":self.tr("annoyed"),
-					"anxious":self.tr("anxious"),
-					"aroused":self.tr("aroused"),
-					"ashamed":self.tr("ashamed"),
-					"bored":self.tr("bored"),
-					"brave":self.tr("brave"),
-					"calm":self.tr("calm"),
-					"cold":self.tr("cold"),
-					"confused":self.tr("confused"),
-					"contented":self.tr("contented"),
-					"cranky":self.tr("cranky"),
-					"curious":self.tr("curious"),
-					"depressed":self.tr("depressed"),
-					"disappointed":self.tr("disappointed"),
-					"disgusted":self.tr("disgusted"),
-					"distracted":self.tr("distracted"),
-					"embarrassed":self.tr("embarrassed"),
-					"excited":self.tr("excited"),
-					"flirtatious":self.tr("flirtatious"),
-					"frustrated":self.tr("frustrated"),
-					"grumpy":self.tr("grumpy"),
-					"guilty":self.tr("guilty"),
-					"happy":self.tr("happy"),
-					"hot":self.tr("hot"),
-					"humbled":self.tr("humbled"),
-					"humiliated":self.tr("humiliated"),
-					"hungry":self.tr("hungry"),
-					"hurt":self.tr("hurt"),
-					"impressed":self.tr("impressed"),
-					"in_awe":self.tr("in_awe"),
-					"in_love":self.tr("in_love"),
-					"indignant":self.tr("indignant"),
-					"interested":self.tr("interested"),
-					"intoxicated":self.tr("intoxicated"),
-					"invincible":self.tr("invincible"),
-					"jealous":self.tr("jealous"),
-					"lonely":self.tr("lonely"),
-					"mean":self.tr("mean"),
-					"moody":self.tr("moody"),
-					"nervous":self.tr("nervous"),
-					"neutral":self.tr("neutral"),
-					"offended":self.tr("offended"),
-					"playful":self.tr("playful"),
-					"proud":self.tr("proud"),
-					"relieved":self.tr("relieved"),
-					"remorseful":self.tr("remorseful"),
-					"restless":self.tr("restless"),
-					"sad":self.tr("sad"),
-					"sarcastic":self.tr("sarcastic"),
-					"serious":self.tr("serious"),
-					"shocked":self.tr("shocked"),
-					"shy":self.tr("shy"),
-					"sick":self.tr("sick"),
-					"sleepy":self.tr("sleepy"),
-					"stressed":self.tr("stressed"),
-					"surprised":self.tr("surprised"),
-					"thirsty":self.tr("thirsty"),
-					"worried":self.tr("worried")
-		}
+		self.moods = self.enums.GetMoods()
 		self.moodActions = {}
-		self.activities = {
-					"none":self.tr("None"),
-					"buying_groceries":self.tr("buying_groceries"),
-					"cleaning":self.tr("cleaning"),
-					"cooking":self.tr("cooking"),
-					"doing_maintenance":self.tr("doing_maintenance"),
-					"doing_the_dishes":self.tr("doing_the_dishes"),
-					"doing_the_laundry":self.tr("doing_the_laundry"),
-					"gardening":self.tr("gardening"),
-					"running_an_errand":self.tr("running_an_errand"),
-					"walking_the_dog":self.tr("walking_the_dog"),
-					"having_a_beer":self.tr("having_a_beer"),
-					"having_coffee":self.tr("having_coffee"),
-					"having_tea":self.tr("having_tea"),
-					"having_a_snack":self.tr("having_a_snack"),
-					"having_breakfast":self.tr("having_breakfast"),
-					"having_dinner":self.tr("having_dinner"),
-					"having_lunch":self.tr("having_lunch"),
-					"cycling":self.tr("cycling"),
-					"hiking":self.tr("hiking"),
-					"jogging":self.tr("jogging"),
-					"playing_sports":self.tr("playing_sports"),
-					"running":self.tr("running"),
-					"skiing":self.tr("skiing"),
-					"swimming":self.tr("swimming"),
-					"working_out":self.tr("working_out"),
-					"at_the_spa":self.tr("at_the_spa"),
-					"brushing_teeth":self.tr("brushing_teeth"),
-					"getting_a_haircut":self.tr("getting_a_haircut"),
-					"shaving":self.tr("shaving"),
-					"taking_a_bath":self.tr("taking_a_bath"),
-					"taking_a_shower":self.tr("taking_a_shower"),
-					"day_off":self.tr("day_off"),
-					"hanging_out":self.tr("hanging_out"),
-					"on_vacation":self.tr("on_vacation"),
-					"scheduled_holiday":self.tr("scheduled_holiday"),
-					"sleeping":self.tr("sleeping"),
-					"gaming":self.tr("gaming"),
-					"going_out":self.tr("going_out"),
-					"partying":self.tr("partying"),
-					"reading":self.tr("reading"),
-					"rehearsing":self.tr("rehearsing"),
-					"shopping":self.tr("shopping"),
-					"socializing":self.tr("socializing"),
-					"sunbathing":self.tr("sunbathing"),
-					"watching_tv":self.tr("watching_tv"),
-					"watching_a_movie":self.tr("watching_a_movie"),
-					"in_real_life":self.tr("in_real_life"),
-					"on_the_phone":self.tr("on_the_phone"),
-					"on_video_phone":self.tr("on_video_phone"),
-					"commuting":self.tr("commuting"),
-					"cycling":self.tr("cycling"),
-					"driving":self.tr("driving"),
-					"in_a_car":self.tr("in_a_car"),
-					"on_a_bus":self.tr("on_a_bus"),
-					"on_a_plane":self.tr("on_a_plane"),
-					"on_a_train":self.tr("on_a_train"),
-					"on_a_trip":self.tr("on_a_trip"),
-					"walking":self.tr("walking"),
-					"coding":self.tr("coding"),
-					"in_a_meeting":self.tr("in_a_meeting"),
-					"studying":self.tr("studying"),
-					"writing":self.tr("writing")}
+		self.activities = self.enums.GetActivities()
 
-		self.activityGroups = {"doing_chores":[self.tr("doing_chores"),"buying_groceries","cleaning","cooking","doing_maintenance","doing_the_dishes","doing_the_laundry","gardening","running_an_errand","walking_the_dog"],
-					"drinking":[self.tr("drinking"),"having_a_beer","having_coffee","having_tea"],
-					"eating":[self.tr("eating"),"having_a_snack","having_breakfast","having_dinner","having_lunch"],
-					"exercising":[self.tr("exercising"),"cycling","hiking","jogging","playing_sports","running","skiing","swimming","working_out"],
-					"grooming":[self.tr("grooming"),"at_the_spa","brushing_teeth","getting_a_haircut","shaving","taking_a_bath","taking_a_shower"],
-					# no substate... we don't allow it<= "having_appointment":self.tr("having_appointment"),
-					"inactive":[self.tr("inactive"),"day_off","hanging_out","on_vacation","scheduled_holiday","sleeping"],
-					"relaxing":[self.tr("relaxing"),"gaming","going_out","partying","reading","rehearsing","shopping","socializing","sunbathing","watching_tv","watching_a_movie"],
-					"talking":[self.tr("talking"),"in_real_life","on_the_phone","on_video_phone"],
-					"traveling":[self.tr("traveling"),"commuting","cycling","driving","in_a_car","on_a_bus","on_a_plane","on_a_train","on_a_trip","walking"],
-					"working":[self.tr("working"),"coding","in_a_meeting","studying","writing"]}
+		self.activityGroups = self.enums.GetActivityGroups() 
+
 
 		self.offline=False
 		#self.ui.showOffline.hide()
@@ -432,10 +271,7 @@ class mainWindow(QtGui.QMainWindow):
 
 		# show tray icon
 		self.tray=QtGui.QSystemTrayIcon(QtGui.QIcon(QtGui.QIcon(RESOURCEPATH+"images/16x16/apps/jabbim.png").pixmap(16,16,QtGui.QIcon.Disabled)))
-		#def _event(ev):
-			#print ev.type()
-			#return QtGui.QSystemTrayIcon.event(self.tray,ev)
-		#self.tray.event=_event
+
 
 		self.app.connect(self.tray,QtCore.SIGNAL("activated (QSystemTrayIcon::ActivationReason)"),self.trayActivated)
 		self.tray.show()
@@ -504,10 +340,6 @@ class mainWindow(QtGui.QMainWindow):
 
 		self.emoticonsWidget=widgets.emoticonswidget.emoticonsWidget(self,self)
 
-		#if self.config['rosterMode'] == "compact":
-		#	self.ui.roster.setRosterStyle(widgets.compactrosterstyle.rosterStyle)
-		#else:
-#			self.ui.roster.setRosterStyle(widgets.defaultrosterstyle.rosterStyle)
 		self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
 		QtCore.QObject.disconnect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
 
@@ -590,9 +422,6 @@ class mainWindow(QtGui.QMainWindow):
 		dialog = QtGui.QFileDialog()
 		dialog.setResolveSymlinks(True)
 		dialog.setDirectory(self.config['lastUploadDir'])
-		#dialog.setFileMode(QtGui.QFileDialog.ExistingFiles|QtGui.QFileDialog.Directory)
-		#dialog.exec_()
-		#file=dialog.selectedFiles()
 		file=dialog.getOpenFileNames(self,self.tr("Choose files"), self.config['lastUploadDir'])
 		file=list(file)
 		#get last dir from result
@@ -1043,32 +872,7 @@ class mainWindow(QtGui.QMainWindow):
 			# send presence
 			self.client.sendPresence(to=jid,show = unicode(show), status = unicode(message),priority=pri)
 
-	def runPluginCommand(self,command,args):
-		"""
-		Safely runs plugins command.
-		@type command: pointer to function
-		@param command: pointer to plugins function
-		@type args: list
-		@param args: list of arguments for function
-		"""
-		try:
-			ret=command(*args)
-			return ret
-		except Exception, ex:
-#	temporary bugfix by triak
-#			log.msg('Plugin error: ' +unicode(ex))
-			log.msg('In function:'+unicode(command))
-			try:
-				message = unicode(traceback.format_exc(), "utf-8")
-				log.msg(message)
-			except:
-				try:
-					message = unicode(traceback.format_exc(),"utf-8")
-					log.msg(message)
-				except:
-					log.msg("can't decode traceback")
-
-
+	
 	def getAvatarSrc(self,jid):
 		hash=""
 		if self.avatarDef.has_key(jid):
@@ -1095,14 +899,7 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		if not self.client:
 			return None
-		#keysToDel=[]
-		#for key,avatar in self.client.avatarImg.iteritems():
-			#if len(unicode(key).split('/'))!=1:
-				#if sys.getrefcount(avatar)==4:
-					#print "Unused chached avatar",key,avatar,sys.getrefcount(avatar)
-					#keysToDel.append(str(key))
-		#for key in keysToDel:
-			#del self.client.avatarImg[key]
+
 		if not pixmap:
 			return None
 		if isinstance(pixmap,unicode) or isinstance(pixmap,str):
@@ -1374,26 +1171,11 @@ class mainWindow(QtGui.QMainWindow):
 		self.showChangeAvatar=self.offlineMenu.addAction(self.tr("Change profile photo"))
 		self.showChangeAvatar.setCheckable(False)
 		self.showChangeAvatar.setObjectName('change_avatar')
-		self.showChangeAvatar.setIcon(QtGui.QIcon("images/16x16/categories/v-card.png"))
+		self.showChangeAvatar.setIcon(QtGui.QIcon(RESOURCEPATH+"images/16x16/categories/v-card.png"))
 		QtCore.QObject.connect(self.showChangeAvatar, QtCore.SIGNAL("triggered ( bool )"),self.identityEditor)
 		self.offlineMenu.addSeparator()
 
-		# show offline contacts action
-		#self.showOfflineAction=self.offlineMenu.addAction(self.tr("Show Offline"))
-		#self.showOfflineAction.setCheckable(True)
-		#self.showOfflineAction.setObjectName('show_offline')
-		#self.showOfflineAction.setChecked(self.offline)
-		#QtCore.QObject.connect(self.showOfflineAction,QtCore.SIGNAL("toggled ( bool )"),self.hideOffline)
 
-		# show transports action
-		#action=self.offlineMenu.addAction(self.tr("Show transports"))
-		#action.setCheckable(True)
-		#action.setObjectName('show_transports')
-		#if self.config['showTransports']=='True':
-		#	action.setChecked(True)
-		# make Toggle Invisibility QAction
-		#self.toggleInv=self.offlineMenu.addAction(self.tr("Become invisible"))
-		#self.toggleInv.setObjectName("toggle_invisible")
 
 		# add resources connected to the our JID (selfResources)
 		if len(self.selfResources)!=0:
@@ -1707,12 +1489,7 @@ class mainWindow(QtGui.QMainWindow):
 					#self.transports[transport].deleteLater()
 				else:
 					ic=self.getIcon("1@"+transport,status=show,size="16x16")
-				#self.tray.showMessage("debug "+self.now(),"adding transport "+unicode(transport))
 
-				#self.transports[transport].setMaximumSize(QtCore.QSize(16777215,20))
-				#self.transports[transport].setMinimumSize(QtCore.QSize(32,32))
-				#self.transports[transport].setIconSize(QtCore.QSize(16,16))
-				#self.transports[transport].setIcon(ic)
 
 				text='<table><tr>'
 				if os.path.isfile(self.homeDir+'/avatars/'+unicode(self.config['jid'])):
@@ -1763,12 +1540,7 @@ class mainWindow(QtGui.QMainWindow):
 				if separator:
 					menu.addSeparator()
 
-				# updates transport menu in self.transports and add it to the self.statusWidgetMenu
-				#self.transports[transport]=menu
 
-
-				#self.transports[transport].setPopupMode(QtGui.QToolButton.InstantPopup)
-				#self.transports[transport].setArrowType(QtCore.Qt.NoArrow)
 				self.app.connect(menu, QtCore.SIGNAL("triggered ( QAction *)"),self.statusWidgetChanged)
 				def tempfunc(tt=transport):
 					self.showTransportMenu(self.transports[tt])
@@ -1778,9 +1550,7 @@ class mainWindow(QtGui.QMainWindow):
 				#QtCore.QObject.connect(self.transports[transport],QtCore.SIGNAL("triggered()"),self.transports[transport].toggle)
 				self.transports[transport].setToolTip(text)
 				self.transports[transport].setMenu(menu)
-				#self.ui.transportsWidget.layout().insertWidget(0,self.transports[transport])
-				#self.statusWidgetMenu.addMenu(menu)
-			#self.statusWidgetMenu.addSeparator()
+
 		else:
 			#self.ui.line1.hide()
 			self.ui.transportsWidget.hide()
@@ -1814,10 +1584,6 @@ class mainWindow(QtGui.QMainWindow):
 		if cmd == 'mood':
 			m = unicode(data.toString())
 			log.msg('setting mood to '+m)
-			#if m=="none":
-				#self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(None))
-			#else:
-				#self.client.sendPEP('http://jabber.org/protocol/mood', self.client.getMoodPayload(m))
 			self.ui.statusLine.defaultText=unicode(self.tr("Enter mood message"))
 			self.ui.statusLine.typ="mood"
 			self.ui.statusLine.data=m
@@ -1946,10 +1712,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.loadTheme()
 		self.loadSkin()
 		self.ui.roster.reskin()
-		#if self.config['rosterMode'] == "compact":
-		#	self.ui.roster.setRosterStyle(widgets.compactrosterstyle.rosterStyle)
-		#else:
-		#	self.ui.roster.setRosterStyle(widgets.defaultrosterstyle.rosterStyle)
+
 		self.scroll.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
 		QtCore.QObject.disconnect(self.scroll.verticalScrollBar(),QtCore.SIGNAL("valueChanged ( int )"),self.ui.roster.sliderChanged)
 		self.loadRosterStyle() # load roster style
@@ -2078,19 +1841,15 @@ class mainWindow(QtGui.QMainWindow):
 		if self.config['showTransports']=='True':
 			self.showTransports(True)
 		# unload plugins of old plugins
-		for i in self.plugins.keys():
-			self.unloadPlugin(i)
+		for i in self.pluginManager.plugins.keys():
+			self.pluginManager.unloadPlugin(i)
 		# load plugins of this user
-		self.findPlugins()
-		self._reloadPlugins()
+		self.pluginManager.findPlugins()
+		self.pluginManager._reloadPlugins()
 
 
 
-	def _reloadPlugins(self):
-		self.loadPlugins()
-		for plug in self.plugins.itervalues():
-			if plug['module']:
-				self.runPluginCommand(plug['module'].userChanged,[self.config["jid"]])
+
 
 	def isConnected(self):
 		return self.client and self.client.connection
@@ -2129,13 +1888,6 @@ class mainWindow(QtGui.QMainWindow):
 				self.chat.timer.start(30000)
 		return QtGui.QMainWindow.event(self,ev)
 
-#	def privacyListEditor(self,bool=False):
-#		"""
-#		Shows Privacy List Editor. Called by QAction from main menu.
-#		"""
-#		self.ple=widgets.privacy.PrivacyListEditorDialog(self,self)
-#		self.ple.show()
-
 	def startChatDialog(self, b=False):
 		message=jid=""
 		while 1:
@@ -2173,13 +1925,6 @@ class mainWindow(QtGui.QMainWindow):
 		"""
 		Shows MUC Browser.
 		"""
-		#if not self.mucbrowser:
-			#self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)
-			#self.mucbrowser.show()
-		#else:
-			#if self.mucbrowser.isHidden()==True:
-				#self.mucbrowser=widgets.mucbrowser.MUCBrowserDialog(self,self)
-				#self.mucbrowser.show()
 		self.joinGroupchat(bool)
 
 	def about(self,bool):
@@ -2242,121 +1987,9 @@ class mainWindow(QtGui.QMainWindow):
 		widget.setRejectText(self.tr("Decline"))
 		widget.ui.accept.setIcon(QtGui.QIcon('images/16x16/actions/ok.png'))
 
-	def findPlugins(self):
-		"""
-		Finds plugins in plugins/ and ~/plugins and saves informations about them to the self.plugins
-		"""
-		if len(self.plugins) != 0:
-			return  # we've done this already
-		plugin_paths = [unicode(os.getcwd(), sys.getfilesystemencoding())+'/plugins/', self.realHomeDir + '/plugins/']
-		for plugin_path in plugin_paths:
-			for plugin_name in os.listdir(plugin_path):
-				dir = '%s/%s' % (plugin_path, plugin_name)
-				if plugin_name == '.svn' or isfile(dir):
-					continue
-				path = '%s/%s.py' % (dir, plugin_name)
-
-				try:
-					f = open(utils.path(path))
-					module = load_source(plugin_name, path.encode(sys.getfilesystemencoding()), f)
-					f.close()
-					plug = module.Plugin(False, self.homeDir, dir)
-					version = float(plug.version)
-				except Exception, ex:
-					log.msg(path + ': BAD PLUGIN!')
-					log.msg(traceback.format_exc())
-					continue
-
-				if not self.plugins.has_key(plugin_name) or version > self.plugins[plugin_name]['version']:
-					self.plugins[plugin_name] = { 'dir': dir, 'version': version, 'module': None }
-
 	def startExtraDonwload(self,file):
 		d=extraDialog("",self,self,file)
 		d.exec_()
-
-	def getPlugin(self, plugin):
-		if self.plugins.has_key(plugin):
-			return self.plugins[plugin]['module']
-		else:
-			return None
-
-	def loadPlugins(self):
-		"""
-		Loads plugins according to config file (self.config['plugins'])
-		"""
-		print "loadplugins"
-		for plugin_name in self.plugins.keys():
-			if plugin_name in self.config['plugins']:
-				try:
-					self.loadPlugin(plugin_name)
-				except Exception, ex:
-					print "1"
-					log.msg(plugin_name+': '+unicode(ex))
-		if self.client:
-			self.client.dispatcher.publishEvent('on_pluginsLoaded')
-		#log.msg("PLUGINS:"+unicode(self.plugins))
-
-	def loadPlugin(self,plugin):
-		"""
-		Loads plugin. Plugin is loaded to the self.plugins[name]['module'].
-		@type plugin: unicode
-		@param plugin: plugins name
-		"""
-		dir = self.plugins[plugin]['dir']
-		path = utils.path('%s/%s.py' % (dir, plugin))
-		log.msg("loading "+unicode(plugin)+" plugin")
-
-		try:
-			f=open((path))
-		except:
-			log.msg('plugin load error: '+plugin)
-			return
-		try:
-			if not self.plugins[plugin]['module']:
-				#plug =  # load plugin module
-				module = load_source(plugin, path, f)
-				f.close()
-				self.plugins[plugin]['module']=module.Plugin(self, self.homeDir, dir)
-				self.runPluginCommand(self.plugins[plugin]['module'].buildMainWindowMenu,[]) # build menu for plugin
-				self.runPluginCommand(self.plugins[plugin]['module'].buildMainWindowToolBar,[])
-			else:
-				log.msg("plugin already loaded")
-				f.close()
-		except Exception, ex:
-					#log.msg(unicode(plugin)+u': '+unicode(ex))
-					traceback.print_exc()
-					f.close()
-					pass
-		#log.msg("PLUGINS:"+unicode(self.plugins))
-
-	def unloadPlugin(self,plugin):
-		"""
-		Unloads plugin. Plugin module is deleted and self.plugins[plugin]=None
-		@type plugin: unicode
-		@param plugin: plugins name
-		"""
-		if self.plugins[plugin]['module']:
-			self.ui.menuPlugins.clear() # clear plugins menu
-			self.runPluginCommand(self.plugins[plugin]['module']._remove,[]) # inform plugin that it will be removed
-
-			l=gc.get_referents(self.plugins[plugin]['module'])
-			for x in range(len(l)):
-				del l[0]
-			l=gc.get_referrers(self.plugins[plugin]['module'])
-			for x in range(len(l)):
-				del l[0]
-			#del self.plugins[plugin]['module']
-			self.plugins[plugin]['module']=None
-			#del self.plugins[plugin]
-			gc.collect()
-			del gc.garbage[:] # delete plugin from python
-			# rebuild plugins menu
-			for plug in self.plugins.itervalues():
-				if plug['module']:
-					self.runPluginCommand(plug['module'].buildMainWindowMenu,[])
-		#else:
-			#print "plugin is not loaded:",plugin
-		#log.msg("PLUGINS:"+unicode(self.plugins))
 
 	def closeEvent(self,event):
 		"""
@@ -2382,8 +2015,7 @@ class mainWindow(QtGui.QMainWindow):
 		if privacy:
 
 			self.client.privacy.active.unsetInvisible(available=False) # hack
-		for i in self.plugins.keys():
-			self.unloadPlugin(i)
+		self.pluginManager.unloadPlugins()
 		self.saveConfigBeforeQuit()
 
 		# close windows, hide tray :)
@@ -2819,10 +2451,7 @@ class mainWindow(QtGui.QMainWindow):
 		self.offline=bool
 		self.ui.roster.showOffline=bool
 		self.ui.roster.reshow=True
-		#if self.ui.roster.item:
-			#if self.ui.roster.item.typ=="user":
-				#if int(self.ui.roster.item.status)==9 and not bool:
-					#self.ui.roster.statusLabel.hide()
+
 		self.ui.roster.sortItems()
 		self.ui.roster.repaint()
 
@@ -3106,18 +2735,15 @@ class mainWindow(QtGui.QMainWindow):
 		if self.client==None:
 			#print "creating client class"
 			self.client = clientClass(unicode(jid).lower()+"/"+resource, password, jid.split("@")[1], 5222,self,reactor)
-			print self.plugins
-			for plug in self.plugins.itervalues():
-				if plug['module']:
-					#print "calling client created"
-					self.runPluginCommand(plug['module'].clientCreated,[])
+			
+			self.pluginManager.clientCreated() #XXX: predelat na event? Plugin manager se na to muze nabindovat a obslouzit to korektne
 
 
 		path = self.realHomeDir+'/avatars/'
 		if self.avatarDef.has_key(self.client.jid.userhost()):
 			if self.avatarDef[self.client.jid.userhost()]:
 				self.client.avatarImg[self.avatarDef[self.client.jid.userhost()]] = self.loadAvatar(self.avatarDef[self.client.jid.userhost()])
-		img=self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"))
+		img=self.getAvatar(QtGui.QPixmap(RESOURCEPATH+"images/32x32/apps/jabbim.png"))
 		img.file=None
 		self.client.avatarImg[None]=[img,32,32]
 		img.file="None"
@@ -3135,7 +2761,7 @@ class mainWindow(QtGui.QMainWindow):
 		# load avatars
 		self.imageLoader=avatarLoader.avatarLoader(self,unicode(path),dict(self.avatarDef))
 		QtCore.QObject.connect(self.imageLoader,QtCore.SIGNAL("imageLoaded(QString,QImage,int,int)"),self.avatarLoaded,QtCore.Qt.QueuedConnection)
-		self.imageLoader.start(QtCore.QThread.LowestPriority)
+		self.imageLoader.start(QtCore.QThread.IdlePriority)
 
 		#self.gotAvatars(self.loadAvatars(unicode(path),dict(self.avatarDef)))
 		try:
@@ -3158,17 +2784,6 @@ class mainWindow(QtGui.QMainWindow):
 
 		self.isJabbimUser = jid.split("@")[1] in self.jabbimServers
 
-	#def _loadAvatar(self,file, hash, jid):
-		#if os.path.isfile(unicode(file)):
-			#jid=jidT.JID(jid).userhost()
-			#pixmap=QtGui.QPixmap(unicode(file))
-			#for item in self.ui.roster.getUserItems(jid):
-				#item.setAvatar(QtGui.QIcon(pixmap))
-			#for item in self.ui.roster.getMetaItems(jid):
-				#item[0].setAvatar(QtGui.QIcon(pixmap))
-		#else:
-			#log.msg("BAD FILE FOR AVATAR:"+unicode(file))
-		#self.client.roster['users'][jid].setAvatar(file, hash)
 
 	def avatarLoaded(self,key,image,width,height):
 		"""
@@ -3180,43 +2795,6 @@ class mainWindow(QtGui.QMainWindow):
 			self.client.avatarImg[unicode(key)]=[img,int(width),int(height)]
 		del img
 
-	#def loadAvatars(self,path,avatarDef):
-		#avatarImg={}
-
-		#hashe = []
-		#try:
-			#for hash in avatarDef.itervalues():
-				#if not hash in hashe and hash and hash!="None":
-					#hashe.append(unicode(str(hash)))
-		#except:
-			#message = unicode(traceback.format_exc(), 'utf-8')
-			#print message
-##		path = self.main.homeDir+'/avatars/'
-		#print "loadAvatars",hashe
-		#frame=QtGui.QImage("images/32x32/frame.png")
-		#for hash in hashe:
-			#try:
-				##self.avatarImg[hash] = self.main.getAvatar(hash)
-				#avatar=QtGui.QImage(path+'/'+hash)
-				#width=int(avatar.width())
-				#height=int(avatar.height())
-				#avatar=avatar.scaled(25,25,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
-				#result=QtGui.QImage(32,32,QtGui.QImage.Format_ARGB32)
-				#result.fill(QtCore.Qt.transparent)
-				##if os.path.exists("themes/"+self.config['theme']+"/frame-32.png"):
-					##frame=QtGui.QImage("themes/"+self.config['theme']+"/frame-32.png")
-				##else:
-				#painter=QtGui.QPainter(result)
-				#painter.drawImage((32-avatar.width())/2,(32-avatar.height())/2,avatar)
-				#painter.drawImage(0,0,frame)
-				#painter.end()
-				#avatarImg[hash] = [result,width,height]
-			#except:
-				#avatarImg[hash] = None
-				#message = unicode(traceback.format_exc(), 'utf-8')
-				#print message
-		#return avatarImg
-
 	def loadAvatar(self,hash):
 		path=self.realHomeDir+"/avatars"
 		avatar=QtGui.QImage(path+'/'+hash)
@@ -3225,10 +2803,8 @@ class mainWindow(QtGui.QMainWindow):
 		avatar=avatar.scaled(25,25,QtCore.Qt.KeepAspectRatio,QtCore.Qt.SmoothTransformation)
 		result=QtGui.QImage(32,32,QtGui.QImage.Format_ARGB32)
 		result.fill(QtCore.Qt.transparent)
-		#if os.path.exists("themes/"+self.config['theme']+"/frame-32.png"):
-			#frame=QtGui.QImage("themes/"+self.config['theme']+"/frame-32.png")
-		#else:
-		frame=QtGui.QImage("images/32x32/frame.png")
+
+		frame=QtGui.QImage(RESOURCEPATH+"images/32x32/frame.png")
 		painter=QtGui.QPainter(result)
 		painter.drawImage((32-avatar.width())/2,(32-avatar.height())/2,avatar)
 		painter.drawImage(0,0,frame)
@@ -3236,16 +2812,6 @@ class mainWindow(QtGui.QMainWindow):
 		img = QtGui.QPixmap.fromImage(result)
 		img.file=hash
 		return [img,width,height]
-
-	#def gotAvatars(self,avatarImg):
-		#self.client.avatarImg=avatarImg
-		#for key in self.client.avatarImg.keys():
-			#self.client.avatarImg[key][0]=QtGui.QPixmap.fromImage(self.client.avatarImg[key][0])
-			##print 'avatarSize',self.client.avatarImg[key].width(),self.client.avatarImg[key][0].height()
-		#self.client.avatarImg[None]=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
-		#self.client.avatarImg[u'None']=[self.getAvatar(QtGui.QPixmap("images/32x32/apps/jabbim.png"),size="32x32",frame=True),32,32]
-		#print 'LOADED AVATARS',self.client.avatarImg
-
 
 	def _addGroup(self, group):
 		item=self.ui.roster.addGroup(unicode(group))
@@ -3291,9 +2857,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.actionJoin_groupchat.setEnabled(False)
 		self.ui.actionService_Discovery.setEnabled(False)
 		self.ui.actionStart_Chat.setEnabled(False)
-#		self.ui.actionPrivacy_list_editor.setEnabled(False)
 		self.ui.actionIdentity.setEnabled(False)
-#		self.client=None
+
 		self.selfResources=[]
 		if self.client.oldstatus:
 			self.ui.loginStatus.setItemData(self.ui.loginStatus.findText(self.status[self.client.oldstatus[0]]),  QtCore.QVariant(QtCore.QStringList([self.client.oldstatus[0], self.client.oldstatus[1]])))
@@ -3311,14 +2876,8 @@ class mainWindow(QtGui.QMainWindow):
 		self.ui.roster.users=[]
 		self.ui.roster.disconnect()
 		self.ui.login_connect.setEnabled(True)
-		#self.ui.eventsListWidget.clear()
 		self.events.removeAll()
 		self.ui.transportsToolbar.clear()
-		#for transport in self.transports.keys():
-			#if self.transports[transport]:
-				#self.ui.transportsWidget.layout().removeWidget(self.transports[transport])
-				#self.transports[transport].setParent(None)
-				#self.transports[transport].deleteLater()
 		self.transports={}
 
 		if self.client:
@@ -3333,7 +2892,7 @@ class mainWindow(QtGui.QMainWindow):
 						w.chat.textEditWrite(message)
 						w.chat.lastMessageFrom=""
 		if error == 'lost' and self.reconnect:
-#			self.client.oldstatus = self.client.getContactByJid(self.client.jid.full()).status
+
 			self.reconnect = False
 			msg = None
 			try:
@@ -3343,23 +2902,20 @@ class mainWindow(QtGui.QMainWindow):
 				log.err('can\'t stop xping')
  			# connection lost, let's wait for a while and then reconnect
 			self.tray.showMessage(self.tr("Connection lost! "),self.tr("Trying to reconnect ..  ") , QtGui.QSystemTrayIcon.Warning, 5000)
- 			#self.plugins={}
-# 			self.client = None
 			log.err('Connection Lost')
 			if msg != None and len(msg)>0:
 				self.delayedMessages = msg
  			reactor.callLater(5, self.connect)
 		else:
 			self.client=None
-			 #= None
-			for i in self.plugins.keys():
-				self.unloadPlugin(i)
-			self._reloadPlugins()
+
+			self.pluginManager._reloadPlugins()
 		self.buildTrayMenu()
 
 	def on_network_state_up(self):
 		# XXX
 		log.msg("on_network_state_up")
+		#reactor.callLater(15, self.connect)
 	def on_network_state_down(self):
 		# XXX
 		self.connectCancel()

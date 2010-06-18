@@ -2282,10 +2282,8 @@ class rosterWidget(QtGui.QWidget):
 							action.setIcon(QtGui.QIcon(RESOURCEPATH+"images/32x32/actions/upload.png"))
 							action.setData(QtCore.QVariant("%s/%s" % (jid, resource)))
 							action.setObjectName("send_file")
-
-		for key,value in self.main.plugins.iteritems():
-			if value['module']:
-				self.main.runPluginCommand(value['module'].buildContactMenu,[contactMenu,contact])
+		self.main.pluginManager.buildContactMenu(contactMenu, contact)
+			
 		# separator
 		contactMenu.addSeparator()
 

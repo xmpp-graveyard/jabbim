@@ -8,6 +8,7 @@ from widgets import tooltip
 import traceback
 import sys
 from twisted.python import log
+from include.constants import RESOURCEPATH
 
 class AvatarLabel(QtGui.QLabel):
 	def __init__(self,main,parent):
@@ -82,7 +83,7 @@ class avatarLoader(QtCore.QThread):
 		except:
 			message = unicode(traceback.format_exc(), 'utf-8')
 			log.err( message)
-		frame=QtGui.QImage("images/32x32/frame.png")
+		frame=QtGui.QImage(RESOURCEPATH+"images/32x32/frame.png")
 		for hash in hashe:
 			try:
 				avatar=QtGui.QImage(path+'/'+hash)

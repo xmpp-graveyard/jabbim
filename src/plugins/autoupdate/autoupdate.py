@@ -76,9 +76,9 @@ class Plugin(plugins.PluginBase):
 			version=float(desc[0].replace(",","."))
 			plugin=name
 
-			if name in self.main.config['plugins'] and self.main.plugins.has_key(plugin):
-				if self.main.plugins[plugin]['module']:
-					if float(self.main.plugins[plugin]['module'].version)<version:
+			if name in self.main.config['plugins'] and self.main.pluginManager.plugins.has_key(plugin):
+				if self.main.pluginManager.plugins[plugin]['module']:
+					if float(self.main.pluginManager.plugins[plugin]['module'].version)<version:
 						self.main.tray.showMessage(self.tr("Autoupdate"),self.tr("New version of plugin")+" "+plugin+" "+self.tr('is available'), QtGui.QSystemTrayIcon.Information, 3000)
 						self.main.events.addBooleanEvent(self.main.startExtraDonwload,["plugins/"+name],None,[],name+self.main.tr("update"),text=self.tr("Do you want to update this plugin?"),name=unicode("update")+name,typ="update")
 						#self.addBooleanEvent(self.main.client.sendPresence,[jid,None,status,None,'subscribed'],self.main.client.sendPresence,[jid,None,status,None,'unsubscribed'],header=mainWindow.tr('Subscribe request'),text=mainWindow.tr('From:')+" "+unicode(jid),name=jid,typ="subscribe")

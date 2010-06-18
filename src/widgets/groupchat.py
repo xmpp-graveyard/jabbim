@@ -91,9 +91,8 @@ class groupChatWidget(abstractChatWidget):
 		self.ui.smileys.setMaximumHeight(self.ui.sendButton.height())
 
 		# load plugins buttons
-		for key,value in self.main().plugins.iteritems():
-			if value['module']:
-				self.main().runPluginCommand(value['module'].buildGroupchatWidget,[unicode(self.jid),self.flowLayout,self])
+		self.main().pluginManager.buildGroupchatWidget(unicode(self.jid),self.flowLayout,self )
+		
 
 		# Make "Room Configuration" Menu
 
@@ -443,9 +442,8 @@ class groupChatWidget(abstractChatWidget):
 ##				menu.addSeparator()
 
 			# add other actions from plugins
-			for key,value in self.main().plugins.iteritems():
-				if value['module']:
-					self.main().runPluginCommand(value['module'].buildGroupchatContactMenu,[menu,jid,user])
+			self.main().pluginManager.buildGroupchatContactMenu(menu, jid, user)
+			
 
 		menu.connect(menu, QtCore.SIGNAL("triggered ( QAction * )"),self.usersContextMenuTriggered)
 		# set menu position and show
@@ -1001,15 +999,13 @@ class groupChatWidget(abstractChatWidget):
 			xhtml,same=self.qtHtmlToXhtml(xhtml,text)
 			ret=[]
 			if same:
-				for key,value in self.main().plugins.iteritems():
-					if value['module']:
-						ret.append(self.main().runPluginCommand(value['module'].on_groupchatMessageSend,[unicode(self.jid),text,'',"active"]))
+				self.main().pluginManager.on_groupchatMessageSend(unicode(self.jid),text,'',"active")
+				
 				if not False in ret:
 					self.main().client.sendMessage(unicode(self.jid),text,'groupchat',composing="active")
 			else:
-				for key,value in self.main().plugins.iteritems():
-					if value['module']:
-						ret.append(self.main().runPluginCommand(value['module'].on_groupchatMessageSend,[unicode(self.jid),text,xhtml,"active"]))
+				self.main().pluginManager.on_groupchatMessageSend(unicode(self.jid),text,'',"active")
+				
 				if not False in ret:
 					self.main().client.sendMessage(unicode(self.jid),text,'groupchat',xhtml=xhtml,composing="active")
 

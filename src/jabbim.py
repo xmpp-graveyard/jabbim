@@ -151,39 +151,6 @@ except:
 	log.msg('Please upgrade to python2.5')
 	from sha import new as sha1
 
-import widgets
-import wizards
-import pyxl
-from pyxl import storage
-import traceback
-from configobj import ConfigObj, ConfigObjError
-from include import userrating, rot13, plugins, safelog
-import urllib, random, xmlrpclib
-from imp import load_source
-from urllib import quote, unquote
-from os.path import basename,dirname, isfile
-from twisted.words.protocols.jabber.xmlstream import IQ
-from pyxl import jid as jidT
-import ctypes
-from twisted.web.microdom import parseString,Element, escape
-from twisted.web.client import downloadPage
-import shutil #xmlrpc
-from twisted.python.filepath import FilePath
-from widgets.extra import extraDialog
-from widgets import bookmarks, dataforms, tooltip
-from locale import strcoll
-import weakref
-from widgets.avatarLoader import *
-from widgets.aboutDialog import aboutDialog
-from widgets.scrollbar import scrollBar
-
-
-
-
-
-
-
-
 
 MainWindow=None
 
