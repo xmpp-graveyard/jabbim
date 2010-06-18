@@ -23,6 +23,8 @@ from profiles_ui import *
 from include import utils
 import shutil
 from twisted.python import log
+from include.constants import RESOURCEPATH
+
 try:
 	from wizards import firststart
 except:
