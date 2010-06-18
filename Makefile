@@ -9,11 +9,15 @@ datadir = $(PREFIX)/share
 jabbimdata = $(datadir)/jabbim
 
 # Builds generated files
-build: qm jabbim .configured-prefix
+build: qm ui_py jabbim .configured-prefix
 
 ts_files := $(shell find . -name '*.ts')
 qm_files := $(ts_files:.ts=.qm)
 qm: $(qm_files)
+
+ui_files := $(shell find . -name '*.ui')
+ui_py_files := $(ui_files:.ui=_ui.py)
+ui_py: $(ui_py_files)
 
 .configured-prefix: jabbim
 	echo $(PREFIX) > .configured-prefix
@@ -25,6 +29,8 @@ jabbim: jabbim.in
 %.qm: %.ts
 	lrelease-qt4 -compress $< -qm $@
 
+%_ui.py: %.ui
+	pyuic4 -o $@ $<
 
 # Installs Jabbim into the system.
 # DESTDIR is mainly useful for packagers.
