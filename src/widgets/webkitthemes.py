@@ -19,6 +19,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 from PyQt4 import QtCore, QtGui
 import sys, os, time
 from twisted.internet import threads
+from include.constants import RESOURCEPATH
 
 class webkitThemeFactory:
 	def __init__(self,chatTheme,groupchatTheme,realHomeDir):
@@ -83,10 +84,10 @@ class webkitThemeFactory:
 		print "loading chatTheme",self.chatTheme,self.chatStyle
 		print "loading groupchatTheme",self.groupchatTheme,self.groupchatStyle
 
-		self.cPath = cwd + "/chatskins/%s/" % self.chatTheme
+		self.cPath = cwd +RESOURCEPATH+ "/chatskins/%s/" % self.chatTheme
 		if not os.path.exists(self.cPath + "Incoming/Content.html"):
 			self.cPath = self.realHomeDir + "/chatskins/%s/" % self.chatTheme
-		self.gPath = cwd + "/chatskins/%s/" % self.groupchatTheme
+		self.gPath = cwd +RESOURCEPATH+ "/chatskins/%s/" % self.groupchatTheme
 		if not os.path.exists(self.gPath + "Incoming/Content.html"):
 			self.gPath = self.realHomeDir + "/chatskins/%s/" % self.groupchatTheme
 
