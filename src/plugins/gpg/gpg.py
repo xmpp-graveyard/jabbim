@@ -34,7 +34,7 @@ class Plugin(plugins.PluginBase):
 			self.registerHandler('on_message', self.on_message, priority = 4)
 
 			self.loadConfig()
-			self.key_dialog=self.loadDialog("%s/gpg_dialog.py" % self.pluginDir,self.main)
+			self.key_dialog=self.loadDialog("%s/gpg_dialog_ui.py" % self.pluginDir,self.main)
 		else:
 			self.loadConfig(homedir)
 
