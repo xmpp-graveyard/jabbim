@@ -991,6 +991,7 @@ class abstractChatWidget(QtGui.QWidget):
 		# look for longest-string first; e.g. for styles where both ':)' and ':)]' smileys are defined
 		for k in sorted(self.main().emoticonsWidget.smileys.iterkeys(), key=len, reverse=True):
 			v = self.main().emoticonsWidget.smileys[k]
+			v = os.path.abspath(v)
 			text=text.replace(" "+k,'&nbsp;<img alt="'+k+'" src="'+v+'"/>')
 			text=text.replace("&nbsp;"+k,'&nbsp;<img alt="'+k+'" src="'+v+'"/>')
 			text=text.replace(">"+k,'><img alt="'+k+'" src="'+v+'"/>')

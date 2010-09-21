@@ -497,6 +497,7 @@ class chatWidget(abstractChatWidget):
 		if not os.path.isfile(self.file):
 			# use default avatar if users avatar doesn't exist
 			self.file = RESOURCEPATH+"/images/32x32/apps/jabbim.png"
+		self.file = os.path.abspath(self.file)
 
 		# our avatar
 		f=""

@@ -322,7 +322,9 @@ def generateEmoticonsPreview(mainWindow,pack):
 	for k,v in config['emoticons'].iteritems():
 		#mainWindow.smileys[k.replace("<","&lt;").replace(">","&gt;")]=v
 		if not v in values:
-			html+='<img src="file://'+src+os.path.dirname(pack)+'/'+v+'" />'
+			ppth = os.path.join(src,os.path.dirname(pack),v)
+			ppth = os.path.abspath(ppth)
+			html+='<img src="file:///'+ppth+'" />'
 			values.append(v)
 	html += "</body></html>"
 	return html
