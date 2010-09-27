@@ -168,6 +168,7 @@ def loadConfig(main,status):
 			"notifyOnDND":"True",
 			"keepStatus":"False",
 			"keepedStatus":'',
+            "keepedShow":'',
 			"showChatStatusChanges":"True",
 			"showMucStatus":"True",
 			"showMucJoinPart":"True",

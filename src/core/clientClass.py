@@ -721,8 +721,8 @@ class clientClass(pyxl.client.Client):
 		self.main.selfStatus=show
 		#self.main.tray.setToolTip(mainWindow.tr('Your status:')+" "+self.main.status[show])
 		self.main.ui.selfAvatar.refreshToolTip()
-		if self.main.config['keepStatus'] == "True" and self.main.config['keepedStatus'] != '':
-			self.main.sendPresence(None,show,self.main.config['keepedStatus'])
+		if self.main.config['keepStatus'] == "True" and self.main.config['keepedShow'] != '' and self.main.config['keepedShow'] in self.main.shows.keys():
+			self.main.sendPresence(None,self.main.config['keepedShow'],self.main.config['keepedStatus'])
 		else:
 			self.main.sendPresence(None,show,status)
 		print "Sending firse presence to server..."

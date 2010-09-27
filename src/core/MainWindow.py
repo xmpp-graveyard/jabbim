@@ -819,6 +819,7 @@ class mainWindow(QtGui.QMainWindow):
 				# keep status in config file only if status is no from autoaway
 				if  show != 'away':
 					self.config['keepedStatus'] = unicode(message)
+					self.config['keepedShow'] = unicode(show)
 
 				# send presence to the server
 				self.client.sendPresence(show = unicode(show), status = unicode(message),priority=pri)
