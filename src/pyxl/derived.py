@@ -812,6 +812,9 @@ class derived:
 			jd = jid.JID(injid)
 		except:
 			return None
+		if jd == self.jid:
+			return self.identity+"/"+self.xmlLang+"/"+self.client_name
+			#return self.identity+"//"+self.client_name
 		try:
 			if self.disco[jd.host][(jd.host,None)].has_key("identities"):
 				return self.disco[jd.host][(jd.host,None)]["identities"]

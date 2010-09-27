@@ -21,6 +21,7 @@ import locale
 import sys, time, os
 import traceback
 from base64 import b64encode, b64decode
+from base64 import standard_b64encode
 
 from configobj import ConfigObj
 from twisted.internet import protocol, threads, defer, reactor
@@ -102,6 +103,7 @@ class Client(derived):
 		self.ft = {}
 		self.last = 0
 		self.registerFeature('jabber:iq:version')
+		self.registerFeature('http://jabber.org/protocol/caps')
 		self.registerFeature('jabber:iq:last')
 		self.registerFeature('http://jabber.org/protocol/xhtml-im')
 		self.registerFeature('http://jabber.org/protocol/disco#info')
@@ -138,12 +140,12 @@ class Client(derived):
 		self.registerFeature('urn:xmpp:bob')
 		self.registerFeature('http://dev.jabbim.cz/jabbim/treeft')
 		self.identity = 'client/pc'
-
+		self.xmlLang = 'cs'
 		self.caps_cache = {} # 'ext': (identity,[feature1, feature2])
 		self.rebuildCaps()
 		self.evil = False
 		self.log = True
-		self.xmlLang = 'cs'
+		
 		self.dispatcher = events.EventDispatcher()
 		self.avatars = {} # jid:hash
 #		path = self.main.homeDir+'/avatars/'
@@ -233,8 +235,8 @@ class Client(derived):
 		features = []
 		for f in self.discofeatures[None]:
 			features.append(f[0])
-		self.caps_ext = self.calcCapsExt(features = features, identity = [self.identity])
-		self.cacheCaps(self.caps_ext, features, self.identity)
+		self.caps_ext = self.calcCapsExt(features = features, identity = [self.getIdentity(self.jid)])
+		self.cacheCaps(self.caps_ext, features, self.getIdentity(self.jid))
 		if self.state == 'connected':
 			try:
 				contact = self.getContactByJid(self.jid.userhost()) 
@@ -1072,9 +1074,16 @@ class Client(derived):
 			if child.name == 'feature':
 				features.append(child['var'])
 			if child.name == 'identity':
-				identity = '%s/%s'%(child['category'], child['type'])
+				lang =""
+				name =""
+				lang = el["xml:lang"]
+				if child["name"]:
+					name = child["name"]
+				identity = '%s/%s/%s/%s'%(child['category'], child['type'], lang, name)
 		if ext != None:
 			print 'caching caps!'
+			inc = self.calcCapsExt(identity, features)
+			print "inc:"+inc+" vs ext:"+ext
 			self.cacheCaps(ext, features, identity)
 		frm = jid.JID(el['from'])
 		resource = frm.resource
@@ -1083,10 +1092,12 @@ class Client(derived):
 
 	def calcCapsExt(self, identity = ['client/pc'], features = []):
 		identity.sort()
+		#features = self.discofeatures[None]
 		features.sort()
 
-		out = '<'.join(identity) + '<' + '<'.join(features)
-		out = b64encode(sha1(out).digest())
+		out = '<'.join(identity) + '<' + '<'.join(features)+"<"
+		print out
+		out = standard_b64encode(sha1(out.encode('utf-8')).digest())
 		return out
 
 
@@ -1127,8 +1138,10 @@ class Client(derived):
 		iq['to'] = el['from']
 		iq['type'] = 'result'
 		iq['id'] = el['id']
+		iq['xml:lang'] = self.xmlLang
 		q = iq.addElement('query', 'http://jabber.org/protocol/disco#info')
-
+		i,f = self.caps_cache[self.caps_ext]
+		i = i.split('/')
 		for child in el.elements():
 			if child.name == 'query':
 				if child.hasAttribute('node'):
@@ -1136,7 +1149,7 @@ class Client(derived):
 				else:
 					node = None
 		if node == '%s#%s'%(self.caps_node, self.version): #magie: pokud se nas nekdo zepta na caps nasi verze, tak mu rekneme default
-			node == None
+			node = None
 
 		if not self.discofeatures.has_key(node):
 			node = None
@@ -1144,10 +1157,26 @@ class Client(derived):
 			q['node'] = node
 		else:
 			id = q.addElement('identity')
-			id['category'] = self.identity.split('/')[0]
-			id['name'] = self.client_name
-			id['type'] = self.identity.split('/')[1]
-		for feature in self.discofeatures[node]:
+			#id['category'] = self.getIdentity(self.jid).split('/')[0]
+			#id['name'] = self.client_name
+			#id['type'] = self.getIdentity(self.jid).split('/')[1]
+			
+			id['category'] = i[0]
+			id['name'] = i[3]
+			id['type'] = i[1]
+			id['xml:lang'] = i[2]
+			
+		#features = self.discofeatures[node]
+		
+		#for feature in self.discofeatures[node]:
+		if node != None:
+			features = self.discofeatures[node]
+		else:
+			features = []
+			for g in f:
+				features.append((g,None))
+		for feature in features:
+			print feature
 			f = q.addElement('feature')
 			f['var'] = feature[0]
 			if len(feature) > 1:
